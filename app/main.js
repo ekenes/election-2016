@@ -34,11 +34,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/popup/content/FieldsContent", "esri/renderers", "esri/symbols"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, FieldsContent, renderers_1, symbols_1) {
+define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/popup/content/FieldsContent", "esri/renderers/visualVariables/OpacityVariable", "esri/renderers/visualVariables/SizeVariable", "esri/renderers", "esri/symbols", "esri/rasterRenderers"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, FieldsContent, OpacityVariable, SizeVariable, renderers_1, symbols_1, rasterRenderers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var map, maxSize, maxDataValue, maxScale, view, layer;
+        var map, maxSize, minDataValue, maxDataValue, maxScale, view, turnoutLayer, polygonLayer, pointLayer;
         return __generator(this, function (_a) {
             map = new EsriMap({
                 basemap: {
@@ -47,9 +47,10 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     }
                 }
             });
-            maxSize = 60;
-            maxDataValue = 50000;
-            maxScale = 18056 * 4 * 4 * 4;
+            maxSize = 15;
+            minDataValue = 100;
+            maxDataValue = 5000;
+            maxScale = 4622324;
             view = new MapView({
                 container: "viewDiv",
                 map: map,
@@ -57,13 +58,1019 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 zoom: 5,
                 constraints: {
                     minScale: 0,
-                    maxScale: maxScale
+                    maxScale: maxScale / 2
                 },
                 highlightOptions: {
                     fillOpacity: 0
                 }
             });
-            layer = new FeatureLayer({
+            view.watch("scale", function (scale) {
+                console.log(scale);
+            });
+            turnoutLayer = new FeatureLayer({
+                portalItem: {
+                    id: "91910117e36f49ee9a88b84fa5053c67"
+                },
+                opacity: 1,
+                renderer: new rasterRenderers_1.UniqueValueRenderer({
+                    valueExpression: "\n        var dem12 = $feature.PRS_DEM_12;\n        var rep12 = $feature.PRS_REP_12;\n        var oth12 = $feature.PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.PRS_DEM_16;\n        var rep16 = $feature.PRS_REP_16;\n        var oth16 = $feature.PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
+                    valueExpressionTitle: "Outright winner",
+                    defaultSymbol: new symbols_1.SimpleFillSymbol({
+                        color: "rgba(128,128,128)",
+                        style: "solid"
+                    }),
+                    uniqueValueInfos: [{
+                            value: "Republican 2012, Republican 2016",
+                            label: "Republican 2012-2016",
+                            symbol: new symbols_1.SimpleMarkerSymbol({
+                                color: "rgba(230, 0, 0, 1)",
+                                outline: null,
+                                size: 30
+                            })
+                        }, {
+                            value: "Democrat 2012, Democrat 2016",
+                            label: "Democrat 2012-2016",
+                            symbol: new symbols_1.SimpleMarkerSymbol({
+                                color: "rgba(0, 0, 230, 1)",
+                                outline: null,
+                                size: 30
+                            })
+                        }, {
+                            value: "Other 2012, Other 2016",
+                            label: "Other 2012-2016",
+                            symbol: new symbols_1.SimpleMarkerSymbol({
+                                color: "rgba(21, 209, 21, 1)",
+                                outline: null,
+                                size: 30
+                            })
+                        }, {
+                            value: "Democrat 2012, Republican 2016",
+                            label: "Democrat 2012, Republican 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPointSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMVectorMarker",
+                                                enable: true,
+                                                anchorPoint: { x: 0, y: 0 },
+                                                offsetX: 0,
+                                                offsetY: 0,
+                                                anchorPointUnits: "Relative",
+                                                size: 30,
+                                                frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                                markerGraphics: [
+                                                    {
+                                                        type: "CIMMarkerGraphic",
+                                                        geometry: {
+                                                            rings: [
+                                                                [
+                                                                    [8.5, 0.2],
+                                                                    [7.06, 0.33],
+                                                                    [5.66, 0.7],
+                                                                    [4.35, 1.31],
+                                                                    [3.16, 2.14],
+                                                                    [2.14, 3.16],
+                                                                    [1.31, 4.35],
+                                                                    [0.7, 5.66],
+                                                                    [0.33, 7.06],
+                                                                    [0.2, 8.5],
+                                                                    [0.33, 9.94],
+                                                                    [0.7, 11.34],
+                                                                    [1.31, 12.65],
+                                                                    [2.14, 13.84],
+                                                                    [3.16, 14.86],
+                                                                    [4.35, 15.69],
+                                                                    [5.66, 16.3],
+                                                                    [7.06, 16.67],
+                                                                    [8.5, 16.8],
+                                                                    [9.94, 16.67],
+                                                                    [11.34, 16.3],
+                                                                    [12.65, 15.69],
+                                                                    [13.84, 14.86],
+                                                                    [14.86, 13.84],
+                                                                    [15.69, 12.65],
+                                                                    [16.3, 11.34],
+                                                                    [16.67, 9.94],
+                                                                    [16.8, 8.5],
+                                                                    [16.67, 7.06],
+                                                                    [16.3, 5.66],
+                                                                    [15.69, 4.35],
+                                                                    [14.86, 3.16],
+                                                                    [13.84, 2.14],
+                                                                    [12.65, 1.31],
+                                                                    [11.34, 0.7],
+                                                                    [9.94, 0.33],
+                                                                    [8.5, 0.2]
+                                                                ]
+                                                            ]
+                                                        },
+                                                        symbol: {
+                                                            type: "CIMPointSymbol",
+                                                            symbolLayers: [
+                                                                {
+                                                                    type: "CIMHatchFill",
+                                                                    enable: true,
+                                                                    lineSymbol: {
+                                                                        type: "CIMLineSymbol",
+                                                                        symbolLayers: [
+                                                                            {
+                                                                                type: "CIMSolidStroke",
+                                                                                effects: [
+                                                                                    {
+                                                                                        type: "CIMGeometricEffectDashes",
+                                                                                        dashTemplate: [2, 2],
+                                                                                        lineDashEnding: "FullPattern"
+                                                                                    }
+                                                                                ],
+                                                                                enable: true,
+                                                                                width: 1,
+                                                                                color: [0, 0, 230, 255]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    rotation: 45,
+                                                                    separation: 4 // distance between lines in hatch fill
+                                                                },
+                                                                {
+                                                                    type: "CIMSolidFill",
+                                                                    enable: true,
+                                                                    color: [230, 0, 0, 255]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                scaleSymbolsProportionally: true,
+                                                respectFrame: true,
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Democrat 2012, Other 2016",
+                            label: "Democrat 2012, Other 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPointSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMVectorMarker",
+                                                enable: true,
+                                                anchorPoint: { x: 0, y: 0 },
+                                                offsetX: 0,
+                                                offsetY: 0,
+                                                anchorPointUnits: "Relative",
+                                                size: 30,
+                                                frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                                markerGraphics: [
+                                                    {
+                                                        type: "CIMMarkerGraphic",
+                                                        geometry: {
+                                                            rings: [
+                                                                [
+                                                                    [8.5, 0.2],
+                                                                    [7.06, 0.33],
+                                                                    [5.66, 0.7],
+                                                                    [4.35, 1.31],
+                                                                    [3.16, 2.14],
+                                                                    [2.14, 3.16],
+                                                                    [1.31, 4.35],
+                                                                    [0.7, 5.66],
+                                                                    [0.33, 7.06],
+                                                                    [0.2, 8.5],
+                                                                    [0.33, 9.94],
+                                                                    [0.7, 11.34],
+                                                                    [1.31, 12.65],
+                                                                    [2.14, 13.84],
+                                                                    [3.16, 14.86],
+                                                                    [4.35, 15.69],
+                                                                    [5.66, 16.3],
+                                                                    [7.06, 16.67],
+                                                                    [8.5, 16.8],
+                                                                    [9.94, 16.67],
+                                                                    [11.34, 16.3],
+                                                                    [12.65, 15.69],
+                                                                    [13.84, 14.86],
+                                                                    [14.86, 13.84],
+                                                                    [15.69, 12.65],
+                                                                    [16.3, 11.34],
+                                                                    [16.67, 9.94],
+                                                                    [16.8, 8.5],
+                                                                    [16.67, 7.06],
+                                                                    [16.3, 5.66],
+                                                                    [15.69, 4.35],
+                                                                    [14.86, 3.16],
+                                                                    [13.84, 2.14],
+                                                                    [12.65, 1.31],
+                                                                    [11.34, 0.7],
+                                                                    [9.94, 0.33],
+                                                                    [8.5, 0.2]
+                                                                ]
+                                                            ]
+                                                        },
+                                                        symbol: {
+                                                            type: "CIMPointSymbol",
+                                                            symbolLayers: [
+                                                                {
+                                                                    type: "CIMHatchFill",
+                                                                    enable: true,
+                                                                    lineSymbol: {
+                                                                        type: "CIMLineSymbol",
+                                                                        symbolLayers: [
+                                                                            {
+                                                                                type: "CIMSolidStroke",
+                                                                                effects: [
+                                                                                    {
+                                                                                        type: "CIMGeometricEffectDashes",
+                                                                                        dashTemplate: [2, 2],
+                                                                                        lineDashEnding: "FullPattern"
+                                                                                    }
+                                                                                ],
+                                                                                enable: true,
+                                                                                width: 1,
+                                                                                color: [0, 0, 230, 255]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    rotation: 45,
+                                                                    separation: 4 // distance between lines in hatch fill
+                                                                },
+                                                                {
+                                                                    type: "CIMSolidFill",
+                                                                    enable: true,
+                                                                    color: [21, 209, 21, 255]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                scaleSymbolsProportionally: true,
+                                                respectFrame: true,
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Republican 2012, Democrat 2016",
+                            label: "Republican 2012, Democrat 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPointSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMVectorMarker",
+                                                enable: true,
+                                                anchorPoint: { x: 0, y: 0 },
+                                                offsetX: 0,
+                                                offsetY: 0,
+                                                anchorPointUnits: "Relative",
+                                                size: 30,
+                                                frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                                markerGraphics: [
+                                                    {
+                                                        type: "CIMMarkerGraphic",
+                                                        geometry: {
+                                                            rings: [
+                                                                [
+                                                                    [8.5, 0.2],
+                                                                    [7.06, 0.33],
+                                                                    [5.66, 0.7],
+                                                                    [4.35, 1.31],
+                                                                    [3.16, 2.14],
+                                                                    [2.14, 3.16],
+                                                                    [1.31, 4.35],
+                                                                    [0.7, 5.66],
+                                                                    [0.33, 7.06],
+                                                                    [0.2, 8.5],
+                                                                    [0.33, 9.94],
+                                                                    [0.7, 11.34],
+                                                                    [1.31, 12.65],
+                                                                    [2.14, 13.84],
+                                                                    [3.16, 14.86],
+                                                                    [4.35, 15.69],
+                                                                    [5.66, 16.3],
+                                                                    [7.06, 16.67],
+                                                                    [8.5, 16.8],
+                                                                    [9.94, 16.67],
+                                                                    [11.34, 16.3],
+                                                                    [12.65, 15.69],
+                                                                    [13.84, 14.86],
+                                                                    [14.86, 13.84],
+                                                                    [15.69, 12.65],
+                                                                    [16.3, 11.34],
+                                                                    [16.67, 9.94],
+                                                                    [16.8, 8.5],
+                                                                    [16.67, 7.06],
+                                                                    [16.3, 5.66],
+                                                                    [15.69, 4.35],
+                                                                    [14.86, 3.16],
+                                                                    [13.84, 2.14],
+                                                                    [12.65, 1.31],
+                                                                    [11.34, 0.7],
+                                                                    [9.94, 0.33],
+                                                                    [8.5, 0.2]
+                                                                ]
+                                                            ]
+                                                        },
+                                                        symbol: {
+                                                            type: "CIMPointSymbol",
+                                                            symbolLayers: [
+                                                                {
+                                                                    type: "CIMHatchFill",
+                                                                    enable: true,
+                                                                    lineSymbol: {
+                                                                        type: "CIMLineSymbol",
+                                                                        symbolLayers: [
+                                                                            {
+                                                                                type: "CIMSolidStroke",
+                                                                                effects: [
+                                                                                    {
+                                                                                        type: "CIMGeometricEffectDashes",
+                                                                                        dashTemplate: [2, 2],
+                                                                                        lineDashEnding: "FullPattern"
+                                                                                    }
+                                                                                ],
+                                                                                enable: true,
+                                                                                width: 1,
+                                                                                color: [230, 0, 0, 255]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    rotation: 45,
+                                                                    separation: 4 // distance between lines in hatch fill
+                                                                },
+                                                                {
+                                                                    type: "CIMSolidFill",
+                                                                    enable: true,
+                                                                    color: [0, 0, 230, 255]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                scaleSymbolsProportionally: true,
+                                                respectFrame: true,
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Republican 2012, Other 2016",
+                            label: "Republican 2012, Other 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPointSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMVectorMarker",
+                                                enable: true,
+                                                anchorPoint: { x: 0, y: 0 },
+                                                offsetX: 0,
+                                                offsetY: 0,
+                                                anchorPointUnits: "Relative",
+                                                size: 30,
+                                                frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                                markerGraphics: [
+                                                    {
+                                                        type: "CIMMarkerGraphic",
+                                                        geometry: {
+                                                            rings: [
+                                                                [
+                                                                    [8.5, 0.2],
+                                                                    [7.06, 0.33],
+                                                                    [5.66, 0.7],
+                                                                    [4.35, 1.31],
+                                                                    [3.16, 2.14],
+                                                                    [2.14, 3.16],
+                                                                    [1.31, 4.35],
+                                                                    [0.7, 5.66],
+                                                                    [0.33, 7.06],
+                                                                    [0.2, 8.5],
+                                                                    [0.33, 9.94],
+                                                                    [0.7, 11.34],
+                                                                    [1.31, 12.65],
+                                                                    [2.14, 13.84],
+                                                                    [3.16, 14.86],
+                                                                    [4.35, 15.69],
+                                                                    [5.66, 16.3],
+                                                                    [7.06, 16.67],
+                                                                    [8.5, 16.8],
+                                                                    [9.94, 16.67],
+                                                                    [11.34, 16.3],
+                                                                    [12.65, 15.69],
+                                                                    [13.84, 14.86],
+                                                                    [14.86, 13.84],
+                                                                    [15.69, 12.65],
+                                                                    [16.3, 11.34],
+                                                                    [16.67, 9.94],
+                                                                    [16.8, 8.5],
+                                                                    [16.67, 7.06],
+                                                                    [16.3, 5.66],
+                                                                    [15.69, 4.35],
+                                                                    [14.86, 3.16],
+                                                                    [13.84, 2.14],
+                                                                    [12.65, 1.31],
+                                                                    [11.34, 0.7],
+                                                                    [9.94, 0.33],
+                                                                    [8.5, 0.2]
+                                                                ]
+                                                            ]
+                                                        },
+                                                        symbol: {
+                                                            type: "CIMPointSymbol",
+                                                            symbolLayers: [
+                                                                {
+                                                                    type: "CIMHatchFill",
+                                                                    enable: true,
+                                                                    lineSymbol: {
+                                                                        type: "CIMLineSymbol",
+                                                                        symbolLayers: [
+                                                                            {
+                                                                                type: "CIMSolidStroke",
+                                                                                effects: [
+                                                                                    {
+                                                                                        type: "CIMGeometricEffectDashes",
+                                                                                        dashTemplate: [2, 2],
+                                                                                        lineDashEnding: "FullPattern"
+                                                                                    }
+                                                                                ],
+                                                                                enable: true,
+                                                                                width: 1,
+                                                                                color: [230, 0, 0, 255]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    rotation: 45,
+                                                                    separation: 4 // distance between lines in hatch fill
+                                                                },
+                                                                {
+                                                                    type: "CIMSolidFill",
+                                                                    enable: true,
+                                                                    color: [21, 209, 21, 255]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                scaleSymbolsProportionally: true,
+                                                respectFrame: true,
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Other 2012, Republican 2016",
+                            label: "Other 2012, Republican 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPointSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMVectorMarker",
+                                                enable: true,
+                                                anchorPoint: { x: 0, y: 0 },
+                                                offsetX: 0,
+                                                offsetY: 0,
+                                                anchorPointUnits: "Relative",
+                                                size: 30,
+                                                frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                                markerGraphics: [
+                                                    {
+                                                        type: "CIMMarkerGraphic",
+                                                        geometry: {
+                                                            rings: [
+                                                                [
+                                                                    [8.5, 0.2],
+                                                                    [7.06, 0.33],
+                                                                    [5.66, 0.7],
+                                                                    [4.35, 1.31],
+                                                                    [3.16, 2.14],
+                                                                    [2.14, 3.16],
+                                                                    [1.31, 4.35],
+                                                                    [0.7, 5.66],
+                                                                    [0.33, 7.06],
+                                                                    [0.2, 8.5],
+                                                                    [0.33, 9.94],
+                                                                    [0.7, 11.34],
+                                                                    [1.31, 12.65],
+                                                                    [2.14, 13.84],
+                                                                    [3.16, 14.86],
+                                                                    [4.35, 15.69],
+                                                                    [5.66, 16.3],
+                                                                    [7.06, 16.67],
+                                                                    [8.5, 16.8],
+                                                                    [9.94, 16.67],
+                                                                    [11.34, 16.3],
+                                                                    [12.65, 15.69],
+                                                                    [13.84, 14.86],
+                                                                    [14.86, 13.84],
+                                                                    [15.69, 12.65],
+                                                                    [16.3, 11.34],
+                                                                    [16.67, 9.94],
+                                                                    [16.8, 8.5],
+                                                                    [16.67, 7.06],
+                                                                    [16.3, 5.66],
+                                                                    [15.69, 4.35],
+                                                                    [14.86, 3.16],
+                                                                    [13.84, 2.14],
+                                                                    [12.65, 1.31],
+                                                                    [11.34, 0.7],
+                                                                    [9.94, 0.33],
+                                                                    [8.5, 0.2]
+                                                                ]
+                                                            ]
+                                                        },
+                                                        symbol: {
+                                                            type: "CIMPointSymbol",
+                                                            symbolLayers: [
+                                                                {
+                                                                    type: "CIMHatchFill",
+                                                                    enable: true,
+                                                                    lineSymbol: {
+                                                                        type: "CIMLineSymbol",
+                                                                        symbolLayers: [
+                                                                            {
+                                                                                type: "CIMSolidStroke",
+                                                                                effects: [
+                                                                                    {
+                                                                                        type: "CIMGeometricEffectDashes",
+                                                                                        dashTemplate: [2, 2],
+                                                                                        lineDashEnding: "FullPattern"
+                                                                                    }
+                                                                                ],
+                                                                                enable: true,
+                                                                                width: 1,
+                                                                                color: [21, 209, 21, 255]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    rotation: 45,
+                                                                    separation: 4 // distance between lines in hatch fill
+                                                                },
+                                                                {
+                                                                    type: "CIMSolidFill",
+                                                                    enable: true,
+                                                                    color: [230, 0, 0, 255]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                scaleSymbolsProportionally: true,
+                                                respectFrame: true,
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Other 2012, Democrat 2016",
+                            label: "Other 2012, Democrat 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPointSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMVectorMarker",
+                                                enable: true,
+                                                anchorPoint: { x: 0, y: 0 },
+                                                offsetX: 0,
+                                                offsetY: 0,
+                                                anchorPointUnits: "Relative",
+                                                size: 30,
+                                                frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                                markerGraphics: [
+                                                    {
+                                                        type: "CIMMarkerGraphic",
+                                                        geometry: {
+                                                            rings: [
+                                                                [
+                                                                    [8.5, 0.2],
+                                                                    [7.06, 0.33],
+                                                                    [5.66, 0.7],
+                                                                    [4.35, 1.31],
+                                                                    [3.16, 2.14],
+                                                                    [2.14, 3.16],
+                                                                    [1.31, 4.35],
+                                                                    [0.7, 5.66],
+                                                                    [0.33, 7.06],
+                                                                    [0.2, 8.5],
+                                                                    [0.33, 9.94],
+                                                                    [0.7, 11.34],
+                                                                    [1.31, 12.65],
+                                                                    [2.14, 13.84],
+                                                                    [3.16, 14.86],
+                                                                    [4.35, 15.69],
+                                                                    [5.66, 16.3],
+                                                                    [7.06, 16.67],
+                                                                    [8.5, 16.8],
+                                                                    [9.94, 16.67],
+                                                                    [11.34, 16.3],
+                                                                    [12.65, 15.69],
+                                                                    [13.84, 14.86],
+                                                                    [14.86, 13.84],
+                                                                    [15.69, 12.65],
+                                                                    [16.3, 11.34],
+                                                                    [16.67, 9.94],
+                                                                    [16.8, 8.5],
+                                                                    [16.67, 7.06],
+                                                                    [16.3, 5.66],
+                                                                    [15.69, 4.35],
+                                                                    [14.86, 3.16],
+                                                                    [13.84, 2.14],
+                                                                    [12.65, 1.31],
+                                                                    [11.34, 0.7],
+                                                                    [9.94, 0.33],
+                                                                    [8.5, 0.2]
+                                                                ]
+                                                            ]
+                                                        },
+                                                        symbol: {
+                                                            type: "CIMPointSymbol",
+                                                            symbolLayers: [
+                                                                {
+                                                                    type: "CIMHatchFill",
+                                                                    enable: true,
+                                                                    lineSymbol: {
+                                                                        type: "CIMLineSymbol",
+                                                                        symbolLayers: [
+                                                                            {
+                                                                                type: "CIMSolidStroke",
+                                                                                effects: [
+                                                                                    {
+                                                                                        type: "CIMGeometricEffectDashes",
+                                                                                        dashTemplate: [2, 2],
+                                                                                        lineDashEnding: "FullPattern"
+                                                                                    }
+                                                                                ],
+                                                                                enable: true,
+                                                                                width: 1,
+                                                                                color: [21, 209, 21, 255]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    rotation: 45,
+                                                                    separation: 4 // distance between lines in hatch fill
+                                                                },
+                                                                {
+                                                                    type: "CIMSolidFill",
+                                                                    enable: true,
+                                                                    color: [0, 0, 230, 255]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                scaleSymbolsProportionally: true,
+                                                respectFrame: true,
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }],
+                    visualVariables: [
+                        new SizeVariable({
+                            valueExpression: "\n            var dem16 = $feature.PRS_DEM_16;\n            var rep16 = $feature.PRS_REP_16;\n            var oth16 = $feature.PRS_OTH_16;\n            var all = [dem16, rep16, oth16];\n            return Sum(all);\n          ",
+                            valueExpressionTitle: "Voter turnout",
+                            minDataValue: 100,
+                            minSize: 2,
+                            maxDataValue: 1000000,
+                            maxSize: 30
+                        }),
+                        new OpacityVariable({
+                            valueExpression: "\n            var dem16 = $feature.PRS_DEM_16;\n            var rep16 = $feature.PRS_REP_16;\n            var oth16 = $feature.PRS_OTH_16;\n            var all = [dem16, rep16, oth16];\n            return (Max(all) / Sum(all)) * 100;\n          ",
+                            stops: [
+                                { value: 90, opacity: 0.95 },
+                                { value: 10, opacity: 0.05 }
+                            ]
+                        })
+                    ]
+                }),
+            });
+            polygonLayer = new FeatureLayer({
+                portalItem: {
+                    id: "91910117e36f49ee9a88b84fa5053c67"
+                },
+                opacity: 1,
+                renderer: new rasterRenderers_1.UniqueValueRenderer({
+                    valueExpression: "\n        var dem12 = $feature.PRS_DEM_12;\n        var rep12 = $feature.PRS_REP_12;\n        var oth12 = $feature.PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.PRS_DEM_16;\n        var rep16 = $feature.PRS_REP_16;\n        var oth16 = $feature.PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        console(Concatenate([winner12, winner16], \", \"))\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
+                    valueExpressionTitle: "Outright winner",
+                    defaultSymbol: new symbols_1.SimpleFillSymbol({
+                        color: "rgba(128,128,128)",
+                        style: "solid"
+                    }),
+                    uniqueValueInfos: [{
+                            value: "Republican 2012, Republican 2016",
+                            label: "Republican 2012-2016",
+                            symbol: new symbols_1.SimpleFillSymbol({
+                                color: "rgba(230, 0, 0, 1)",
+                                outline: null
+                            })
+                        }, {
+                            value: "Democrat 2012, Democrat 2016",
+                            label: "Democrat 2012-2016",
+                            symbol: new symbols_1.SimpleFillSymbol({
+                                color: "rgba(0, 0, 230, 1)",
+                                outline: null
+                            })
+                        }, {
+                            value: "Other 2012, Other 2016",
+                            label: "Other 2012-2016",
+                            symbol: new symbols_1.SimpleFillSymbol({
+                                color: "rgba(21, 209, 21, 1)",
+                                outline: null
+                            })
+                        }, {
+                            value: "Democrat 2012, Republican 2016",
+                            label: "Democrat 2012, Republican 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPolygonSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMHatchFill",
+                                                enable: true,
+                                                lineSymbol: {
+                                                    type: "CIMLineSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidStroke",
+                                                            effects: [
+                                                                {
+                                                                    type: "CIMGeometricEffectDashes",
+                                                                    dashTemplate: [2, 2],
+                                                                    lineDashEnding: "FullPattern"
+                                                                }
+                                                            ],
+                                                            enable: true,
+                                                            width: 1,
+                                                            color: [0, 0, 230, 255]
+                                                        }
+                                                    ]
+                                                },
+                                                rotation: 45,
+                                                separation: 4 // distance between lines in hatch fill
+                                            },
+                                            {
+                                                type: "CIMSolidFill",
+                                                enable: true,
+                                                color: [230, 0, 0, 255]
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Democrat 2012, Other 2016",
+                            label: "Democrat 2012, Other 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPolygonSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMHatchFill",
+                                                enable: true,
+                                                lineSymbol: {
+                                                    type: "CIMLineSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidStroke",
+                                                            effects: [
+                                                                {
+                                                                    type: "CIMGeometricEffectDashes",
+                                                                    dashTemplate: [2, 2],
+                                                                    lineDashEnding: "FullPattern"
+                                                                }
+                                                            ],
+                                                            enable: true,
+                                                            width: 1,
+                                                            color: [0, 0, 230, 255]
+                                                        }
+                                                    ]
+                                                },
+                                                rotation: 45,
+                                                separation: 4 // distance between lines in hatch fill
+                                            },
+                                            {
+                                                type: "CIMSolidFill",
+                                                enable: true,
+                                                color: [21, 209, 21, 255]
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Republican 2012, Democrat 2016",
+                            label: "Republican 2012, Democrat 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPolygonSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMHatchFill",
+                                                enable: true,
+                                                lineSymbol: {
+                                                    type: "CIMLineSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidStroke",
+                                                            effects: [
+                                                                {
+                                                                    type: "CIMGeometricEffectDashes",
+                                                                    dashTemplate: [2, 2],
+                                                                    lineDashEnding: "FullPattern"
+                                                                }
+                                                            ],
+                                                            enable: true,
+                                                            width: 1,
+                                                            color: [230, 0, 0, 255]
+                                                        }
+                                                    ]
+                                                },
+                                                rotation: 45,
+                                                separation: 4 // distance between lines in hatch fill
+                                            },
+                                            {
+                                                type: "CIMSolidFill",
+                                                enable: true,
+                                                color: [0, 0, 230, 255]
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Republican 2012, Other 2016",
+                            label: "Republican 2012, Other 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPolygonSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMHatchFill",
+                                                enable: true,
+                                                lineSymbol: {
+                                                    type: "CIMLineSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidStroke",
+                                                            effects: [
+                                                                {
+                                                                    type: "CIMGeometricEffectDashes",
+                                                                    dashTemplate: [2, 2],
+                                                                    lineDashEnding: "FullPattern"
+                                                                }
+                                                            ],
+                                                            enable: true,
+                                                            width: 1,
+                                                            color: [230, 0, 0, 255]
+                                                        }
+                                                    ]
+                                                },
+                                                rotation: 45,
+                                                separation: 4 // distance between lines in hatch fill
+                                            },
+                                            {
+                                                type: "CIMSolidFill",
+                                                enable: true,
+                                                color: [21, 209, 21, 255]
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Other 2012, Republican 2016",
+                            label: "Other 2012, Republican 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPolygonSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMHatchFill",
+                                                enable: true,
+                                                lineSymbol: {
+                                                    type: "CIMLineSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidStroke",
+                                                            effects: [
+                                                                {
+                                                                    type: "CIMGeometricEffectDashes",
+                                                                    dashTemplate: [2, 2],
+                                                                    lineDashEnding: "FullPattern"
+                                                                }
+                                                            ],
+                                                            enable: true,
+                                                            width: 1,
+                                                            color: [21, 209, 21, 255]
+                                                        }
+                                                    ]
+                                                },
+                                                rotation: 45,
+                                                separation: 4 // distance between lines in hatch fill
+                                            },
+                                            {
+                                                type: "CIMSolidFill",
+                                                enable: true,
+                                                color: [230, 0, 0, 255]
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }, {
+                            value: "Other 2012, Democrat 2016",
+                            label: "Other 2012, Democrat 2016",
+                            symbol: new symbols_1.CIMSymbol({
+                                data: {
+                                    type: "CIMSymbolReference",
+                                    symbol: {
+                                        type: "CIMPolygonSymbol",
+                                        symbolLayers: [
+                                            {
+                                                type: "CIMHatchFill",
+                                                enable: true,
+                                                lineSymbol: {
+                                                    type: "CIMLineSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidStroke",
+                                                            effects: [
+                                                                {
+                                                                    type: "CIMGeometricEffectDashes",
+                                                                    dashTemplate: [2, 2],
+                                                                    lineDashEnding: "FullPattern"
+                                                                }
+                                                            ],
+                                                            enable: true,
+                                                            width: 1,
+                                                            color: [21, 209, 21, 255]
+                                                        }
+                                                    ]
+                                                },
+                                                rotation: 45,
+                                                separation: 4 // distance between lines in hatch fill
+                                            },
+                                            {
+                                                type: "CIMSolidFill",
+                                                enable: true,
+                                                color: [0, 0, 230, 255]
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                        }],
+                    visualVariables: [
+                        new SizeVariable({
+                            valueExpression: "\n            var dem16 = $feature.PRS_DEM_16;\n            var rep16 = $feature.PRS_REP_16;\n            var oth16 = $feature.PRS_OTH_16;\n            var all = [dem16, rep16, oth16];\n            return Sum(all);\n          ",
+                            valueExpressionTitle: "Voter turnout",
+                            minDataValue: 100,
+                            minSize: 2,
+                            maxDataValue: 1000000,
+                            maxSize: 30
+                        }),
+                        new OpacityVariable({
+                            valueExpression: "\n            var dem16 = $feature.PRS_DEM_16;\n            var rep16 = $feature.PRS_REP_16;\n            var oth16 = $feature.PRS_OTH_16;\n            var all = [dem16, rep16, oth16];\n            return (Max(all) / Sum(all)) * 100;\n          ",
+                            stops: [
+                                { value: 90, opacity: 0.95 },
+                                { value: 33, opacity: 0.05 }
+                            ]
+                        })
+                    ]
+                }),
+            });
+            pointLayer = new FeatureLayer({
                 portalItem: {
                     id: "ba48def248cb45bebb234aa346c97676"
                 },
@@ -504,7 +1511,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                     valueExpressionInfo: {
                                         type: "CIMExpressionInfo",
                                         title: "Increase in Democrat votes",
-                                        expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change > 0, change, 0);\n                  var boundedDataValue = when(\n                    value > " + maxDataValue + ", " + maxDataValue + ",\n                    value > 0 && value <= 100, 4,\n                    value\n                  );\n                  return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) * (" + maxScale + " / $view.scale);\n                ",
+                                        expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  var boundedDataValue = When(\n                    percentStateVotes >= 10, 10,\n                    percentStateVotes > 0.5 && percentStateVotes < 10, percentStateVotes,\n                    0\n                  );\n                  return percentStateVotes * 5;\n                  // return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) //* (" + maxScale + " / $view.scale);\n                ",
                                         returnType: "Default"
                                     }
                                 },
@@ -515,7 +1522,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                     valueExpressionInfo: {
                                         type: "CIMExpressionInfo",
                                         title: "Decrease in Democrat votes",
-                                        expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var boundedDataValue = when(\n                    value > " + maxDataValue + ", " + maxDataValue + ",\n                    value > 0 && value <= 100, 100,\n                    value\n                  );\n                  return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) * (" + maxScale + " / $view.scale);\n                ",
+                                        expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  var boundedDataValue = When(\n                    percentStateVotes >= 10, 10,\n                    percentStateVotes > 0.5 && percentStateVotes < 10, percentStateVotes,\n                    0\n                  );\n                  return percentStateVotes * 5;\n                  // return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) //* (" + maxScale + " / $view.scale);\n                ",
                                         returnType: "Default"
                                     }
                                 },
@@ -526,7 +1533,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                     valueExpressionInfo: {
                                         type: "CIMExpressionInfo",
                                         title: "Increase in Republican votes",
-                                        expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  var boundedDataValue = when(\n                    value > " + maxDataValue + ", " + maxDataValue + ",\n                    value > 0 && value <= 100, 4,\n                    value\n                  );\n                  return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) * (" + maxScale + " / $view.scale);\n                ",
+                                        expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  var boundedDataValue = When(\n                    percentStateVotes >= 10, 10,\n                    percentStateVotes > 0.5 && percentStateVotes < 10, percentStateVotes,\n                    0\n                  );\n                  return percentStateVotes * 5;\n                  // return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) //* (" + maxScale + " / $view.scale);\n                ",
                                         returnType: "Default"
                                     }
                                 },
@@ -537,7 +1544,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                     valueExpressionInfo: {
                                         type: "CIMExpressionInfo",
                                         title: "Decrease in Republican votes",
-                                        expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var boundedDataValue = when(\n                    value > " + maxDataValue + ", " + maxDataValue + ",\n                    value > 0 && value <= 100, 4,\n                    value\n                  );\n                  return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) * (" + maxScale + " / $view.scale);\n                ",
+                                        expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  var boundedDataValue = When(\n                    percentStateVotes >= 10, 10,\n                    percentStateVotes > 0.5 && percentStateVotes < 10, percentStateVotes,\n                    0\n                  );\n                  return percentStateVotes * 5;\n                  // return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) //* (" + maxScale + " / $view.scale);\n                ",
                                         returnType: "Default"
                                     }
                                 },
@@ -548,7 +1555,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                     valueExpressionInfo: {
                                         type: "CIMExpressionInfo",
                                         title: "Increase in Other votes",
-                                        expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  var boundedDataValue = when(\n                    value > " + maxDataValue + ", " + maxDataValue + ",\n                    value > 0 && value <= 100, 4,\n                    value\n                  );\n                  return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) * (" + maxScale + " / $view.scale);\n                ",
+                                        expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  var boundedDataValue = When(\n                    percentStateVotes >= 10, 10,\n                    percentStateVotes > 0.5 && percentStateVotes < 10, percentStateVotes,\n                    0\n                  );\n                  return percentStateVotes * 5;\n                  // return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) //* (" + maxScale + " / $view.scale);\n                ",
                                         returnType: "Default"
                                     }
                                 },
@@ -559,7 +1566,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                     valueExpressionInfo: {
                                         type: "CIMExpressionInfo",
                                         title: "Decrease in Other votes",
-                                        expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var boundedDataValue = when(\n                    value > " + maxDataValue + ", " + maxDataValue + ",\n                    value > 0 && value <= 100, 4,\n                    value\n                  );\n                  return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) * (" + maxScale + " / $view.scale);\n                ",
+                                        expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  var boundedDataValue = When(\n                    percentStateVotes >= 10, 10,\n                    percentStateVotes > 0.5 && percentStateVotes < 10, percentStateVotes,\n                    0\n                  );\n                  return percentStateVotes * 5;\n                  // return boundedDataValue * (" + maxSize + " / " + maxDataValue + " ) //* (" + maxScale + " / $view.scale);\n                ",
                                         returnType: "Default"
                                     }
                                 }
@@ -572,6 +1579,30 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     content: [
                         new FieldsContent({
                             fieldInfos: [
+                                new FieldInfo({
+                                    fieldName: "PRS_DEM_12",
+                                    label: "2012 Democrat votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_REP_12",
+                                    label: "2012 Republican votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_OTH_12",
+                                    label: "2012 Other votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
                                 new FieldInfo({
                                     fieldName: "PRS_DEM_16",
                                     label: "2016 Democrat votes",
@@ -626,37 +1657,8 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         })
                     ]
                 })
-                // popupTemplate: {
-                //   content: [
-                //     {
-                //       type: "fields",
-                //       fieldInfos: [{
-                //         fieldName: "B03002_006E",
-                //         label: "Asian",
-                //         format: {
-                //           places: 0,
-                //           digitSeparator: true
-                //         }
-                //       }, {
-                //         fieldName: "B03002_012E",
-                //         label: "Hispanic",
-                //         format: {
-                //           places: 0,
-                //           digitSeparator: true
-                //         }
-                //       }, {
-                //         fieldName: "B03002_004E",
-                //         label: "Black",
-                //         format: {
-                //           places: 0,
-                //           digitSeparator: true
-                //         }
-                //       }]
-                //     }
-                //   ]
-                // }
             });
-            view.map.add(layer);
+            view.map.add(pointLayer);
             return [2 /*return*/];
         });
     }); })();

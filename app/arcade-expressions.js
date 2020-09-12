@@ -1,0 +1,3 @@
+var TOTAL_STATE_VOTES_12 = "\n  var state = $feature[\"STATE_NAME\"];\n  var fields = [\"PRS_DEM_12\", \"PRS_OTH_12\", \"PRS_REP_12\", \"STATE_NAME\"]\n  var countiesInState = Filter(FeatureSetById($datastore, \"0\", fields, false), \"STATE_NAME = @state\");\n  Sum(countiesInState, \"PRS_DEM_12 + PRS_OTH_12 + PRS_REP_12\");\n";
+var TOTAL_STATE_VOTES_16 = "\n  var state = $feature[\"STATE_NAME\"];\n  var fields = [\"PRS_DEM_16\", \"PRS_OTH_16\", \"PRS_REP_16\", \"STATE_NAME\"]\n  var countiesInState = Filter(FeatureSetById($datastore, \"0\", fields, false), \"STATE_NAME = @state\");\n  Sum(countiesInState, \"PRS_DEM_16 + PRS_OTH_16 + PRS_REP_16\");\n";
+//# sourceMappingURL=arcade-expressions.js.map
