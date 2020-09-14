@@ -1134,10 +1134,10 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
 
   const sizeExpressionBase = `
     var sizeFactor = When(
-      percentStateVotes >= 10, 50,
-      percentStateVotes >= 5, 30 + (4 * (percentStateVotes - 5)),
+      percentStateVotes >= 10, 40,
+      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),
       percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),
-      percentStateVotes > 0.5, 10 + (20 * (percentStateVotes - 0.5)),
+      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
       percentStateVotes > 0, percentStateVotes * 20,
       0
     );
@@ -1146,7 +1146,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
 
     var scaleFactor = When(
       scaleFactorBase >= 1, 1,  // 1
-      scaleFactorBase >= 0.5, scaleFactorBase * 1.2,  // 0.6
+      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
       scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45
       scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125
       scaleFactorBase * 3  // 0.1875
@@ -1156,10 +1156,10 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
 
   const offsetExpressionBase = `
     var sizeFactor = When(
-      percentStateVotes >= 10, 50,
-      percentStateVotes >= 5, 30 + (4 * (percentStateVotes - 5)),
+      percentStateVotes >= 10, 40,
+      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),
       percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),
-      percentStateVotes > 0.5, 10 + (20 * (percentStateVotes - 0.5)),
+      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
       percentStateVotes > 0, percentStateVotes * 20,
       0
     );
@@ -1168,7 +1168,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
 
     var scaleFactor = When(
       scaleFactorBase >= 1, 1,  // 1
-      scaleFactorBase >= 0.5, scaleFactorBase * 1.2,  // 0.6
+      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
       scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45
       scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125
       scaleFactorBase * 3  // 0.1875
