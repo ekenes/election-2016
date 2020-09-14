@@ -38,7 +38,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var map, maxSize, minDataValue, maxDataValue, maxScale, referenceScale, view, turnoutLayer, polygonLayer, sizeExpressionBase, pointLayer;
+        var map, maxSize, minDataValue, maxDataValue, maxScale, referenceScale, view, turnoutLayer, polygonLayer, sizeExpressionBase, offsetExpressionBase, pointLayer;
         return __generator(this, function (_a) {
             map = new EsriMap({
                 basemap: {
@@ -59,7 +59,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 scale: referenceScale,
                 constraints: {
                     minScale: 0,
-                    maxScale: maxScale / 2
+                    maxScale: maxScale / 16
                 },
                 highlightOptions: {
                     fillOpacity: 0
@@ -1071,11 +1071,13 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     ]
                 }),
             });
-            sizeExpressionBase = "\n    function getSizeFactor(sizeRange, dataRange){\n      var minSize = sizeRange[0];\n      var maxSize = sizeRange[1];\n      var minDataValue = dataRange[0];\n      var maxDataValue = dataRange[1];\n\n      return (maxSize - minSize) / (maxDataValue - minDataValue);\n    }\n\n    var sizeFactor = When(\n      percentStateVotes >= 10, 50,\n      percentStateVotes >= 5, 30 + (4 * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + (20 * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, percentStateVotes * 20,\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1.2,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
+            sizeExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 10, 50,\n      percentStateVotes >= 5, 30 + (4 * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + (20 * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, percentStateVotes * 20,\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1.2,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
+            offsetExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 10, 50,\n      percentStateVotes >= 5, 30 + (4 * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + (20 * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, percentStateVotes * 20,\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1.2,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
             pointLayer = new FeatureLayer({
                 portalItem: {
                     id: "ba48def248cb45bebb234aa346c97676"
                 },
+                labelsVisible: false,
                 renderer: new renderers_1.SimpleRenderer({
                     symbol: new symbols_1.CIMSymbol({
                         data: {
@@ -1151,7 +1153,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             }
                                         ],
                                         scaleSymbolsProportionally: true,
-                                        respectFrame: true,
+                                        respectFrame: true
                                     },
                                     {
                                         type: "CIMVectorMarker",
@@ -1569,6 +1571,73 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         type: "CIMExpressionInfo",
                                         title: "Decrease in Other votes",
                                         expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                " + sizeExpressionBase,
+                                        returnType: "Default"
+                                    }
+                                },
+                                // offset overrides
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "democrat-positive-votes",
+                                    propertyName: "OffsetX",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Democrat votes",
+                                        expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetExpressionBase + "\n                  return offset * -1;\n                ",
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "democrat-negative-votes",
+                                    propertyName: "OffsetX",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Decrease in Democrat votes",
+                                        expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetExpressionBase + "\n                  return offset * -1;\n                ",
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "republican-positive-votes",
+                                    propertyName: "OffsetY",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Republican votes",
+                                        expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetExpressionBase + "\n                  return offset;\n                ",
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "republican-negative-votes",
+                                    propertyName: "OffsetY",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Decrease in Republican votes",
+                                        expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetExpressionBase + "\n                  return offset;\n                ",
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "other-positive-votes",
+                                    propertyName: "OffsetX",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Other votes",
+                                        expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetExpressionBase + "\n                  return offset;\n                ",
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "other-negative-votes",
+                                    propertyName: "OffsetX",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Decrease in Other votes",
+                                        expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetExpressionBase + "\n                  return offset;\n                ",
                                         returnType: "Default"
                                     }
                                 }

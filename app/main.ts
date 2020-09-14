@@ -38,7 +38,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     scale: referenceScale,
     constraints: {
       minScale: 0,
-      maxScale: maxScale/2
+      maxScale: maxScale/16
     },
     highlightOptions: {
       fillOpacity: 0
@@ -1133,15 +1133,6 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
   });
 
   const sizeExpressionBase = `
-    function getSizeFactor(sizeRange, dataRange){
-      var minSize = sizeRange[0];
-      var maxSize = sizeRange[1];
-      var minDataValue = dataRange[0];
-      var maxDataValue = dataRange[1];
-
-      return (maxSize - minSize) / (maxDataValue - minDataValue);
-    }
-
     var sizeFactor = When(
       percentStateVotes >= 10, 50,
       percentStateVotes >= 5, 30 + (4 * (percentStateVotes - 5)),
@@ -1163,10 +1154,34 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     return sizeFactor * scaleFactor;
   `;
 
+  const offsetExpressionBase = `
+    var sizeFactor = When(
+      percentStateVotes >= 10, 50,
+      percentStateVotes >= 5, 30 + (4 * (percentStateVotes - 5)),
+      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),
+      percentStateVotes > 0.5, 10 + (20 * (percentStateVotes - 0.5)),
+      percentStateVotes > 0, percentStateVotes * 20,
+      0
+    );
+
+    var scaleFactorBase = ( ${referenceScale} / $view.scale );
+
+    var scaleFactor = When(
+      scaleFactorBase >= 1, 1,  // 1
+      scaleFactorBase >= 0.5, scaleFactorBase * 1.2,  // 0.6
+      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45
+      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125
+      scaleFactorBase * 3  // 0.1875
+    );
+    var diameter = sizeFactor * scaleFactor;
+    var offset = diameter / 2;
+  `;
+
   const pointLayer = new FeatureLayer({
     portalItem: {
       id: "ba48def248cb45bebb234aa346c97676"
     },
+    labelsVisible: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
         data: {
@@ -1242,7 +1257,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                   }
                 ],
                 scaleSymbolsProportionally: true,
-                respectFrame: true,
+                respectFrame: true
               },
               {
                 type: "CIMVectorMarker",
@@ -1702,6 +1717,123 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                   var value = IIF( change < 0, Abs(change), 0);
                   var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
                 ` + sizeExpressionBase,
+                returnType: "Default"
+              }
+            },
+
+             // offset overrides
+
+            {
+              type: "CIMPrimitiveOverride",
+              primitiveName: "democrat-positive-votes",
+              propertyName: "OffsetX",
+              valueExpressionInfo: {
+                type: "CIMExpressionInfo",
+                title: "Increase in Democrat votes",
+                expression: `
+                  var dem16 = $feature.PRS_DEM_16;
+                  var dem12 = $feature.PRS_DEM_12;
+                  var change = dem16 - dem12;
+                  var value = IIF( change > 0, change, 0);
+                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  ${offsetExpressionBase}
+                  return offset * -1;
+                `,
+                returnType: "Default"
+              }
+            },
+            {
+              type: "CIMPrimitiveOverride",
+              primitiveName: "democrat-negative-votes",
+              propertyName: "OffsetX",
+              valueExpressionInfo: {
+                type: "CIMExpressionInfo",
+                title: "Decrease in Democrat votes",
+                expression: `
+                  var dem16 = $feature.PRS_DEM_16;
+                  var dem12 = $feature.PRS_DEM_12;
+                  var change = dem16 - dem12;
+                  var value = IIF( change < 0, Abs(change), 0);
+                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  ${offsetExpressionBase}
+                  return offset * -1;
+                `,
+                returnType: "Default"
+              }
+            },
+            {
+              type: "CIMPrimitiveOverride",
+              primitiveName: "republican-positive-votes",
+              propertyName: "OffsetY",
+              valueExpressionInfo: {
+                type: "CIMExpressionInfo",
+                title: "Increase in Republican votes",
+                expression: `
+                  var rep16 = $feature.PRS_REP_16;
+                  var rep12 = $feature.PRS_REP_12;
+                  var change = rep16 - rep12;
+                  var value = IIF( change > 0, change, 0);
+                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  ${offsetExpressionBase}
+                  return offset;
+                `,
+                returnType: "Default"
+              }
+            },
+            {
+              type: "CIMPrimitiveOverride",
+              primitiveName: "republican-negative-votes",
+              propertyName: "OffsetY",
+              valueExpressionInfo: {
+                type: "CIMExpressionInfo",
+                title: "Decrease in Republican votes",
+                expression: `
+                  var rep16 = $feature.PRS_REP_16;
+                  var rep12 = $feature.PRS_REP_12;
+                  var change = rep16 - rep12;
+                  var value = IIF( change < 0, Abs(change), 0);
+                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  ${offsetExpressionBase}
+                  return offset;
+                `,
+                returnType: "Default"
+              }
+            },
+            {
+              type: "CIMPrimitiveOverride",
+              primitiveName: "other-positive-votes",
+              propertyName: "OffsetX",
+              valueExpressionInfo: {
+                type: "CIMExpressionInfo",
+                title: "Increase in Other votes",
+                expression: `
+                  var oth16 = $feature.PRS_OTH_16;
+                  var oth12 = $feature.PRS_OTH_12;
+                  var change = oth16 - oth12;
+                  var value = IIF( change > 0, change, 0);
+                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  ${offsetExpressionBase}
+                  return offset;
+                `,
+                returnType: "Default"
+              }
+            },
+            {
+              type: "CIMPrimitiveOverride",
+              primitiveName: "other-negative-votes",
+              propertyName: "OffsetX",
+              valueExpressionInfo: {
+                type: "CIMExpressionInfo",
+                title: "Decrease in Other votes",
+                expression: `
+                  var oth16 = $feature.PRS_OTH_16;
+                  var oth12 = $feature.PRS_OTH_12;
+                  var change = oth16 - oth12;
+                  var value = IIF( change < 0, Abs(change), 0);
+                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  ${offsetExpressionBase}
+                  return offset;
+                `,
                 returnType: "Default"
               }
             }
