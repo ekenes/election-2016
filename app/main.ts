@@ -11,16 +11,19 @@ import OpacityVariable = require("esri/renderers/visualVariables/OpacityVariable
 import SizeVariable = require("esri/renderers/visualVariables/SizeVariable");
 import Swipe = require("esri/widgets/Swipe");
 import Legend = require("esri/widgets/Legend");
+import LabelClass = require("esri/layers/support/LabelClass");
+import Color = require("esri/Color");
+import Font = require("esri/symbols/Font");
 
 import { SimpleRenderer } from "esri/renderers";
-import { CIMSymbol, SimpleFillSymbol, SimpleMarkerSymbol } from "esri/symbols";
+import { CIMSymbol, SimpleFillSymbol, SimpleMarkerSymbol, TextSymbol } from "esri/symbols";
 import { UniqueValueRenderer } from "esri/rasterRenderers";
 
 ( async () => {
   const map = new EsriMap({
     basemap: {
       portalItem: {
-        id: "3582b744bba84668b52a16b0b6942544"
+        id: "fbfb62f3599f41e5a77845f863e2872f"
       }
     }
   });
@@ -58,9 +61,11 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
   const dColorCIM = [60, 108, 204, 255]; // [20, 158, 206, 255];
   const oColorCIM = [224, 206, 0, 255]; // [167, 198, 54, 255];   145, 217, 0
 
-  const rColor = "#ed5151"// "#ed5151";  dc4b00
-  const dColor = "#149ece"// "#149ece";  3c6ccc
-  const oColor = "#a7c636"// "#a7c636";  #91d900  #a87132
+  const rColor = "rgba(220, 75, 0, 1)"// "#ed5151";  dc4b00
+  const dColor = "rgba(60, 108, 204,1)"// "#149ece";  3c6ccc
+  const oColor = "rgba(224, 206, 0, 1)"// "#a7c636";  #91d900  #a87132
+  const haloColor = "#f7f7f7";
+  const haloSize = 1;
 
   const turnoutLayer = new FeatureLayer({
     portalItem: {
@@ -825,8 +830,6 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
           oth16, 'Other 2016',
         'n/a' );
 
-        console(Concatenate([winner12, winner16], ", "))
-
         return Concatenate([winner12, winner16], ", ");
       `,
       valueExpressionTitle: "Outright winner",
@@ -1227,7 +1230,6 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     portalItem: {
       id: "ba48def248cb45bebb234aa346c97676"
     },
-    labelsVisible: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
         data: {
@@ -1887,6 +1889,480 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
         }
       })
     }),
+    labelsVisible: true,
+    labelingInfo: [
+
+      // DEMOCRAT label classes
+
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_DEM_16;
+            var value12 = $feature.PRS_DEM_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -50,
+          yoffset: -25
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_DEM_16;
+            var value12 = $feature.PRS_DEM_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -40,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 5",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_DEM_16;
+            var value12 = $feature.PRS_DEM_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -40,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 1",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_DEM_16;
+            var value12 = $feature.PRS_DEM_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -30,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_DEM_16;
+            var value12 = $feature.PRS_DEM_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -20,
+          yoffset: -10
+        })
+      }),
+
+
+      // REPUBLICAN label classes
+
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_REP_16;
+            var value12 = $feature.PRS_REP_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 60,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_REP_16;
+            var value12 = $feature.PRS_REP_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 50,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 5",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_REP_16;
+            var value12 = $feature.PRS_REP_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 35,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 1",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_REP_16;
+            var value12 = $feature.PRS_REP_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 20,
+          yoffset: -10
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_REP_16;
+            var value12 = $feature.PRS_REP_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 10,
+          yoffset: -10
+        })
+      }),
+
+      // OTHER label classes
+
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_OTH_16;
+            var value12 = $feature.PRS_OTH_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oColor),
+          xoffset: 20,
+          yoffset: 60
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        labelExpressionInfo: {
+          expression: `
+          var value16 = $feature.PRS_OTH_16;
+          var value12 = $feature.PRS_OTH_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oColor),
+          xoffset: 20,
+          yoffset: 50
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 5",
+        labelExpressionInfo: {
+          expression: `
+          var value16 = $feature.PRS_OTH_16;
+          var value12 = $feature.PRS_OTH_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oColor),
+          xoffset: 20,
+          yoffset: 35
+        })
+      }),
+
+      new LabelClass({
+        minScale: 577791,
+        where: `
+          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)
+          AND
+          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) <= 3)
+        `,
+        labelExpressionInfo: {
+          expression: `
+          var value16 = $feature.PRS_OTH_16;
+          var value12 = $feature.PRS_OTH_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oColor),
+          xoffset: 20,
+          yoffset: 20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: `
+          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5)
+          AND
+          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) <= 3)
+        `,
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_OTH_16;
+            var value12 = $feature.PRS_OTH_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oColor),
+          xoffset: 10,
+          yoffset: 10
+        })
+      }),
+
+      new LabelClass({
+        minScale: 577791,
+        where: `
+          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)
+          AND
+          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) > 5)"
+        `,
+        labelExpressionInfo: {
+          expression: `
+          var value16 = $feature.PRS_OTH_16;
+          var value12 = $feature.PRS_OTH_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oColor),
+          xoffset: 20,
+          yoffset: 30
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: `
+          ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5)
+          AND
+          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) > 5)
+        `,
+        labelExpressionInfo: {
+          expression: `
+            var value16 = $feature.PRS_OTH_16;
+            var value12 = $feature.PRS_OTH_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oColor),
+          xoffset: 10,
+          yoffset: 30
+        })
+      })
+
+    ],
     popupTemplate: new PopupTemplate({
       title: "",
       content: [
@@ -3707,9 +4183,9 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
 
   const swipe = new Swipe({
     view,
-    leadingLayers: [ results2016Layer ],
-    trailingLayers: [ changeLayer ],
-    position: 10
+    leadingLayers: [ changeLayer ],
+    trailingLayers: [ results2016Layer, polygonLayer ],
+    position: 90
   });
   view.ui.add(swipe);
 
