@@ -63,7 +63,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
 
   const rColor = "rgba(220, 75, 0, 1)"// "#ed5151";  dc4b00
   const dColor = "rgba(60, 108, 204,1)"// "#149ece";  3c6ccc
-  const oColor = "rgba(224, 206, 0, 1)"// "#a7c636";  #91d900  #a87132
+  const oColor = "rgba(224, 206, 0, 1)";// "rgba(224, 206, 0, 1)"// "#a7c636";  #91d900  #a87132
   const haloColor = "#f7f7f7";
   const oHaloColor = "rgba(181, 166, 0, 1)";// = "#4b4b4b";
   const haloSize = 1;
@@ -2836,7 +2836,6 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     portalItem: {
       id: "ba48def248cb45bebb234aa346c97676"
     },
-    labelsVisible: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
         data: {
@@ -3155,6 +3154,372 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
         }
       })
     }),
+    labelsVisible: true,
+    labelingInfo: [
+
+      // DEMOCRAT label classes
+
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_DEM_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -50,
+          yoffset: -25
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_DEM_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -40,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 5",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_DEM_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -40,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 1",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_DEM_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -30,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_DEM_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(dColor),
+          xoffset: -20,
+          yoffset: -10
+        })
+      }),
+
+
+      // REPUBLICAN label classes
+
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_REP_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 60,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_REP_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 50,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 5",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_REP_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 35,
+          yoffset: -20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 1",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_REP_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 20,
+          yoffset: -10
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_REP_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(rColor),
+          xoffset: 10,
+          yoffset: -10
+        })
+      }),
+
+      // OTHER label classes
+
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_OTH_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oHaloColor),
+          xoffset: 20,
+          yoffset: 40
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: "ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_OTH_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oHaloColor),
+          xoffset: 20,
+          yoffset: 40
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: `
+          (ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 5)
+        `,
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_OTH_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oHaloColor),
+          xoffset: 20,
+          yoffset: 30
+        })
+      }),
+
+      new LabelClass({
+        minScale: 577791,
+        where: `
+          (ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 1)
+        `,
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_OTH_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oHaloColor),
+          xoffset: 20,
+          yoffset: 20
+        })
+      }),
+      new LabelClass({
+        minScale: 577791,
+        where: `
+          (ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 0.5)
+        `,
+        labelExpressionInfo: {
+          expression: `
+            Text($feature.PRS_OTH_16, '#,###');
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oHaloColor),
+          xoffset: 10,
+          yoffset: 10
+        })
+      })
+
+    ],
     popupTemplate: new PopupTemplate({
       title: "",
       content: [
