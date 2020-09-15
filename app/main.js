@@ -38,7 +38,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, rColor, dColor, oColor, turnoutLayer, polygonLayer, sizeExpressionBase, offsetExpressionBase, changeLayer, results2012Layer, results2016Layer, trailingLayer, swipe, legend;
+        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, rColor, dColor, oColor, turnoutLayer, polygonLayer, sizeExpressionBase, offsetExpressionBase, sizeTotalExpressionBase, offsetTotalExpressionBase, changeLayer, results2012Layer, results2016Layer, resultsTotal2012Layer, resultsTotal2016Layer, trailingLayer, swipe, legend;
         return __generator(this, function (_a) {
             map = new EsriMap({
                 basemap: {
@@ -1077,6 +1077,8 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
             });
             sizeExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 10, 40,\n      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),\n      // percentStateVotes > 0, (20 * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
             offsetExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 10, 40,\n      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),\n      // percentStateVotes > 0, (20 * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
+            sizeTotalExpressionBase = "\n    var sizeFactor = When(\n      votes >= 1000000, 40,\n      votes >= 100000, 30 + (((40-30) / (1000000-100000)) * (votes - 100000)),\n      votes >= 50000, 20 + (((30-20) / (100000-50000)) * (votes - 50000)),\n      votes > 10000, 10 + (((20-10) / (50000-10000)) * (votes - 10000)),\n      votes > 0, 2 + (((10-2) / (10000-0)) * votes),\n      // votes > 0, (20 * votes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
+            offsetTotalExpressionBase = "\n    var sizeFactor = When(\n      votes >= 1000000, 40,\n      votes >= 100000, 30 + (((40-30) / (1000000-100000)) * (votes - 100000)),\n      votes >= 50000, 20 + (((30-20) / (100000-50000)) * (votes - 50000)),\n      votes > 10000, 10 + (((20-10) / (50000-10000)) * (votes - 10000)),\n      votes > 0, 2 + (((10-2) / (10000-0)) * votes),\n      // votes > 0, (20 * votes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
             changeLayer = new FeatureLayer({
                 portalItem: {
                     id: "ba48def248cb45bebb234aa346c97676"
@@ -2493,16 +2495,778 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     ]
                 })
             });
+            resultsTotal2012Layer = new FeatureLayer({
+                portalItem: {
+                    id: "ba48def248cb45bebb234aa346c97676"
+                },
+                labelsVisible: false,
+                renderer: new renderers_1.SimpleRenderer({
+                    symbol: new symbols_1.CIMSymbol({
+                        data: {
+                            type: "CIMSymbolReference",
+                            symbol: {
+                                type: "CIMPointSymbol",
+                                symbolLayers: [
+                                    {
+                                        type: "CIMVectorMarker",
+                                        enable: true,
+                                        anchorPoint: { x: 0, y: 0 },
+                                        offsetX: -10,
+                                        offsetY: 0,
+                                        anchorPointUnits: "Relative",
+                                        primitiveName: "democrat-positive-votes",
+                                        frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                        markerGraphics: [
+                                            {
+                                                type: "CIMMarkerGraphic",
+                                                geometry: {
+                                                    rings: [
+                                                        [
+                                                            [8.5, 0.2],
+                                                            [7.06, 0.33],
+                                                            [5.66, 0.7],
+                                                            [4.35, 1.31],
+                                                            [3.16, 2.14],
+                                                            [2.14, 3.16],
+                                                            [1.31, 4.35],
+                                                            [0.7, 5.66],
+                                                            [0.33, 7.06],
+                                                            [0.2, 8.5],
+                                                            [0.33, 9.94],
+                                                            [0.7, 11.34],
+                                                            [1.31, 12.65],
+                                                            [2.14, 13.84],
+                                                            [3.16, 14.86],
+                                                            [4.35, 15.69],
+                                                            [5.66, 16.3],
+                                                            [7.06, 16.67],
+                                                            [8.5, 16.8],
+                                                            [9.94, 16.67],
+                                                            [11.34, 16.3],
+                                                            [12.65, 15.69],
+                                                            [13.84, 14.86],
+                                                            [14.86, 13.84],
+                                                            [15.69, 12.65],
+                                                            [16.3, 11.34],
+                                                            [16.67, 9.94],
+                                                            [16.8, 8.5],
+                                                            [16.67, 7.06],
+                                                            [16.3, 5.66],
+                                                            [15.69, 4.35],
+                                                            [14.86, 3.16],
+                                                            [13.84, 2.14],
+                                                            [12.65, 1.31],
+                                                            [11.34, 0.7],
+                                                            [9.94, 0.33],
+                                                            [8.5, 0.2]
+                                                        ]
+                                                    ]
+                                                },
+                                                symbol: {
+                                                    type: "CIMPolygonSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidFill",
+                                                            enable: true,
+                                                            color: dColorCIM
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        scaleSymbolsProportionally: true,
+                                        respectFrame: true
+                                    },
+                                    {
+                                        type: "CIMVectorMarker",
+                                        enable: true,
+                                        anchorPoint: { x: 0, y: 0 },
+                                        offsetX: 10,
+                                        offsetY: 0,
+                                        anchorPointUnits: "Relative",
+                                        primitiveName: "republican-positive-votes",
+                                        frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                        markerGraphics: [
+                                            {
+                                                type: "CIMMarkerGraphic",
+                                                geometry: {
+                                                    rings: [
+                                                        [
+                                                            [8.5, 0.2],
+                                                            [7.06, 0.33],
+                                                            [5.66, 0.7],
+                                                            [4.35, 1.31],
+                                                            [3.16, 2.14],
+                                                            [2.14, 3.16],
+                                                            [1.31, 4.35],
+                                                            [0.7, 5.66],
+                                                            [0.33, 7.06],
+                                                            [0.2, 8.5],
+                                                            [0.33, 9.94],
+                                                            [0.7, 11.34],
+                                                            [1.31, 12.65],
+                                                            [2.14, 13.84],
+                                                            [3.16, 14.86],
+                                                            [4.35, 15.69],
+                                                            [5.66, 16.3],
+                                                            [7.06, 16.67],
+                                                            [8.5, 16.8],
+                                                            [9.94, 16.67],
+                                                            [11.34, 16.3],
+                                                            [12.65, 15.69],
+                                                            [13.84, 14.86],
+                                                            [14.86, 13.84],
+                                                            [15.69, 12.65],
+                                                            [16.3, 11.34],
+                                                            [16.67, 9.94],
+                                                            [16.8, 8.5],
+                                                            [16.67, 7.06],
+                                                            [16.3, 5.66],
+                                                            [15.69, 4.35],
+                                                            [14.86, 3.16],
+                                                            [13.84, 2.14],
+                                                            [12.65, 1.31],
+                                                            [11.34, 0.7],
+                                                            [9.94, 0.33],
+                                                            [8.5, 0.2]
+                                                        ]
+                                                    ]
+                                                },
+                                                symbol: {
+                                                    type: "CIMPolygonSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidFill",
+                                                            enable: true,
+                                                            color: rColorCIM
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        scaleSymbolsProportionally: true,
+                                        respectFrame: true,
+                                    },
+                                    {
+                                        type: "CIMVectorMarker",
+                                        enable: true,
+                                        anchorPoint: { x: 0, y: 0 },
+                                        offsetX: 0,
+                                        offsetY: 10,
+                                        anchorPointUnits: "Relative",
+                                        primitiveName: "other-positive-votes",
+                                        frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                        markerGraphics: [
+                                            {
+                                                type: "CIMMarkerGraphic",
+                                                geometry: {
+                                                    rings: [
+                                                        [
+                                                            [8.5, 0.2],
+                                                            [7.06, 0.33],
+                                                            [5.66, 0.7],
+                                                            [4.35, 1.31],
+                                                            [3.16, 2.14],
+                                                            [2.14, 3.16],
+                                                            [1.31, 4.35],
+                                                            [0.7, 5.66],
+                                                            [0.33, 7.06],
+                                                            [0.2, 8.5],
+                                                            [0.33, 9.94],
+                                                            [0.7, 11.34],
+                                                            [1.31, 12.65],
+                                                            [2.14, 13.84],
+                                                            [3.16, 14.86],
+                                                            [4.35, 15.69],
+                                                            [5.66, 16.3],
+                                                            [7.06, 16.67],
+                                                            [8.5, 16.8],
+                                                            [9.94, 16.67],
+                                                            [11.34, 16.3],
+                                                            [12.65, 15.69],
+                                                            [13.84, 14.86],
+                                                            [14.86, 13.84],
+                                                            [15.69, 12.65],
+                                                            [16.3, 11.34],
+                                                            [16.67, 9.94],
+                                                            [16.8, 8.5],
+                                                            [16.67, 7.06],
+                                                            [16.3, 5.66],
+                                                            [15.69, 4.35],
+                                                            [14.86, 3.16],
+                                                            [13.84, 2.14],
+                                                            [12.65, 1.31],
+                                                            [11.34, 0.7],
+                                                            [9.94, 0.33],
+                                                            [8.5, 0.2]
+                                                        ]
+                                                    ]
+                                                },
+                                                symbol: {
+                                                    type: "CIMPolygonSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidFill",
+                                                            enable: true,
+                                                            color: oColorCIM,
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        scaleSymbolsProportionally: true,
+                                        respectFrame: true,
+                                    }
+                                ]
+                            },
+                            primitiveOverrides: [
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "democrat-positive-votes",
+                                    propertyName: "Size",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Democrat votes",
+                                        expression: "\n                  var votes = $feature.PRS_DEM_12;\n\n                " + sizeTotalExpressionBase,
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "republican-positive-votes",
+                                    propertyName: "Size",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Republican votes",
+                                        expression: "\n                  var votes = $feature.PRS_REP_12;\n\n                " + sizeTotalExpressionBase,
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "other-positive-votes",
+                                    propertyName: "Size",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Other votes",
+                                        expression: "\n                  var votes = $feature.PRS_OTH_12;\n\n                " + sizeTotalExpressionBase,
+                                        returnType: "Default"
+                                    }
+                                },
+                                // offset overrides
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "democrat-positive-votes",
+                                    propertyName: "OffsetX",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Democrat votes",
+                                        expression: "\n                  var votes = $feature.PRS_DEM_12;\n\n                  " + offsetTotalExpressionBase + "\n                  return offset * -1;\n                ",
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "republican-positive-votes",
+                                    propertyName: "OffsetX",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Republican votes",
+                                        expression: "\n                  var votes = $feature.PRS_REP_12;\n                  " + offsetTotalExpressionBase + "\n                  return offset;\n                ",
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "other-positive-votes",
+                                    propertyName: "OffsetY",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Other votes",
+                                        expression: "\n                  var votes = $feature.PRS_OTH_12;\n\n                  " + offsetTotalExpressionBase + "\n                  return offset;\n                ",
+                                        returnType: "Default"
+                                    }
+                                }
+                            ]
+                        }
+                    })
+                }),
+                popupTemplate: new PopupTemplate({
+                    title: "",
+                    content: [
+                        new FieldsContent({
+                            fieldInfos: [
+                                new FieldInfo({
+                                    fieldName: "PRS_DEM_12",
+                                    label: "2012 Democrat votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_REP_12",
+                                    label: "2012 Republican votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_OTH_12",
+                                    label: "2012 Other votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_DEM_16",
+                                    label: "2016 Democrat votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_REP_16",
+                                    label: "2016 Republican votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_OTH_16",
+                                    label: "2016 Other votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "expression/dem12change16"
+                                }),
+                                new FieldInfo({
+                                    fieldName: "expression/rep12change16"
+                                }),
+                                new FieldInfo({
+                                    fieldName: "expression/oth12change16"
+                                })
+                            ]
+                        })
+                    ],
+                    expressionInfos: [
+                        new ExpressionInfo({
+                            title: "Democrat change from 2012",
+                            name: "dem12change16",
+                            expression: "\n            var votes16 = $feature.PRS_DEM_16;\n            var votes12 = $feature.PRS_DEM_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Republican change from 2012",
+                            name: "rep12change16",
+                            expression: "\n            var votes16 = $feature.PRS_REP_16;\n            var votes12 = $feature.PRS_REP_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Other change from 2012",
+                            name: "oth12change16",
+                            expression: "\n            var votes16 = $feature.PRS_OTH_16;\n            var votes12 = $feature.PRS_OTH_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
+                        })
+                    ]
+                })
+            });
+            resultsTotal2016Layer = new FeatureLayer({
+                portalItem: {
+                    id: "ba48def248cb45bebb234aa346c97676"
+                },
+                labelsVisible: false,
+                renderer: new renderers_1.SimpleRenderer({
+                    symbol: new symbols_1.CIMSymbol({
+                        data: {
+                            type: "CIMSymbolReference",
+                            symbol: {
+                                type: "CIMPointSymbol",
+                                symbolLayers: [
+                                    {
+                                        type: "CIMVectorMarker",
+                                        enable: true,
+                                        anchorPoint: { x: 0, y: 0 },
+                                        offsetX: -10,
+                                        offsetY: 0,
+                                        anchorPointUnits: "Relative",
+                                        primitiveName: "democrat-positive-votes",
+                                        frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                        markerGraphics: [
+                                            {
+                                                type: "CIMMarkerGraphic",
+                                                geometry: {
+                                                    rings: [
+                                                        [
+                                                            [8.5, 0.2],
+                                                            [7.06, 0.33],
+                                                            [5.66, 0.7],
+                                                            [4.35, 1.31],
+                                                            [3.16, 2.14],
+                                                            [2.14, 3.16],
+                                                            [1.31, 4.35],
+                                                            [0.7, 5.66],
+                                                            [0.33, 7.06],
+                                                            [0.2, 8.5],
+                                                            [0.33, 9.94],
+                                                            [0.7, 11.34],
+                                                            [1.31, 12.65],
+                                                            [2.14, 13.84],
+                                                            [3.16, 14.86],
+                                                            [4.35, 15.69],
+                                                            [5.66, 16.3],
+                                                            [7.06, 16.67],
+                                                            [8.5, 16.8],
+                                                            [9.94, 16.67],
+                                                            [11.34, 16.3],
+                                                            [12.65, 15.69],
+                                                            [13.84, 14.86],
+                                                            [14.86, 13.84],
+                                                            [15.69, 12.65],
+                                                            [16.3, 11.34],
+                                                            [16.67, 9.94],
+                                                            [16.8, 8.5],
+                                                            [16.67, 7.06],
+                                                            [16.3, 5.66],
+                                                            [15.69, 4.35],
+                                                            [14.86, 3.16],
+                                                            [13.84, 2.14],
+                                                            [12.65, 1.31],
+                                                            [11.34, 0.7],
+                                                            [9.94, 0.33],
+                                                            [8.5, 0.2]
+                                                        ]
+                                                    ]
+                                                },
+                                                symbol: {
+                                                    type: "CIMPolygonSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidFill",
+                                                            enable: true,
+                                                            color: dColorCIM
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        scaleSymbolsProportionally: true,
+                                        respectFrame: true
+                                    },
+                                    {
+                                        type: "CIMVectorMarker",
+                                        enable: true,
+                                        anchorPoint: { x: 0, y: 0 },
+                                        offsetX: 10,
+                                        offsetY: 0,
+                                        anchorPointUnits: "Relative",
+                                        primitiveName: "republican-positive-votes",
+                                        frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                        markerGraphics: [
+                                            {
+                                                type: "CIMMarkerGraphic",
+                                                geometry: {
+                                                    rings: [
+                                                        [
+                                                            [8.5, 0.2],
+                                                            [7.06, 0.33],
+                                                            [5.66, 0.7],
+                                                            [4.35, 1.31],
+                                                            [3.16, 2.14],
+                                                            [2.14, 3.16],
+                                                            [1.31, 4.35],
+                                                            [0.7, 5.66],
+                                                            [0.33, 7.06],
+                                                            [0.2, 8.5],
+                                                            [0.33, 9.94],
+                                                            [0.7, 11.34],
+                                                            [1.31, 12.65],
+                                                            [2.14, 13.84],
+                                                            [3.16, 14.86],
+                                                            [4.35, 15.69],
+                                                            [5.66, 16.3],
+                                                            [7.06, 16.67],
+                                                            [8.5, 16.8],
+                                                            [9.94, 16.67],
+                                                            [11.34, 16.3],
+                                                            [12.65, 15.69],
+                                                            [13.84, 14.86],
+                                                            [14.86, 13.84],
+                                                            [15.69, 12.65],
+                                                            [16.3, 11.34],
+                                                            [16.67, 9.94],
+                                                            [16.8, 8.5],
+                                                            [16.67, 7.06],
+                                                            [16.3, 5.66],
+                                                            [15.69, 4.35],
+                                                            [14.86, 3.16],
+                                                            [13.84, 2.14],
+                                                            [12.65, 1.31],
+                                                            [11.34, 0.7],
+                                                            [9.94, 0.33],
+                                                            [8.5, 0.2]
+                                                        ]
+                                                    ]
+                                                },
+                                                symbol: {
+                                                    type: "CIMPolygonSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidFill",
+                                                            enable: true,
+                                                            color: rColorCIM
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        scaleSymbolsProportionally: true,
+                                        respectFrame: true,
+                                    },
+                                    {
+                                        type: "CIMVectorMarker",
+                                        enable: true,
+                                        anchorPoint: { x: 0, y: 0 },
+                                        offsetX: 0,
+                                        offsetY: 10,
+                                        anchorPointUnits: "Relative",
+                                        primitiveName: "other-positive-votes",
+                                        frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
+                                        markerGraphics: [
+                                            {
+                                                type: "CIMMarkerGraphic",
+                                                geometry: {
+                                                    rings: [
+                                                        [
+                                                            [8.5, 0.2],
+                                                            [7.06, 0.33],
+                                                            [5.66, 0.7],
+                                                            [4.35, 1.31],
+                                                            [3.16, 2.14],
+                                                            [2.14, 3.16],
+                                                            [1.31, 4.35],
+                                                            [0.7, 5.66],
+                                                            [0.33, 7.06],
+                                                            [0.2, 8.5],
+                                                            [0.33, 9.94],
+                                                            [0.7, 11.34],
+                                                            [1.31, 12.65],
+                                                            [2.14, 13.84],
+                                                            [3.16, 14.86],
+                                                            [4.35, 15.69],
+                                                            [5.66, 16.3],
+                                                            [7.06, 16.67],
+                                                            [8.5, 16.8],
+                                                            [9.94, 16.67],
+                                                            [11.34, 16.3],
+                                                            [12.65, 15.69],
+                                                            [13.84, 14.86],
+                                                            [14.86, 13.84],
+                                                            [15.69, 12.65],
+                                                            [16.3, 11.34],
+                                                            [16.67, 9.94],
+                                                            [16.8, 8.5],
+                                                            [16.67, 7.06],
+                                                            [16.3, 5.66],
+                                                            [15.69, 4.35],
+                                                            [14.86, 3.16],
+                                                            [13.84, 2.14],
+                                                            [12.65, 1.31],
+                                                            [11.34, 0.7],
+                                                            [9.94, 0.33],
+                                                            [8.5, 0.2]
+                                                        ]
+                                                    ]
+                                                },
+                                                symbol: {
+                                                    type: "CIMPolygonSymbol",
+                                                    symbolLayers: [
+                                                        {
+                                                            type: "CIMSolidFill",
+                                                            enable: true,
+                                                            color: oColorCIM,
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ],
+                                        scaleSymbolsProportionally: true,
+                                        respectFrame: true,
+                                    }
+                                ]
+                            },
+                            primitiveOverrides: [
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "democrat-positive-votes",
+                                    propertyName: "Size",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Democrat votes",
+                                        expression: "\n                  var votes = $feature.PRS_DEM_16;\n\n                " + sizeTotalExpressionBase,
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "republican-positive-votes",
+                                    propertyName: "Size",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Republican votes",
+                                        expression: "\n                  var votes = $feature.PRS_REP_16;\n\n                " + sizeTotalExpressionBase,
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "other-positive-votes",
+                                    propertyName: "Size",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Other votes",
+                                        expression: "\n                  var votes = $feature.PRS_OTH_16;\n\n                " + sizeTotalExpressionBase,
+                                        returnType: "Default"
+                                    }
+                                },
+                                // offset overrides
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "democrat-positive-votes",
+                                    propertyName: "OffsetX",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Democrat votes",
+                                        expression: "\n                  var votes = $feature.PRS_DEM_16;\n\n                  " + offsetTotalExpressionBase + "\n                  return offset * -1;\n                ",
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "republican-positive-votes",
+                                    propertyName: "OffsetX",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Republican votes",
+                                        expression: "\n                  var votes = $feature.PRS_REP_16;\n                  " + offsetTotalExpressionBase + "\n                  return offset;\n                ",
+                                        returnType: "Default"
+                                    }
+                                },
+                                {
+                                    type: "CIMPrimitiveOverride",
+                                    primitiveName: "other-positive-votes",
+                                    propertyName: "OffsetY",
+                                    valueExpressionInfo: {
+                                        type: "CIMExpressionInfo",
+                                        title: "Increase in Other votes",
+                                        expression: "\n                  var votes = $feature.PRS_OTH_16;\n\n                  " + offsetTotalExpressionBase + "\n                  return offset;\n                ",
+                                        returnType: "Default"
+                                    }
+                                }
+                            ]
+                        }
+                    })
+                }),
+                popupTemplate: new PopupTemplate({
+                    title: "",
+                    content: [
+                        new FieldsContent({
+                            fieldInfos: [
+                                new FieldInfo({
+                                    fieldName: "PRS_DEM_12",
+                                    label: "2012 Democrat votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_REP_12",
+                                    label: "2012 Republican votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_OTH_12",
+                                    label: "2012 Other votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_DEM_16",
+                                    label: "2016 Democrat votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_REP_16",
+                                    label: "2016 Republican votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "PRS_OTH_16",
+                                    label: "2016 Other votes",
+                                    format: new FieldInfoFormat({
+                                        places: 0,
+                                        digitSeparator: true
+                                    })
+                                }),
+                                new FieldInfo({
+                                    fieldName: "expression/dem12change16"
+                                }),
+                                new FieldInfo({
+                                    fieldName: "expression/rep12change16"
+                                }),
+                                new FieldInfo({
+                                    fieldName: "expression/oth12change16"
+                                })
+                            ]
+                        })
+                    ],
+                    expressionInfos: [
+                        new ExpressionInfo({
+                            title: "Democrat change from 2012",
+                            name: "dem12change16",
+                            expression: "\n            var votes16 = $feature.PRS_DEM_16;\n            var votes12 = $feature.PRS_DEM_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Republican change from 2012",
+                            name: "rep12change16",
+                            expression: "\n            var votes16 = $feature.PRS_REP_16;\n            var votes12 = $feature.PRS_REP_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Other change from 2012",
+                            name: "oth12change16",
+                            expression: "\n            var votes16 = $feature.PRS_OTH_16;\n            var votes12 = $feature.PRS_OTH_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
+                        })
+                    ]
+                })
+            });
             trailingLayer = polygonLayer;
-            // view.map.add(polygonLayer);
+            view.map.add(polygonLayer);
             // view.map.add(changeLayer);
-            view.map.add(results2012Layer);
+            // view.map.add(results2012Layer);
+            // view.map.add(results2016Layer);
+            view.map.add(changeLayer);
             view.map.add(results2016Layer);
             swipe = new Swipe({
                 view: view,
-                leadingLayers: [results2012Layer],
-                trailingLayers: [results2016Layer],
-                position: 100
+                leadingLayers: [results2016Layer],
+                trailingLayers: [changeLayer],
+                position: 10
             });
             view.ui.add(swipe);
             legend = new Legend({
