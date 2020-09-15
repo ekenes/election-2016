@@ -38,7 +38,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, turnoutLayer, polygonLayer, sizeExpressionBase, offsetExpressionBase, sizeTotalExpressionBase, offsetTotalExpressionBase, changeLayer, results2012Layer, results2016Layer, resultsTotal2012Layer, resultsTotal2016Layer, trailingLayer, swipe, legend;
+        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, borderColorCIM75, borderColorCIM50, borderColorCIM25, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, turnoutLayer, polygonLayer, sizeExpressionBase, offsetExpressionBase, sizeTotalExpressionBase, offsetTotalExpressionBase, changeLayer, results2012Layer, results2016Layer, resultsTotal2012Layer, resultsTotal2016Layer, trailingLayer, swipe, legend;
         return __generator(this, function (_a) {
             map = new EsriMap({
                 basemap: {
@@ -68,6 +68,10 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
             rColorCIM = [220, 75, 0, 255];
             dColorCIM = [60, 108, 204, 255];
             oColorCIM = [224, 206, 0, 255];
+            borderColorCIM100 = [133, 32, 1, 255];
+            borderColorCIM75 = [133, 32, 1, 191];
+            borderColorCIM50 = [133, 32, 1, 128];
+            borderColorCIM25 = [133, 32, 1, 64];
             rColor = "rgba(220, 75, 0, 1)" // "#ed5151";  dc4b00
             ;
             dColor = "rgba(60, 108, 204,1)" // "#149ece";  3c6ccc
@@ -781,36 +785,36 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 portalItem: {
                     id: "4f03bcde997e4badbef186d0c05f5a9a"
                 },
-                opacity: 0.6,
+                title: "2012 & 2016 Election results",
+                opacity: 0.3,
                 renderer: new rasterRenderers_1.UniqueValueRenderer({
                     valueExpression: "\n        var dem12 = $feature.SUM_PRS_DEM_12;\n        var rep12 = $feature.SUM_PRS_REP_12;\n        var oth12 = $feature.SUM_PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
                     valueExpressionTitle: "Outright winner",
-                    defaultSymbol: new symbols_1.SimpleFillSymbol({
-                        color: "rgba(128,128,128)",
-                        style: "solid"
-                    }),
+                    defaultSymbol: null,
                     uniqueValueInfos: [{
                             value: "Republican 2012, Republican 2016",
-                            label: "Republican 2012-2016",
+                            label: "Republican 2012 & 2016",
                             symbol: new symbols_1.SimpleFillSymbol({
                                 color: rColor,
                                 outline: null
                             })
                         }, {
                             value: "Democrat 2012, Democrat 2016",
-                            label: "Democrat 2012-2016",
+                            label: "Democrat 2012 & 2016",
                             symbol: new symbols_1.SimpleFillSymbol({
                                 color: dColor,
                                 outline: null
                             })
-                        }, {
-                            value: "Other 2012, Other 2016",
-                            label: "Other 2012-2016",
-                            symbol: new symbols_1.SimpleFillSymbol({
-                                color: oColor,
-                                outline: null
-                            })
-                        }, {
+                        },
+                        // {
+                        //   value: "Other 2012, Other 2016",
+                        //   label: "Other 2012-2016",
+                        //   symbol: new SimpleFillSymbol({
+                        //     color: oColor,
+                        //     outline: null
+                        //   })
+                        // },
+                        {
                             value: "Democrat 2012, Republican 2016",
                             label: "Democrat 2012, Republican 2016",
                             symbol: new symbols_1.CIMSymbol({
@@ -830,7 +834,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             effects: [
                                                                 {
                                                                     type: "CIMGeometricEffectDashes",
-                                                                    dashTemplate: [2, 2],
+                                                                    // dashTemplate: [5, 5],
                                                                     lineDashEnding: "FullPattern"
                                                                 }
                                                             ],
@@ -847,235 +851,20 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 type: "CIMSolidFill",
                                                 enable: true,
                                                 color: rColorCIM
-                                            }
-                                        ]
-                                    }
-                                }
-                            })
-                        }, {
-                            value: "Democrat 2012, Other 2016",
-                            label: "Democrat 2012, Other 2016",
-                            symbol: new symbols_1.CIMSymbol({
-                                data: {
-                                    type: "CIMSymbolReference",
-                                    symbol: {
-                                        type: "CIMPolygonSymbol",
-                                        symbolLayers: [
-                                            {
-                                                type: "CIMHatchFill",
-                                                enable: true,
-                                                lineSymbol: {
-                                                    type: "CIMLineSymbol",
-                                                    symbolLayers: [
-                                                        {
-                                                            type: "CIMSolidStroke",
-                                                            effects: [
-                                                                {
-                                                                    type: "CIMGeometricEffectDashes",
-                                                                    dashTemplate: [2, 2],
-                                                                    lineDashEnding: "FullPattern"
-                                                                }
-                                                            ],
-                                                            enable: true,
-                                                            width: 1,
-                                                            color: dColorCIM
-                                                        }
-                                                    ]
-                                                },
-                                                rotation: 45,
-                                                separation: 4 // distance between lines in hatch fill
                                             },
                                             {
-                                                type: "CIMSolidFill",
+                                                type: "CIMSolidStroke",
                                                 enable: true,
-                                                color: oColorCIM
+                                                width: 4,
+                                                color: borderColorCIM100
                                             }
                                         ]
                                     }
                                 }
                             })
-                        }, {
-                            value: "Republican 2012, Democrat 2016",
-                            label: "Republican 2012, Democrat 2016",
-                            symbol: new symbols_1.CIMSymbol({
-                                data: {
-                                    type: "CIMSymbolReference",
-                                    symbol: {
-                                        type: "CIMPolygonSymbol",
-                                        symbolLayers: [
-                                            {
-                                                type: "CIMHatchFill",
-                                                enable: true,
-                                                lineSymbol: {
-                                                    type: "CIMLineSymbol",
-                                                    symbolLayers: [
-                                                        {
-                                                            type: "CIMSolidStroke",
-                                                            effects: [
-                                                                {
-                                                                    type: "CIMGeometricEffectDashes",
-                                                                    dashTemplate: [2, 2],
-                                                                    lineDashEnding: "FullPattern"
-                                                                }
-                                                            ],
-                                                            enable: true,
-                                                            width: 1,
-                                                            color: rColorCIM
-                                                        }
-                                                    ]
-                                                },
-                                                rotation: 45,
-                                                separation: 4 // distance between lines in hatch fill
-                                            },
-                                            {
-                                                type: "CIMSolidFill",
-                                                enable: true,
-                                                color: dColorCIM
-                                            }
-                                        ]
-                                    }
-                                }
-                            })
-                        }, {
-                            value: "Republican 2012, Other 2016",
-                            label: "Republican 2012, Other 2016",
-                            symbol: new symbols_1.CIMSymbol({
-                                data: {
-                                    type: "CIMSymbolReference",
-                                    symbol: {
-                                        type: "CIMPolygonSymbol",
-                                        symbolLayers: [
-                                            {
-                                                type: "CIMHatchFill",
-                                                enable: true,
-                                                lineSymbol: {
-                                                    type: "CIMLineSymbol",
-                                                    symbolLayers: [
-                                                        {
-                                                            type: "CIMSolidStroke",
-                                                            effects: [
-                                                                {
-                                                                    type: "CIMGeometricEffectDashes",
-                                                                    dashTemplate: [2, 2],
-                                                                    lineDashEnding: "FullPattern"
-                                                                }
-                                                            ],
-                                                            enable: true,
-                                                            width: 1,
-                                                            color: rColorCIM
-                                                        }
-                                                    ]
-                                                },
-                                                rotation: 45,
-                                                separation: 4 // distance between lines in hatch fill
-                                            },
-                                            {
-                                                type: "CIMSolidFill",
-                                                enable: true,
-                                                color: oColorCIM
-                                            }
-                                        ]
-                                    }
-                                }
-                            })
-                        }, {
-                            value: "Other 2012, Republican 2016",
-                            label: "Other 2012, Republican 2016",
-                            symbol: new symbols_1.CIMSymbol({
-                                data: {
-                                    type: "CIMSymbolReference",
-                                    symbol: {
-                                        type: "CIMPolygonSymbol",
-                                        symbolLayers: [
-                                            {
-                                                type: "CIMHatchFill",
-                                                enable: true,
-                                                lineSymbol: {
-                                                    type: "CIMLineSymbol",
-                                                    symbolLayers: [
-                                                        {
-                                                            type: "CIMSolidStroke",
-                                                            effects: [
-                                                                {
-                                                                    type: "CIMGeometricEffectDashes",
-                                                                    dashTemplate: [2, 2],
-                                                                    lineDashEnding: "FullPattern"
-                                                                }
-                                                            ],
-                                                            enable: true,
-                                                            width: 1,
-                                                            color: oColorCIM
-                                                        }
-                                                    ]
-                                                },
-                                                rotation: 45,
-                                                separation: 4 // distance between lines in hatch fill
-                                            },
-                                            {
-                                                type: "CIMSolidFill",
-                                                enable: true,
-                                                color: rColorCIM
-                                            }
-                                        ]
-                                    }
-                                }
-                            })
-                        }, {
-                            value: "Other 2012, Democrat 2016",
-                            label: "Other 2012, Democrat 2016",
-                            symbol: new symbols_1.CIMSymbol({
-                                data: {
-                                    type: "CIMSymbolReference",
-                                    symbol: {
-                                        type: "CIMPolygonSymbol",
-                                        symbolLayers: [
-                                            {
-                                                type: "CIMHatchFill",
-                                                enable: true,
-                                                lineSymbol: {
-                                                    type: "CIMLineSymbol",
-                                                    symbolLayers: [
-                                                        {
-                                                            type: "CIMSolidStroke",
-                                                            effects: [
-                                                                {
-                                                                    type: "CIMGeometricEffectDashes",
-                                                                    dashTemplate: [2, 2],
-                                                                    lineDashEnding: "FullPattern"
-                                                                }
-                                                            ],
-                                                            enable: true,
-                                                            width: 1,
-                                                            color: oColorCIM
-                                                        }
-                                                    ]
-                                                },
-                                                rotation: 45,
-                                                separation: 4 // distance between lines in hatch fill
-                                            },
-                                            {
-                                                type: "CIMSolidFill",
-                                                enable: true,
-                                                color: dColorCIM
-                                            }
-                                        ]
-                                    }
-                                }
-                            })
-                        }],
-                    visualVariables: [
-                        new OpacityVariable({
-                            valueExpression: "\n            var dem16 = $feature.SUM_PRS_DEM_16;\n            var rep16 = $feature.SUM_PRS_REP_16;\n            var oth16 = $feature.SUM_PRS_OTH_16;\n            var all = [dem16, rep16, oth16];\n            return (Max(all) / Sum(all)) * 100;\n          ",
-                            stops: [
-                                { value: 60, opacity: 0.95 },
-                                { value: 40, opacity: 0.05 }
-                            ],
-                            legendOptions: {
-                                showLegend: false
-                            }
-                        })
-                    ]
-                }),
+                        },
+                    ],
+                })
             });
             sizeExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 10, 40,\n      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),\n      // percentStateVotes > 0, (20 * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
             offsetExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 10, 40,\n      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),\n      // percentStateVotes > 0, (20 * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
@@ -1085,6 +874,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 portalItem: {
                     id: "ba48def248cb45bebb234aa346c97676"
                 },
+                legendEnabled: false,
                 renderer: new renderers_1.SimpleRenderer({
                     symbol: new symbols_1.CIMSymbol({
                         data: {
@@ -1715,7 +1505,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             haloSize: haloSize,
                             color: new Color(dColor),
                             xoffset: -40,
-                            yoffset: -20
+                            yoffset: -10
                         })
                     }),
                     new LabelClass({
@@ -1736,7 +1526,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             haloSize: haloSize,
                             color: new Color(dColor),
                             xoffset: -30,
-                            yoffset: -20
+                            yoffset: -10
                         })
                     }),
                     new LabelClass({
@@ -2441,6 +2231,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 portalItem: {
                     id: "ba48def248cb45bebb234aa346c97676"
                 },
+                legendEnabled: false,
                 renderer: new renderers_1.SimpleRenderer({
                     symbol: new symbols_1.CIMSymbol({
                         data: {
@@ -3908,7 +3699,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 view: view,
                 leadingLayers: [changeLayer],
                 trailingLayers: [results2016Layer, polygonLayer],
-                position: 90
+                position: 10
             });
             view.ui.add(swipe);
             legend = new Legend({

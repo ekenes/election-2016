@@ -60,6 +60,10 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
   const rColorCIM = [220, 75, 0, 255]; // [237, 81, 81, 255];
   const dColorCIM = [60, 108, 204, 255]; // [20, 158, 206, 255];
   const oColorCIM = [224, 206, 0, 255]; // [167, 198, 54, 255];   145, 217, 0
+  const borderColorCIM100 = [133, 32, 1, 255];
+  const borderColorCIM75 = [133, 32, 1, 191];
+  const borderColorCIM50 = [133, 32, 1, 128];
+  const borderColorCIM25 = [133, 32, 1, 64];
 
   const rColor = "rgba(220, 75, 0, 1)"// "#ed5151";  dc4b00
   const dColor = "rgba(60, 108, 204,1)"// "#149ece";  3c6ccc
@@ -808,7 +812,8 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     portalItem: {
       id: "4f03bcde997e4badbef186d0c05f5a9a"
     },
-    opacity: 0.6,
+    title: "2012 & 2016 Election results",
+    opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
         var dem12 = $feature.SUM_PRS_DEM_12;
@@ -834,32 +839,31 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
         return Concatenate([winner12, winner16], ", ");
       `,
       valueExpressionTitle: "Outright winner",
-      defaultSymbol: new SimpleFillSymbol({
-        color: "rgba(128,128,128)",
-        style: "solid"
-      }),
+      defaultSymbol: null,
       uniqueValueInfos: [{
         value: "Republican 2012, Republican 2016",
-        label: "Republican 2012-2016",
+        label: "Republican 2012 & 2016",
         symbol: new SimpleFillSymbol({
           color: rColor,
           outline: null
         })
       }, {
         value: "Democrat 2012, Democrat 2016",
-        label: "Democrat 2012-2016",
+        label: "Democrat 2012 & 2016",
         symbol: new SimpleFillSymbol({
           color: dColor,
           outline: null
         })
-      }, {
-        value: "Other 2012, Other 2016",
-        label: "Other 2012-2016",
-        symbol: new SimpleFillSymbol({
-          color: oColor,
-          outline: null
-        })
-      }, {
+      },
+      // {
+      //   value: "Other 2012, Other 2016",
+      //   label: "Other 2012-2016",
+      //   symbol: new SimpleFillSymbol({
+      //     color: oColor,
+      //     outline: null
+      //   })
+      // },
+      {
         value: "Democrat 2012, Republican 2016",
         label: "Democrat 2012, Republican 2016",
         symbol: new CIMSymbol({
@@ -879,7 +883,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         effects: [
                           {
                             type: "CIMGeometricEffectDashes",
-                            dashTemplate: [2, 2],
+                            // dashTemplate: [5, 5],
                             lineDashEnding: "FullPattern"
                           }
                         ],
@@ -896,241 +900,253 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                   type: "CIMSolidFill",
                   enable: true,
                   color: rColorCIM
-                }
-              ]
-            }
-          }
-        })
-      }, {
-        value: "Democrat 2012, Other 2016",
-        label: "Democrat 2012, Other 2016",
-        symbol: new CIMSymbol({
-          data: {
-            type: "CIMSymbolReference",
-            symbol: {
-              type: "CIMPolygonSymbol",
-              symbolLayers: [
-                {
-                  type: "CIMHatchFill",
-                  enable: true,
-                  lineSymbol: {
-                    type: "CIMLineSymbol",
-                    symbolLayers: [
-                      {
-                        type: "CIMSolidStroke",
-                        effects: [
-                          {
-                            type: "CIMGeometricEffectDashes",
-                            dashTemplate: [2, 2],
-                            lineDashEnding: "FullPattern"
-                          }
-                        ],
-                        enable: true,
-                        width: 1,
-                        color: dColorCIM
-                      }
-                    ]
-                  },
-                  rotation: 45, // rotation of the lines
-                  separation: 4 // distance between lines in hatch fill
                 },
                 {
-                  type: "CIMSolidFill",
+                  type: "CIMSolidStroke",
                   enable: true,
-                  color: oColorCIM
+                  width: 4,
+                  color: borderColorCIM100
                 }
               ]
             }
           }
         })
-      }, {
-        value: "Republican 2012, Democrat 2016",
-        label: "Republican 2012, Democrat 2016",
-        symbol: new CIMSymbol({
-          data: {
-            type: "CIMSymbolReference",
-            symbol: {
-              type: "CIMPolygonSymbol",
-              symbolLayers: [
-                {
-                  type: "CIMHatchFill",
-                  enable: true,
-                  lineSymbol: {
-                    type: "CIMLineSymbol",
-                    symbolLayers: [
-                      {
-                        type: "CIMSolidStroke",
-                        effects: [
-                          {
-                            type: "CIMGeometricEffectDashes",
-                            dashTemplate: [2, 2],
-                            lineDashEnding: "FullPattern"
-                          }
-                        ],
-                        enable: true,
-                        width: 1,
-                        color: rColorCIM
-                      }
-                    ]
-                  },
-                  rotation: 45, // rotation of the lines
-                  separation: 4 // distance between lines in hatch fill
-                },
-                {
-                  type: "CIMSolidFill",
-                  enable: true,
-                  color: dColorCIM
-                }
-              ]
-            }
-          }
-        })
-      }, {
-        value: "Republican 2012, Other 2016",
-        label: "Republican 2012, Other 2016",
-        symbol: new CIMSymbol({
-          data: {
-            type: "CIMSymbolReference",
-            symbol: {
-              type: "CIMPolygonSymbol",
-              symbolLayers: [
-                {
-                  type: "CIMHatchFill",
-                  enable: true,
-                  lineSymbol: {
-                    type: "CIMLineSymbol",
-                    symbolLayers: [
-                      {
-                        type: "CIMSolidStroke",
-                        effects: [
-                          {
-                            type: "CIMGeometricEffectDashes",
-                            dashTemplate: [2, 2],
-                            lineDashEnding: "FullPattern"
-                          }
-                        ],
-                        enable: true,
-                        width: 1,
-                        color: rColorCIM
-                      }
-                    ]
-                  },
-                  rotation: 45, // rotation of the lines
-                  separation: 4 // distance between lines in hatch fill
-                },
-                {
-                  type: "CIMSolidFill",
-                  enable: true,
-                  color: oColorCIM
-                }
-              ]
-            }
-          }
-        })
-      }, {
-        value: "Other 2012, Republican 2016",
-        label: "Other 2012, Republican 2016",
-        symbol: new CIMSymbol({
-          data: {
-            type: "CIMSymbolReference",
-            symbol: {
-              type: "CIMPolygonSymbol",
-              symbolLayers: [
-                {
-                  type: "CIMHatchFill",
-                  enable: true,
-                  lineSymbol: {
-                    type: "CIMLineSymbol",
-                    symbolLayers: [
-                      {
-                        type: "CIMSolidStroke",
-                        effects: [
-                          {
-                            type: "CIMGeometricEffectDashes",
-                            dashTemplate: [2, 2],
-                            lineDashEnding: "FullPattern"
-                          }
-                        ],
-                        enable: true,
-                        width: 1,
-                        color: oColorCIM
-                      }
-                    ]
-                  },
-                  rotation: 45, // rotation of the lines
-                  separation: 4 // distance between lines in hatch fill
-                },
-                {
-                  type: "CIMSolidFill",
-                  enable: true,
-                  color: rColorCIM
-                }
-              ]
-            }
-          }
-        })
-      }, {
-        value: "Other 2012, Democrat 2016",
-        label: "Other 2012, Democrat 2016",
-        symbol: new CIMSymbol({
-          data: {
-            type: "CIMSymbolReference",
-            symbol: {
-              type: "CIMPolygonSymbol",
-              symbolLayers: [
-                {
-                  type: "CIMHatchFill",
-                  enable: true,
-                  lineSymbol: {
-                    type: "CIMLineSymbol",
-                    symbolLayers: [
-                      {
-                        type: "CIMSolidStroke",
-                        effects: [
-                          {
-                            type: "CIMGeometricEffectDashes",
-                            dashTemplate: [2, 2],
-                            lineDashEnding: "FullPattern"
-                          }
-                        ],
-                        enable: true,
-                        width: 1,
-                        color: oColorCIM
-                      }
-                    ]
-                  },
-                  rotation: 45, // rotation of the lines
-                  separation: 4 // distance between lines in hatch fill
-                },
-                {
-                  type: "CIMSolidFill",
-                  enable: true,
-                  color: dColorCIM
-                }
-              ]
-            }
-          }
-        })
-      }],
-      visualVariables: [
-        new OpacityVariable({
-          valueExpression: `
-            var dem16 = $feature.SUM_PRS_DEM_16;
-            var rep16 = $feature.SUM_PRS_REP_16;
-            var oth16 = $feature.SUM_PRS_OTH_16;
-            var all = [dem16, rep16, oth16];
-            return (Max(all) / Sum(all)) * 100;
-          `,
-          stops: [
-            { value: 60, opacity: 0.95 },
-            { value: 40, opacity: 0.05 }
-          ],
-          legendOptions: {
-            showLegend: false
-          }
-        })
-      ]
-    }),
+      },
+      // {
+      //   value: "Democrat 2012, Other 2016",
+      //   label: "Democrat 2012, Other 2016",
+      //   symbol: new CIMSymbol({
+      //     data: {
+      //       type: "CIMSymbolReference",
+      //       symbol: {
+      //         type: "CIMPolygonSymbol",
+      //         symbolLayers: [
+      //           {
+      //             type: "CIMHatchFill",
+      //             enable: true,
+      //             lineSymbol: {
+      //               type: "CIMLineSymbol",
+      //               symbolLayers: [
+      //                 {
+      //                   type: "CIMSolidStroke",
+      //                   effects: [
+      //                     {
+      //                       type: "CIMGeometricEffectDashes",
+      //                       dashTemplate: [2, 2],
+      //                       lineDashEnding: "FullPattern"
+      //                     }
+      //                   ],
+      //                   enable: true,
+      //                   width: 1,
+      //                   color: dColorCIM
+      //                 }
+      //               ]
+      //             },
+      //             rotation: 45, // rotation of the lines
+      //             separation: 4 // distance between lines in hatch fill
+      //           },
+      //           {
+      //             type: "CIMSolidFill",
+      //             enable: true,
+      //             color: oColorCIM
+      //           }
+      //         ]
+      //       }
+      //     }
+      //   })
+      // },
+      // {
+      //   value: "Republican 2012, Democrat 2016",
+      //   label: "Republican 2012, Democrat 2016",
+      //   symbol: new CIMSymbol({
+      //     data: {
+      //       type: "CIMSymbolReference",
+      //       symbol: {
+      //         type: "CIMPolygonSymbol",
+      //         symbolLayers: [
+      //           {
+      //             type: "CIMHatchFill",
+      //             enable: true,
+      //             lineSymbol: {
+      //               type: "CIMLineSymbol",
+      //               symbolLayers: [
+      //                 {
+      //                   type: "CIMSolidStroke",
+      //                   effects: [
+      //                     {
+      //                       type: "CIMGeometricEffectDashes",
+      //                       dashTemplate: [2, 2],
+      //                       lineDashEnding: "FullPattern"
+      //                     }
+      //                   ],
+      //                   enable: true,
+      //                   width: 1,
+      //                   color: rColorCIM
+      //                 }
+      //               ]
+      //             },
+      //             rotation: 45, // rotation of the lines
+      //             separation: 4 // distance between lines in hatch fill
+      //           },
+      //           {
+      //             type: "CIMSolidFill",
+      //             enable: true,
+      //             color: dColorCIM
+      //           }
+      //         ]
+      //       }
+      //     }
+      //   })
+      // },
+      // {
+      //   value: "Republican 2012, Other 2016",
+      //   label: "Republican 2012, Other 2016",
+      //   symbol: new CIMSymbol({
+      //     data: {
+      //       type: "CIMSymbolReference",
+      //       symbol: {
+      //         type: "CIMPolygonSymbol",
+      //         symbolLayers: [
+      //           {
+      //             type: "CIMHatchFill",
+      //             enable: true,
+      //             lineSymbol: {
+      //               type: "CIMLineSymbol",
+      //               symbolLayers: [
+      //                 {
+      //                   type: "CIMSolidStroke",
+      //                   effects: [
+      //                     {
+      //                       type: "CIMGeometricEffectDashes",
+      //                       dashTemplate: [2, 2],
+      //                       lineDashEnding: "FullPattern"
+      //                     }
+      //                   ],
+      //                   enable: true,
+      //                   width: 1,
+      //                   color: rColorCIM
+      //                 }
+      //               ]
+      //             },
+      //             rotation: 45, // rotation of the lines
+      //             separation: 4 // distance between lines in hatch fill
+      //           },
+      //           {
+      //             type: "CIMSolidFill",
+      //             enable: true,
+      //             color: oColorCIM
+      //           }
+      //         ]
+      //       }
+      //     }
+      //   })
+      // },
+      // {
+      //   value: "Other 2012, Republican 2016",
+      //   label: "Other 2012, Republican 2016",
+      //   symbol: new CIMSymbol({
+      //     data: {
+      //       type: "CIMSymbolReference",
+      //       symbol: {
+      //         type: "CIMPolygonSymbol",
+      //         symbolLayers: [
+      //           {
+      //             type: "CIMHatchFill",
+      //             enable: true,
+      //             lineSymbol: {
+      //               type: "CIMLineSymbol",
+      //               symbolLayers: [
+      //                 {
+      //                   type: "CIMSolidStroke",
+      //                   effects: [
+      //                     {
+      //                       type: "CIMGeometricEffectDashes",
+      //                       dashTemplate: [2, 2],
+      //                       lineDashEnding: "FullPattern"
+      //                     }
+      //                   ],
+      //                   enable: true,
+      //                   width: 1,
+      //                   color: oColorCIM
+      //                 }
+      //               ]
+      //             },
+      //             rotation: 45, // rotation of the lines
+      //             separation: 4 // distance between lines in hatch fill
+      //           },
+      //           {
+      //             type: "CIMSolidFill",
+      //             enable: true,
+      //             color: rColorCIM
+      //           }
+      //         ]
+      //       }
+      //     }
+      //   })
+      // },
+      // {
+      //   value: "Other 2012, Democrat 2016",
+      //   label: "Other 2012, Democrat 2016",
+      //   symbol: new CIMSymbol({
+      //     data: {
+      //       type: "CIMSymbolReference",
+      //       symbol: {
+      //         type: "CIMPolygonSymbol",
+      //         symbolLayers: [
+      //           {
+      //             type: "CIMHatchFill",
+      //             enable: true,
+      //             lineSymbol: {
+      //               type: "CIMLineSymbol",
+      //               symbolLayers: [
+      //                 {
+      //                   type: "CIMSolidStroke",
+      //                   effects: [
+      //                     {
+      //                       type: "CIMGeometricEffectDashes",
+      //                       dashTemplate: [2, 2],
+      //                       lineDashEnding: "FullPattern"
+      //                     }
+      //                   ],
+      //                   enable: true,
+      //                   width: 1,
+      //                   color: oColorCIM
+      //                 }
+      //               ]
+      //             },
+      //             rotation: 45, // rotation of the lines
+      //             separation: 4 // distance between lines in hatch fill
+      //           },
+      //           {
+      //             type: "CIMSolidFill",
+      //             enable: true,
+      //             color: dColorCIM
+      //           }
+      //         ]
+      //       }
+      //     }
+      //   })
+      // }
+    ],
+      // visualVariables: [
+      //   new OpacityVariable({
+      //     valueExpression: `
+      //       var dem16 = $feature.SUM_PRS_DEM_16;
+      //       var rep16 = $feature.SUM_PRS_REP_16;
+      //       var oth16 = $feature.SUM_PRS_OTH_16;
+      //       var all = [dem16, rep16, oth16];
+      //       return (Max(all) / Sum(all)) * 100;
+      //     `,
+      //     stops: [
+      //       { value: 60, opacity: 0.95 },
+      //       { value: 40, opacity: 0.05 }
+      //     ],
+      //     legendOptions: {
+      //       showLegend: false
+      //     }
+      //   })
+      // ]
+    })
   });
 
   const sizeExpressionBase = `
@@ -1231,6 +1247,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     portalItem: {
       id: "ba48def248cb45bebb234aa346c97676"
     },
+    legendEnabled: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
         data: {
@@ -1970,7 +1987,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
           haloSize,
           color: new Color(dColor),
           xoffset: -40,
-          yoffset: -20
+          yoffset: -10
         })
       }),
       new LabelClass({
@@ -1996,7 +2013,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
           haloSize,
           color: new Color(dColor),
           xoffset: -30,
-          yoffset: -20
+          yoffset: -10
         })
       }),
       new LabelClass({
@@ -2836,6 +2853,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     portalItem: {
       id: "ba48def248cb45bebb234aa346c97676"
     },
+    legendEnabled: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
         data: {
@@ -4488,7 +4506,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     view,
     leadingLayers: [ changeLayer ],
     trailingLayers: [ results2016Layer, polygonLayer ],
-    position: 90
+    position: 10
   });
   view.ui.add(swipe);
 
