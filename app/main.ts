@@ -25,10 +25,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     }
   });
 
-  const maxSize = 15;
-  const minDataValue = 100;
-  const maxDataValue = 5000;
-  const maxScale = 4622324;
+  const maxScale = 4622324/16;
   const referenceScale = 2311162;
 
   const view = new MapView({
@@ -38,7 +35,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     scale: referenceScale,
     constraints: {
       minScale: 0,
-      maxScale: maxScale/16
+      maxScale
     },
     highlightOptions: {
       fillOpacity: 0
@@ -56,6 +53,14 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
   // PRS_DEM_16
   // PRS_REP_16
   // PRS_OTH_16
+
+  const rColorCIM = [220, 75, 0, 255]; // [237, 81, 81, 255];
+  const dColorCIM = [60, 108, 204, 255]; // [20, 158, 206, 255];
+  const oColorCIM = [117, 125, 117, 255]; // [167, 198, 54, 255];   145, 217, 0
+
+  const rColor = "#ed5151"// "#ed5151";  dc4b00
+  const dColor = "#149ece"// "#149ece";  3c6ccc
+  const oColor = "#a87132"// "#a7c636";  #91d900  #a87132
 
   const turnoutLayer = new FeatureLayer({
     portalItem: {
@@ -792,14 +797,14 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
 
   const polygonLayer = new FeatureLayer({
     portalItem: {
-      id: "91910117e36f49ee9a88b84fa5053c67"
+      id: "4f03bcde997e4badbef186d0c05f5a9a"
     },
-    opacity: 1,
+    opacity: 0.6,
     renderer: new UniqueValueRenderer({
       valueExpression: `
-        var dem12 = $feature.PRS_DEM_12;
-        var rep12 = $feature.PRS_REP_12;
-        var oth12 = $feature.PRS_OTH_12;
+        var dem12 = $feature.SUM_PRS_DEM_12;
+        var rep12 = $feature.SUM_PRS_REP_12;
+        var oth12 = $feature.SUM_PRS_OTH_12;
 
         var winner12 = Decode( Max([dem12, rep12, oth12]),
           dem12, 'Democrat 2012',
@@ -807,9 +812,9 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
           oth12, 'Other 2012',
         'n/a' );
 
-        var dem16 = $feature.PRS_DEM_16;
-        var rep16 = $feature.PRS_REP_16;
-        var oth16 = $feature.PRS_OTH_16;
+        var dem16 = $feature.SUM_PRS_DEM_16;
+        var rep16 = $feature.SUM_PRS_REP_16;
+        var oth16 = $feature.SUM_PRS_OTH_16;
 
         var winner16 = Decode( Max([dem16, rep16, oth16]),
           dem16, 'Democrat 2016',
@@ -830,21 +835,21 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
         value: "Republican 2012, Republican 2016",
         label: "Republican 2012-2016",
         symbol: new SimpleFillSymbol({
-          color: "rgba(230, 0, 0, 1)",
+          color: rColor,
           outline: null
         })
       }, {
         value: "Democrat 2012, Democrat 2016",
         label: "Democrat 2012-2016",
         symbol: new SimpleFillSymbol({
-          color: "rgba(0, 0, 230, 1)",
+          color: dColor,
           outline: null
         })
       }, {
         value: "Other 2012, Other 2016",
         label: "Other 2012-2016",
         symbol: new SimpleFillSymbol({
-          color: "rgba(21, 209, 21, 1)",
+          color: oColor,
           outline: null
         })
       }, {
@@ -873,7 +878,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         ],
                         enable: true,
                         width: 1,
-                        color: [0, 0, 230, 255]
+                        color: dColorCIM
                       }
                     ]
                   },
@@ -883,7 +888,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 {
                   type: "CIMSolidFill",
                   enable: true,
-                  color: [230, 0, 0, 255]
+                  color: rColorCIM
                 }
               ]
             }
@@ -915,7 +920,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         ],
                         enable: true,
                         width: 1,
-                        color: [0, 0, 230, 255]
+                        color: dColorCIM
                       }
                     ]
                   },
@@ -925,7 +930,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 {
                   type: "CIMSolidFill",
                   enable: true,
-                  color: [21, 209, 21, 255]
+                  color: oColorCIM
                 }
               ]
             }
@@ -957,7 +962,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         ],
                         enable: true,
                         width: 1,
-                        color: [230, 0, 0, 255]
+                        color: rColorCIM
                       }
                     ]
                   },
@@ -967,7 +972,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 {
                   type: "CIMSolidFill",
                   enable: true,
-                  color: [0, 0, 230, 255]
+                  color: dColorCIM
                 }
               ]
             }
@@ -999,7 +1004,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         ],
                         enable: true,
                         width: 1,
-                        color: [230, 0, 0, 255]
+                        color: rColorCIM
                       }
                     ]
                   },
@@ -1009,7 +1014,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 {
                   type: "CIMSolidFill",
                   enable: true,
-                  color: [21, 209, 21, 255]
+                  color: oColorCIM
                 }
               ]
             }
@@ -1041,7 +1046,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         ],
                         enable: true,
                         width: 1,
-                        color: [21, 209, 21, 255]
+                        color: oColorCIM
                       }
                     ]
                   },
@@ -1051,7 +1056,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 {
                   type: "CIMSolidFill",
                   enable: true,
-                  color: [230, 0, 0, 255]
+                  color: rColorCIM
                 }
               ]
             }
@@ -1083,7 +1088,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         ],
                         enable: true,
                         width: 1,
-                        color: [21, 209, 21, 255]
+                        color: oColorCIM
                       }
                     ]
                   },
@@ -1093,7 +1098,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 {
                   type: "CIMSolidFill",
                   enable: true,
-                  color: [0, 0, 230, 255]
+                  color: dColorCIM
                 }
               ]
             }
@@ -1101,31 +1106,17 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
         })
       }],
       visualVariables: [
-        new SizeVariable({
-          valueExpression: `
-            var dem16 = $feature.PRS_DEM_16;
-            var rep16 = $feature.PRS_REP_16;
-            var oth16 = $feature.PRS_OTH_16;
-            var all = [dem16, rep16, oth16];
-            return Sum(all);
-          `,
-          valueExpressionTitle: "Voter turnout",
-          minDataValue: 100,
-          minSize: 2,
-          maxDataValue: 1000000,
-          maxSize: 30
-        }),
         new OpacityVariable({
           valueExpression: `
-            var dem16 = $feature.PRS_DEM_16;
-            var rep16 = $feature.PRS_REP_16;
-            var oth16 = $feature.PRS_OTH_16;
+            var dem16 = $feature.SUM_PRS_DEM_16;
+            var rep16 = $feature.SUM_PRS_REP_16;
+            var oth16 = $feature.SUM_PRS_OTH_16;
             var all = [dem16, rep16, oth16];
             return (Max(all) / Sum(all)) * 100;
           `,
           stops: [
-            { value: 90, opacity: 0.95 },
-            { value: 33, opacity: 0.05 }
+            { value: 60, opacity: 0.95 },
+            { value: 40, opacity: 0.05 }
           ]
         })
       ]
@@ -1250,7 +1241,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         {
                           type: "CIMSolidFill",
                           enable: true,
-                          color: [0, 0, 230, 255]
+                          color: dColorCIM
                         }
                       ]
                     }
@@ -1320,7 +1311,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         {
                           type: "CIMSolidStroke",
                           enable: true,
-                          color: [0, 0, 230, 255],
+                          color: dColorCIM,
                           width: 2
                         }
                       ]
@@ -1391,7 +1382,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         {
                           type: "CIMSolidFill",
                           enable: true,
-                          color: [230, 0, 0, 255]
+                          color: rColorCIM
                         }
                       ]
                     }
@@ -1461,7 +1452,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         {
                           type: "CIMSolidStroke",
                           enable: true,
-                          color: [230, 0, 0, 255],
+                          color: rColorCIM,
                           width: 2
                         }
                       ]
@@ -1533,7 +1524,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         {
                           type: "CIMSolidFill",
                           enable: true,
-                          color: [21, 209, 21, 255],
+                          color: oColorCIM,
                         }
                       ]
                     }
@@ -1603,7 +1594,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                         {
                           type: "CIMSolidStroke",
                           enable: true,
-                          color: [21, 209, 21, 255],
+                          color: oColorCIM,
                           width: 2
                         }
                       ]
@@ -1943,21 +1934,21 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
       ]
     })
   });
+  var trailingLayer = polygonLayer; // polygonLayer;
+  view.map.add(polygonLayer);
+
   view.map.add(pointLayer);
-  // var trailingLayer = turnoutLayer; // polygonLayer;
-  // view.map.add(trailingLayer);
+  const swipe = new Swipe({
+    view,
+    leadingLayers: [ pointLayer ],
+    trailingLayers: [ pointLayer, trailingLayer],
+    position: 100
+  });
+  view.ui.add(swipe);
 
-  // const swipe = new Swipe({
-  //   view,
-  //   leadingLayers: [ pointLayer ],
-  //   trailingLayers: [ trailingLayer],
-  //   position: 100
-  // });
-  // view.ui.add(swipe);
-
-  // const legend = new Legend({
-  //   view
-  // });
-  // view.ui.add(legend, "bottom-left");
+  const legend = new Legend({
+    view
+  });
+  view.ui.add(legend, "bottom-left");
 
 })();

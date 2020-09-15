@@ -34,11 +34,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/popup/content/FieldsContent", "esri/renderers/visualVariables/OpacityVariable", "esri/renderers/visualVariables/SizeVariable", "esri/renderers", "esri/symbols", "esri/rasterRenderers"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, FieldsContent, OpacityVariable, SizeVariable, renderers_1, symbols_1, rasterRenderers_1) {
+define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/popup/content/FieldsContent", "esri/renderers/visualVariables/OpacityVariable", "esri/renderers/visualVariables/SizeVariable", "esri/widgets/Swipe", "esri/widgets/Legend", "esri/renderers", "esri/symbols", "esri/rasterRenderers"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, FieldsContent, OpacityVariable, SizeVariable, Swipe, Legend, renderers_1, symbols_1, rasterRenderers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var map, maxSize, minDataValue, maxDataValue, maxScale, referenceScale, view, turnoutLayer, polygonLayer, sizeExpressionBase, offsetExpressionBase, pointLayer;
+        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, rColor, dColor, oColor, turnoutLayer, polygonLayer, sizeExpressionBase, offsetExpressionBase, pointLayer, trailingLayer, swipe, legend;
         return __generator(this, function (_a) {
             map = new EsriMap({
                 basemap: {
@@ -47,10 +47,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     }
                 }
             });
-            maxSize = 15;
-            minDataValue = 100;
-            maxDataValue = 5000;
-            maxScale = 4622324;
+            maxScale = 4622324 / 16;
             referenceScale = 2311162;
             view = new MapView({
                 container: "viewDiv",
@@ -59,7 +56,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 scale: referenceScale,
                 constraints: {
                     minScale: 0,
-                    maxScale: maxScale / 16
+                    maxScale: maxScale
                 },
                 highlightOptions: {
                     fillOpacity: 0
@@ -68,6 +65,15 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
             view.watch("scale", function (scale) {
                 console.log(scale);
             });
+            rColorCIM = [220, 75, 0, 255];
+            dColorCIM = [60, 108, 204, 255];
+            oColorCIM = [117, 125, 117, 255];
+            rColor = "#ed5151" // "#ed5151";  dc4b00
+            ;
+            dColor = "#149ece" // "#149ece";  3c6ccc
+            ;
+            oColor = "#a87132" // "#a7c636";  #91d900  #a87132
+            ;
             turnoutLayer = new FeatureLayer({
                 portalItem: {
                     id: "91910117e36f49ee9a88b84fa5053c67"
@@ -768,11 +774,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
             });
             polygonLayer = new FeatureLayer({
                 portalItem: {
-                    id: "91910117e36f49ee9a88b84fa5053c67"
+                    id: "4f03bcde997e4badbef186d0c05f5a9a"
                 },
-                opacity: 1,
+                opacity: 0.6,
                 renderer: new rasterRenderers_1.UniqueValueRenderer({
-                    valueExpression: "\n        var dem12 = $feature.PRS_DEM_12;\n        var rep12 = $feature.PRS_REP_12;\n        var oth12 = $feature.PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.PRS_DEM_16;\n        var rep16 = $feature.PRS_REP_16;\n        var oth16 = $feature.PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        console(Concatenate([winner12, winner16], \", \"))\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
+                    valueExpression: "\n        var dem12 = $feature.SUM_PRS_DEM_12;\n        var rep12 = $feature.SUM_PRS_REP_12;\n        var oth12 = $feature.SUM_PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        console(Concatenate([winner12, winner16], \", \"))\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
                     valueExpressionTitle: "Outright winner",
                     defaultSymbol: new symbols_1.SimpleFillSymbol({
                         color: "rgba(128,128,128)",
@@ -782,21 +788,21 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             value: "Republican 2012, Republican 2016",
                             label: "Republican 2012-2016",
                             symbol: new symbols_1.SimpleFillSymbol({
-                                color: "rgba(230, 0, 0, 1)",
+                                color: rColor,
                                 outline: null
                             })
                         }, {
                             value: "Democrat 2012, Democrat 2016",
                             label: "Democrat 2012-2016",
                             symbol: new symbols_1.SimpleFillSymbol({
-                                color: "rgba(0, 0, 230, 1)",
+                                color: dColor,
                                 outline: null
                             })
                         }, {
                             value: "Other 2012, Other 2016",
                             label: "Other 2012-2016",
                             symbol: new symbols_1.SimpleFillSymbol({
-                                color: "rgba(21, 209, 21, 1)",
+                                color: oColor,
                                 outline: null
                             })
                         }, {
@@ -825,7 +831,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             ],
                                                             enable: true,
                                                             width: 1,
-                                                            color: [0, 0, 230, 255]
+                                                            color: dColorCIM
                                                         }
                                                     ]
                                                 },
@@ -835,7 +841,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             {
                                                 type: "CIMSolidFill",
                                                 enable: true,
-                                                color: [230, 0, 0, 255]
+                                                color: rColorCIM
                                             }
                                         ]
                                     }
@@ -867,7 +873,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             ],
                                                             enable: true,
                                                             width: 1,
-                                                            color: [0, 0, 230, 255]
+                                                            color: dColorCIM
                                                         }
                                                     ]
                                                 },
@@ -877,7 +883,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             {
                                                 type: "CIMSolidFill",
                                                 enable: true,
-                                                color: [21, 209, 21, 255]
+                                                color: oColorCIM
                                             }
                                         ]
                                     }
@@ -909,7 +915,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             ],
                                                             enable: true,
                                                             width: 1,
-                                                            color: [230, 0, 0, 255]
+                                                            color: rColorCIM
                                                         }
                                                     ]
                                                 },
@@ -919,7 +925,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             {
                                                 type: "CIMSolidFill",
                                                 enable: true,
-                                                color: [0, 0, 230, 255]
+                                                color: dColorCIM
                                             }
                                         ]
                                     }
@@ -951,7 +957,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             ],
                                                             enable: true,
                                                             width: 1,
-                                                            color: [230, 0, 0, 255]
+                                                            color: rColorCIM
                                                         }
                                                     ]
                                                 },
@@ -961,7 +967,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             {
                                                 type: "CIMSolidFill",
                                                 enable: true,
-                                                color: [21, 209, 21, 255]
+                                                color: oColorCIM
                                             }
                                         ]
                                     }
@@ -993,7 +999,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             ],
                                                             enable: true,
                                                             width: 1,
-                                                            color: [21, 209, 21, 255]
+                                                            color: oColorCIM
                                                         }
                                                     ]
                                                 },
@@ -1003,7 +1009,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             {
                                                 type: "CIMSolidFill",
                                                 enable: true,
-                                                color: [230, 0, 0, 255]
+                                                color: rColorCIM
                                             }
                                         ]
                                     }
@@ -1035,7 +1041,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             ],
                                                             enable: true,
                                                             width: 1,
-                                                            color: [21, 209, 21, 255]
+                                                            color: oColorCIM
                                                         }
                                                     ]
                                                 },
@@ -1045,7 +1051,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             {
                                                 type: "CIMSolidFill",
                                                 enable: true,
-                                                color: [0, 0, 230, 255]
+                                                color: dColorCIM
                                             }
                                         ]
                                     }
@@ -1053,19 +1059,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             })
                         }],
                     visualVariables: [
-                        new SizeVariable({
-                            valueExpression: "\n            var dem16 = $feature.PRS_DEM_16;\n            var rep16 = $feature.PRS_REP_16;\n            var oth16 = $feature.PRS_OTH_16;\n            var all = [dem16, rep16, oth16];\n            return Sum(all);\n          ",
-                            valueExpressionTitle: "Voter turnout",
-                            minDataValue: 100,
-                            minSize: 2,
-                            maxDataValue: 1000000,
-                            maxSize: 30
-                        }),
                         new OpacityVariable({
-                            valueExpression: "\n            var dem16 = $feature.PRS_DEM_16;\n            var rep16 = $feature.PRS_REP_16;\n            var oth16 = $feature.PRS_OTH_16;\n            var all = [dem16, rep16, oth16];\n            return (Max(all) / Sum(all)) * 100;\n          ",
+                            valueExpression: "\n            var dem16 = $feature.SUM_PRS_DEM_16;\n            var rep16 = $feature.SUM_PRS_REP_16;\n            var oth16 = $feature.SUM_PRS_OTH_16;\n            var all = [dem16, rep16, oth16];\n            return (Max(all) / Sum(all)) * 100;\n          ",
                             stops: [
-                                { value: 90, opacity: 0.95 },
-                                { value: 33, opacity: 0.05 }
+                                { value: 60, opacity: 0.95 },
+                                { value: 40, opacity: 0.05 }
                             ]
                         })
                     ]
@@ -1146,7 +1144,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                         {
                                                             type: "CIMSolidFill",
                                                             enable: true,
-                                                            color: [0, 0, 230, 255]
+                                                            color: dColorCIM
                                                         }
                                                     ]
                                                 }
@@ -1216,7 +1214,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                         {
                                                             type: "CIMSolidStroke",
                                                             enable: true,
-                                                            color: [0, 0, 230, 255],
+                                                            color: dColorCIM,
                                                             width: 2
                                                         }
                                                     ]
@@ -1286,7 +1284,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                         {
                                                             type: "CIMSolidFill",
                                                             enable: true,
-                                                            color: [230, 0, 0, 255]
+                                                            color: rColorCIM
                                                         }
                                                     ]
                                                 }
@@ -1355,7 +1353,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                         {
                                                             type: "CIMSolidStroke",
                                                             enable: true,
-                                                            color: [230, 0, 0, 255],
+                                                            color: rColorCIM,
                                                             width: 2
                                                         }
                                                     ]
@@ -1426,7 +1424,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                         {
                                                             type: "CIMSolidFill",
                                                             enable: true,
-                                                            color: [21, 209, 21, 255],
+                                                            color: oColorCIM,
                                                         }
                                                     ]
                                                 }
@@ -1495,7 +1493,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                         {
                                                             type: "CIMSolidStroke",
                                                             enable: true,
-                                                            color: [21, 209, 21, 255],
+                                                            color: oColorCIM,
                                                             width: 2
                                                         }
                                                     ]
@@ -1729,7 +1727,20 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     ]
                 })
             });
+            trailingLayer = polygonLayer;
+            view.map.add(polygonLayer);
             view.map.add(pointLayer);
+            swipe = new Swipe({
+                view: view,
+                leadingLayers: [pointLayer],
+                trailingLayers: [pointLayer, trailingLayer],
+                position: 100
+            });
+            view.ui.add(swipe);
+            legend = new Legend({
+                view: view
+            });
+            view.ui.add(legend, "bottom-left");
             return [2 /*return*/];
         });
     }); })();
