@@ -65,6 +65,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
   const dColor = "rgba(60, 108, 204,1)"// "#149ece";  3c6ccc
   const oColor = "rgba(224, 206, 0, 1)"// "#a7c636";  #91d900  #a87132
   const haloColor = "#f7f7f7";
+  const oHaloColor = "rgba(181, 166, 0, 1)";// = "#4b4b4b";
   const haloSize = 1;
 
   const turnoutLayer = new FeatureLayer({
@@ -2182,9 +2183,9 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oColor),
+          color: new Color(oHaloColor),
           xoffset: 20,
-          yoffset: 60
+          yoffset: 40
         })
       }),
       new LabelClass({
@@ -2208,44 +2209,15 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oColor),
+          color: new Color(oHaloColor),
           xoffset: 20,
-          yoffset: 50
+          yoffset: 40
         })
       }),
-      new LabelClass({
-        minScale: 577791,
-        where: "ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 5",
-        labelExpressionInfo: {
-          expression: `
-          var value16 = $feature.PRS_OTH_16;
-          var value12 = $feature.PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
-          `
-        },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
-        symbol: new TextSymbol({
-          font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
-          }),
-          haloColor: new Color(haloColor),
-          haloSize,
-          color: new Color(oColor),
-          xoffset: 20,
-          yoffset: 35
-        })
-      }),
-
       new LabelClass({
         minScale: 577791,
         where: `
-          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)
-          AND
-          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) <= 3)
+          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 5)
         `,
         labelExpressionInfo: {
           expression: `
@@ -2265,7 +2237,36 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oColor),
+          color: new Color(oHaloColor),
+          xoffset: 20,
+          yoffset: 30
+        })
+      }),
+
+      new LabelClass({
+        minScale: 577791,
+        where: `
+          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)
+        `,
+        labelExpressionInfo: {
+          expression: `
+          var value16 = $feature.PRS_OTH_16;
+          var value12 = $feature.PRS_OTH_12;
+            var change = value16 - value12;
+            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          `
+        },
+        deconflictionStrategy: "none",
+        labelPlacement: "center-center",
+        symbol: new TextSymbol({
+          font: new Font({
+            weight: "bold",
+            family: "Noto Sans",
+            size: "10pt"
+          }),
+          haloColor: new Color(haloColor),
+          haloSize,
+          color: new Color(oHaloColor),
           xoffset: 20,
           yoffset: 20
         })
@@ -2274,8 +2275,6 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
         minScale: 577791,
         where: `
           (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5)
-          AND
-          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) <= 3)
         `,
         labelExpressionInfo: {
           expression: `
@@ -2295,70 +2294,9 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oColor),
+          color: new Color(oHaloColor),
           xoffset: 10,
           yoffset: 10
-        })
-      }),
-
-      new LabelClass({
-        minScale: 577791,
-        where: `
-          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)
-          AND
-          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) > 5)"
-        `,
-        labelExpressionInfo: {
-          expression: `
-          var value16 = $feature.PRS_OTH_16;
-          var value12 = $feature.PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
-          `
-        },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
-        symbol: new TextSymbol({
-          font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
-          }),
-          haloColor: new Color(haloColor),
-          haloSize,
-          color: new Color(oColor),
-          xoffset: 20,
-          yoffset: 30
-        })
-      }),
-      new LabelClass({
-        minScale: 577791,
-        where: `
-          ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5)
-          AND
-          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) > 5)
-        `,
-        labelExpressionInfo: {
-          expression: `
-            var value16 = $feature.PRS_OTH_16;
-            var value12 = $feature.PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
-          `
-        },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
-        symbol: new TextSymbol({
-          font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
-          }),
-          haloColor: new Color(haloColor),
-          haloSize,
-          color: new Color(oColor),
-          xoffset: 10,
-          yoffset: 30
         })
       })
 

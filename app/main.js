@@ -38,7 +38,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, rColor, dColor, oColor, haloColor, haloSize, turnoutLayer, polygonLayer, sizeExpressionBase, offsetExpressionBase, sizeTotalExpressionBase, offsetTotalExpressionBase, changeLayer, results2012Layer, results2016Layer, resultsTotal2012Layer, resultsTotal2016Layer, trailingLayer, swipe, legend;
+        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, turnoutLayer, polygonLayer, sizeExpressionBase, offsetExpressionBase, sizeTotalExpressionBase, offsetTotalExpressionBase, changeLayer, results2012Layer, results2016Layer, resultsTotal2012Layer, resultsTotal2016Layer, trailingLayer, swipe, legend;
         return __generator(this, function (_a) {
             map = new EsriMap({
                 basemap: {
@@ -75,6 +75,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
             oColor = "rgba(224, 206, 0, 1)" // "#a7c636";  #91d900  #a87132
             ;
             haloColor = "#f7f7f7";
+            oHaloColor = "rgba(181, 166, 0, 1)";
             haloSize = 1;
             turnoutLayer = new FeatureLayer({
                 portalItem: {
@@ -1883,9 +1884,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
-                            color: new Color(oColor),
+                            color: new Color(oHaloColor),
                             xoffset: 20,
-                            yoffset: 60
+                            yoffset: 40
                         })
                     }),
                     new LabelClass({
@@ -1904,14 +1905,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
-                            color: new Color(oColor),
+                            color: new Color(oHaloColor),
                             xoffset: 20,
-                            yoffset: 50
+                            yoffset: 40
                         })
                     }),
                     new LabelClass({
                         minScale: 577791,
-                        where: "ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 5",
+                        where: "\n          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 5)\n        ",
                         labelExpressionInfo: {
                             expression: "\n          var value16 = $feature.PRS_OTH_16;\n          var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
                         },
@@ -1925,14 +1926,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
-                            color: new Color(oColor),
+                            color: new Color(oHaloColor),
                             xoffset: 20,
-                            yoffset: 35
+                            yoffset: 30
                         })
                     }),
                     new LabelClass({
                         minScale: 577791,
-                        where: "\n          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)\n          AND\n          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) <= 3)\n        ",
+                        where: "\n          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)\n        ",
                         labelExpressionInfo: {
                             expression: "\n          var value16 = $feature.PRS_OTH_16;\n          var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
                         },
@@ -1946,14 +1947,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
-                            color: new Color(oColor),
+                            color: new Color(oHaloColor),
                             xoffset: 20,
                             yoffset: 20
                         })
                     }),
                     new LabelClass({
                         minScale: 577791,
-                        where: "\n          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5)\n          AND\n          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) <= 3)\n        ",
+                        where: "\n          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5)\n        ",
                         labelExpressionInfo: {
                             expression: "\n            var value16 = $feature.PRS_OTH_16;\n            var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
                         },
@@ -1967,51 +1968,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
-                            color: new Color(oColor),
+                            color: new Color(oHaloColor),
                             xoffset: 10,
                             yoffset: 10
-                        })
-                    }),
-                    new LabelClass({
-                        minScale: 577791,
-                        where: "\n          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)\n          AND\n          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) > 5)\"\n        ",
-                        labelExpressionInfo: {
-                            expression: "\n          var value16 = $feature.PRS_OTH_16;\n          var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
-                        },
-                        deconflictionStrategy: "none",
-                        labelPlacement: "center-center",
-                        symbol: new symbols_1.TextSymbol({
-                            font: new Font({
-                                weight: "bold",
-                                family: "Noto Sans",
-                                size: "10pt"
-                            }),
-                            haloColor: new Color(haloColor),
-                            haloSize: haloSize,
-                            color: new Color(oColor),
-                            xoffset: 20,
-                            yoffset: 30
-                        })
-                    }),
-                    new LabelClass({
-                        minScale: 577791,
-                        where: "\n          ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5)\n          AND\n          (ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) > 5)\n        ",
-                        labelExpressionInfo: {
-                            expression: "\n            var value16 = $feature.PRS_OTH_16;\n            var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
-                        },
-                        deconflictionStrategy: "none",
-                        labelPlacement: "center-center",
-                        symbol: new symbols_1.TextSymbol({
-                            font: new Font({
-                                weight: "bold",
-                                family: "Noto Sans",
-                                size: "10pt"
-                            }),
-                            haloColor: new Color(haloColor),
-                            haloSize: haloSize,
-                            color: new Color(oColor),
-                            xoffset: 10,
-                            yoffset: 30
                         })
                     })
                 ],
