@@ -1826,7 +1826,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
                             color: new Color(rColor),
-                            xoffset: 50,
+                            xoffset: 35,
                             yoffset: -20
                         })
                     }),
@@ -1847,7 +1847,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
                             color: new Color(rColor),
-                            xoffset: 35,
+                            xoffset: 20,
                             yoffset: -20
                         })
                     }),
@@ -2819,7 +2819,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
                             color: new Color(rColor),
-                            xoffset: 60,
+                            xoffset: 50,
                             yoffset: -20
                         })
                     }),
@@ -2840,7 +2840,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
                             color: new Color(rColor),
-                            xoffset: 50,
+                            xoffset: 40,
                             yoffset: -20
                         })
                     }),
@@ -2861,7 +2861,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             haloColor: new Color(haloColor),
                             haloSize: haloSize,
                             color: new Color(rColor),
-                            xoffset: 35,
+                            xoffset: 30,
                             yoffset: -20
                         })
                     }),
