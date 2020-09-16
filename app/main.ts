@@ -1370,9 +1370,9 @@ import { TextContent } from "esri/popup/content";
 
   const sizeExpressionBase = `
     var sizeFactor = When(
-      percentStateVotes >= 10, 40,
-      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),
-      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),
+      percentStateVotes >= 30, 40,
+      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
+      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
       percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
       percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),
       // percentStateVotes > 0, (20 * percentStateVotes),
@@ -1393,9 +1393,9 @@ import { TextContent } from "esri/popup/content";
 
   const offsetXExpressionBase = `
     var sizeFactor = When(
-      percentStateVotes >= 10, 40,
-      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),
-      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),
+      percentStateVotes >= 30, 40,
+      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
+      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
       percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
       percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),
       // percentStateVotes > 0, (20 * percentStateVotes),
@@ -1417,9 +1417,9 @@ import { TextContent } from "esri/popup/content";
 
   const offsetYExpressionBase = `
     var sizeFactor = When(
-      percentStateVotes >= 10, 40,
-      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),
-      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),
+      percentStateVotes >= 30, 40,
+      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
+      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
       percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
       percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),
       // percentStateVotes > 0, (20 * percentStateVotes),
