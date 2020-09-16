@@ -34,11 +34,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/popup/content/FieldsContent", "esri/renderers/visualVariables/OpacityVariable", "esri/renderers/visualVariables/SizeVariable", "esri/widgets/Swipe", "esri/widgets/Legend", "esri/layers/support/LabelClass", "esri/Color", "esri/symbols/Font", "esri/renderers", "esri/symbols", "esri/rasterRenderers"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, FieldsContent, OpacityVariable, SizeVariable, Swipe, Legend, LabelClass, Color, Font, renderers_1, symbols_1, rasterRenderers_1) {
+define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/popup/content/FieldsContent", "esri/renderers/visualVariables/OpacityVariable", "esri/renderers/visualVariables/SizeVariable", "esri/widgets/Swipe", "esri/widgets/Legend", "esri/layers/support/LabelClass", "esri/Color", "esri/symbols/Font", "esri/renderers", "esri/symbols", "esri/rasterRenderers", "esri/popup/content"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, FieldsContent, OpacityVariable, SizeVariable, Swipe, Legend, LabelClass, Color, Font, renderers_1, symbols_1, rasterRenderers_1, content_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, borderColorCIM75, borderColorCIM50, borderColorCIM25, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, turnoutLayer, polygonLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, sizeTotalExpressionBase, offsetTotalExpressionBase, changeLayer, results2012Layer, results2016Layer, resultsTotal2012Layer, resultsTotal2016Layer, trailingLayer, swipe, legend;
+        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, borderColorCIM75, borderColorCIM50, borderColorCIM25, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, turnoutLayer, polygonLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, sizeTotalExpressionBase, offsetTotalExpressionBase, popupTemplate, changeLayer, results2012Layer, results2016Layer, resultsTotal2012Layer, resultsTotal2016Layer, trailingLayer, swipe, legend;
         return __generator(this, function (_a) {
             map = new EsriMap({
                 basemap: {
@@ -864,6 +864,124 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             })
                         },
                     ],
+                }),
+                popupTemplate: new PopupTemplate({
+                    title: "{STATE}",
+                    fieldInfos: [
+                        new FieldInfo({
+                            fieldName: "SUM_PRS_DEM_12",
+                            label: "2012 Democrat votes",
+                            format: new FieldInfoFormat({
+                                places: 0,
+                                digitSeparator: true
+                            })
+                        }),
+                        new FieldInfo({
+                            fieldName: "SUM_PRS_REP_12",
+                            label: "2012 Republican votes",
+                            format: new FieldInfoFormat({
+                                places: 0,
+                                digitSeparator: true
+                            })
+                        }),
+                        new FieldInfo({
+                            fieldName: "SUM_PRS_OTH_12",
+                            label: "2012 Other votes",
+                            format: new FieldInfoFormat({
+                                places: 0,
+                                digitSeparator: true
+                            })
+                        }),
+                        new FieldInfo({
+                            fieldName: "SUM_PRS_DEM_16",
+                            label: "2016 Democrat votes",
+                            format: new FieldInfoFormat({
+                                places: 0,
+                                digitSeparator: true
+                            })
+                        }),
+                        new FieldInfo({
+                            fieldName: "SUM_PRS_REP_16",
+                            label: "2016 Republican votes",
+                            format: new FieldInfoFormat({
+                                places: 0,
+                                digitSeparator: true
+                            })
+                        }),
+                        new FieldInfo({
+                            fieldName: "SUM_PRS_OTH_16",
+                            label: "2016 Other votes",
+                            format: new FieldInfoFormat({
+                                places: 0,
+                                digitSeparator: true
+                            })
+                        })
+                    ],
+                    content: [
+                        new content_1.TextContent({
+                            text: "\n            The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n            candidate won {STATE} by a margin of {expression/winner-margin} points.\n            The {expression/winner-votes} votes cast for the winner comprise\n            {expression/winner-percent-state-votes} of the total votes cast in the state.\n          "
+                        }),
+                        new content_1.TextContent({
+                            text: "\n            Votes per party in 2016 and the change from 2012:\n\n            <ul>\n              <li><span style='color:" + dColor + "; font-weight:bolder'>Democrat:</span>  {SUM_PRS_DEM_16} (<span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span>)</li>\n              <li><span style='color:" + rColor + "; font-weight:bolder'>Republican:</span>  {SUM_PRS_REP_16} (<span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span>)</li>\n              <li><span style='color:" + oHaloColor + "; font-weight:bolder'>Other:</span>  {SUM_PRS_OTH_16} (<span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span>)</li>\n            </ul>\n          "
+                        })
+                    ],
+                    expressionInfos: [
+                        new ExpressionInfo({
+                            title: "winner % of state votes",
+                            name: "winner-percent-state-votes",
+                            expression: "\n            var dem = $feature.SUM_PRS_DEM_16;\n            var rep = $feature.SUM_PRS_REP_16;\n            var oth = $feature.SUM_PRS_OTH_16;\n            var all = [dem, rep, oth];\n\n            var winnerTotal = Max(all);\n            return Text(winnerTotal/Sum(all), \"#%\");\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "winner votes",
+                            name: "winner-votes",
+                            expression: "\n            var dem = $feature.SUM_PRS_DEM_16;\n            var rep = $feature.SUM_PRS_REP_16;\n            var oth = $feature.SUM_PRS_OTH_16;\n            var all = [dem, rep, oth];\n\n            return Text(Max(all), \"#,###\");\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "winner-color",
+                            name: "winner-color",
+                            expression: "\n            var dem = $feature.SUM_PRS_DEM_16;\n            var rep = $feature.SUM_PRS_REP_16;\n            var oth = $feature.SUM_PRS_OTH_16;\n            var all = [dem, rep, oth];\n\n            Decode( Max(all),\n              dem, \"" + dColor + "\",\n              rep, \"" + rColor + "\",\n              oth, \"" + oColor + "\",\n            \"#000000\"\n            );\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "winner",
+                            name: "winner",
+                            expression: "\n            var dem = $feature.SUM_PRS_DEM_16;\n            var rep = $feature.SUM_PRS_REP_16;\n            var oth = $feature.SUM_PRS_OTH_16;\n            var all = [dem, rep, oth];\n\n            Decode( Max(all),\n              dem, \"Democrat\",\n              rep, \"Republican\",\n              oth, \"other\",\n            \"tie\"\n            );\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Democrat change from 2012",
+                            name: "dem12change16",
+                            expression: "\n            var votes16 = $feature.SUM_PRS_DEM_16;\n            var votes12 = $feature.SUM_PRS_DEM_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Republican change from 2012",
+                            name: "rep12change16",
+                            expression: "\n            var votes16 = $feature.SUM_PRS_REP_16;\n            var votes12 = $feature.SUM_PRS_REP_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Other change from 2012",
+                            name: "oth12change16",
+                            expression: "\n            var votes16 = $feature.SUM_PRS_OTH_16;\n            var votes12 = $feature.SUM_PRS_OTH_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "change-color",
+                            name: "dem-change-color",
+                            expression: "\n            var votes16 = $feature.SUM_PRS_DEM_16;\n            var votes12 = $feature.SUM_PRS_DEM_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return IIF(diff > 0, \"green\", \"red\");\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "change-color",
+                            name: "rep-change-color",
+                            expression: "\n            var votes16 = $feature.SUM_PRS_REP_16;\n            var votes12 = $feature.SUM_PRS_REP_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return IIF(diff > 0, \"green\", \"red\");\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "change-color",
+                            name: "oth-change-color",
+                            expression: "\n            var votes16 = $feature.SUM_PRS_OTH_16;\n            var votes12 = $feature.SUM_PRS_OTH_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return IIF(diff > 0, \"green\", \"red\");\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "winner-margin",
+                            name: "winner-margin",
+                            expression: "\n            var fields = [\n              $feature.SUM_PRS_DEM_16,\n              $feature.SUM_PRS_REP_16,\n              $feature.SUM_PRS_OTH_16\n            ];\n\n            var top2 = Top(Reverse(Sort(fields)), 2);\n            var winner = First(top2);\n            var secondPlace = top2[1];\n            var total = Sum(fields);\n            return Text( (winner - secondPlace) / total, \"#.#%\");\n          "
+                        })
+                    ]
                 })
             });
             sizeExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 10, 40,\n      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),\n      // percentStateVotes > 0, (20 * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
@@ -871,6 +989,124 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
             offsetYExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 10, 40,\n      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),\n      // percentStateVotes > 0, (20 * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter * 0.67;\n  ";
             sizeTotalExpressionBase = "\n    var sizeFactor = When(\n      votes >= 1000000, 40,\n      votes >= 100000, 30 + (((40-30) / (1000000-100000)) * (votes - 100000)),\n      votes >= 50000, 20 + (((30-20) / (100000-50000)) * (votes - 50000)),\n      votes > 10000, 10 + (((20-10) / (50000-10000)) * (votes - 10000)),\n      votes > 0, 2 + (((10-2) / (10000-0)) * votes),\n      // votes > 0, (20 * votes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
             offsetTotalExpressionBase = "\n    var sizeFactor = When(\n      votes >= 1000000, 40,\n      votes >= 100000, 30 + (((40-30) / (1000000-100000)) * (votes - 100000)),\n      votes >= 50000, 20 + (((30-20) / (100000-50000)) * (votes - 50000)),\n      votes > 10000, 10 + (((20-10) / (50000-10000)) * (votes - 10000)),\n      votes > 0, 2 + (((10-2) / (10000-0)) * votes),\n      // votes > 0, (20 * votes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
+            popupTemplate = new PopupTemplate({
+                title: "{Name_1}, {STATE_NAME}",
+                fieldInfos: [
+                    new FieldInfo({
+                        fieldName: "PRS_DEM_12",
+                        label: "2012 Democrat votes",
+                        format: new FieldInfoFormat({
+                            places: 0,
+                            digitSeparator: true
+                        })
+                    }),
+                    new FieldInfo({
+                        fieldName: "PRS_REP_12",
+                        label: "2012 Republican votes",
+                        format: new FieldInfoFormat({
+                            places: 0,
+                            digitSeparator: true
+                        })
+                    }),
+                    new FieldInfo({
+                        fieldName: "PRS_OTH_12",
+                        label: "2012 Other votes",
+                        format: new FieldInfoFormat({
+                            places: 0,
+                            digitSeparator: true
+                        })
+                    }),
+                    new FieldInfo({
+                        fieldName: "PRS_DEM_16",
+                        label: "2016 Democrat votes",
+                        format: new FieldInfoFormat({
+                            places: 0,
+                            digitSeparator: true
+                        })
+                    }),
+                    new FieldInfo({
+                        fieldName: "PRS_REP_16",
+                        label: "2016 Republican votes",
+                        format: new FieldInfoFormat({
+                            places: 0,
+                            digitSeparator: true
+                        })
+                    }),
+                    new FieldInfo({
+                        fieldName: "PRS_OTH_16",
+                        label: "2016 Other votes",
+                        format: new FieldInfoFormat({
+                            places: 0,
+                            digitSeparator: true
+                        })
+                    })
+                ],
+                content: [
+                    new content_1.TextContent({
+                        text: "\n          The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n          candidate won this county by a margin of {expression/winner-margin}.\n          The {expression/winner-votes} votes cast for the winner comprise\n          {expression/winner-percent-state-votes} of the total votes cast in the state.\n        "
+                    }),
+                    new content_1.TextContent({
+                        text: "\n          Votes per party in 2016 and the change from 2012:\n\n          <ul>\n            <li><span style='color:" + dColor + "; font-weight:bolder'>Democrat:</span>  {PRS_DEM_16} (<span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span>)</li>\n            <li><span style='color:" + rColor + "; font-weight:bolder'>Republican:</span>  {PRS_REP_16} (<span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span>)</li>\n            <li><span style='color:" + oHaloColor + "; font-weight:bolder'>Other:</span>  {PRS_OTH_16} (<span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span>)</li>\n          </ul>\n        "
+                    })
+                ],
+                expressionInfos: [
+                    new ExpressionInfo({
+                        title: "winner % of state votes",
+                        name: "winner-percent-state-votes",
+                        expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          var winnerTotal = Max(all);\n          return Text(winnerTotal/$feature.TOTAL_STATE_VOTES_16, \"#%\");\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "winner votes",
+                        name: "winner-votes",
+                        expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          return Text(Max(all), \"#,###\");\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "winner-color",
+                        name: "winner-color",
+                        expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"" + dColor + "\",\n            rep, \"" + rColor + "\",\n            oth, \"" + oColor + "\",\n          \"#000000\"\n          );\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "winner",
+                        name: "winner",
+                        expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"Democrat\",\n            rep, \"Republican\",\n            oth, \"other\",\n          \"tie\"\n          );\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "Democrat change from 2012",
+                        name: "dem12change16",
+                        expression: "\n          var votes16 = $feature.PRS_DEM_16;\n          var votes12 = $feature.PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "Republican change from 2012",
+                        name: "rep12change16",
+                        expression: "\n          var votes16 = $feature.PRS_REP_16;\n          var votes12 = $feature.PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "Other change from 2012",
+                        name: "oth12change16",
+                        expression: "\n          var votes16 = $feature.PRS_OTH_16;\n          var votes12 = $feature.PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "change-color",
+                        name: "dem-change-color",
+                        expression: "\n          var votes16 = $feature.PRS_DEM_16;\n          var votes12 = $feature.PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, \"green\", \"red\");\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "change-color",
+                        name: "rep-change-color",
+                        expression: "\n          var votes16 = $feature.PRS_REP_16;\n          var votes12 = $feature.PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, \"green\", \"red\");\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "change-color",
+                        name: "oth-change-color",
+                        expression: "\n          var votes16 = $feature.PRS_OTH_16;\n          var votes12 = $feature.PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, \"green\", \"red\");\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "winner-margin",
+                        name: "winner-margin",
+                        expression: "\n          var fields = [\n            $feature.PRS_DEM_16,\n            $feature.PRS_REP_16,\n            $feature.PRS_OTH_16\n          ];\n\n          var top2 = Top(Reverse(Sort(fields)), 2);\n          var winner = First(top2);\n          var secondPlace = top2[1];\n          var total = Sum(fields);\n          return Text( (winner - secondPlace) / total, \"#.#%\");\n        "
+                    })
+                ]
+            });
             changeLayer = new FeatureLayer({
                 portalItem: {
                     id: "ba48def248cb45bebb234aa346c97676"
@@ -1764,89 +2000,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         })
                     })
                 ],
-                popupTemplate: new PopupTemplate({
-                    title: "",
-                    content: [
-                        new FieldsContent({
-                            fieldInfos: [
-                                new FieldInfo({
-                                    fieldName: "PRS_DEM_12",
-                                    label: "2012 Democrat votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_REP_12",
-                                    label: "2012 Republican votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_OTH_12",
-                                    label: "2012 Other votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_DEM_16",
-                                    label: "2016 Democrat votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_REP_16",
-                                    label: "2016 Republican votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_OTH_16",
-                                    label: "2016 Other votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "expression/dem12change16"
-                                }),
-                                new FieldInfo({
-                                    fieldName: "expression/rep12change16"
-                                }),
-                                new FieldInfo({
-                                    fieldName: "expression/oth12change16"
-                                })
-                            ]
-                        })
-                    ],
-                    expressionInfos: [
-                        new ExpressionInfo({
-                            title: "Democrat change from 2012",
-                            name: "dem12change16",
-                            expression: "\n            var votes16 = $feature.PRS_DEM_16;\n            var votes12 = $feature.PRS_DEM_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
-                        }),
-                        new ExpressionInfo({
-                            title: "Republican change from 2012",
-                            name: "rep12change16",
-                            expression: "\n            var votes16 = $feature.PRS_REP_16;\n            var votes12 = $feature.PRS_REP_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
-                        }),
-                        new ExpressionInfo({
-                            title: "Other change from 2012",
-                            name: "oth12change16",
-                            expression: "\n            var votes16 = $feature.PRS_OTH_16;\n            var votes12 = $feature.PRS_OTH_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
-                        })
-                    ]
-                })
+                popupTemplate: popupTemplate
             });
             results2012Layer = new FeatureLayer({
                 portalItem: {
@@ -2860,89 +3014,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         })
                     })
                 ],
-                popupTemplate: new PopupTemplate({
-                    title: "",
-                    content: [
-                        new FieldsContent({
-                            fieldInfos: [
-                                new FieldInfo({
-                                    fieldName: "PRS_DEM_12",
-                                    label: "2012 Democrat votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_REP_12",
-                                    label: "2012 Republican votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_OTH_12",
-                                    label: "2012 Other votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_DEM_16",
-                                    label: "2016 Democrat votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_REP_16",
-                                    label: "2016 Republican votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "PRS_OTH_16",
-                                    label: "2016 Other votes",
-                                    format: new FieldInfoFormat({
-                                        places: 0,
-                                        digitSeparator: true
-                                    })
-                                }),
-                                new FieldInfo({
-                                    fieldName: "expression/dem12change16"
-                                }),
-                                new FieldInfo({
-                                    fieldName: "expression/rep12change16"
-                                }),
-                                new FieldInfo({
-                                    fieldName: "expression/oth12change16"
-                                })
-                            ]
-                        })
-                    ],
-                    expressionInfos: [
-                        new ExpressionInfo({
-                            title: "Democrat change from 2012",
-                            name: "dem12change16",
-                            expression: "\n            var votes16 = $feature.PRS_DEM_16;\n            var votes12 = $feature.PRS_DEM_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
-                        }),
-                        new ExpressionInfo({
-                            title: "Republican change from 2012",
-                            name: "rep12change16",
-                            expression: "\n            var votes16 = $feature.PRS_REP_16;\n            var votes12 = $feature.PRS_REP_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
-                        }),
-                        new ExpressionInfo({
-                            title: "Other change from 2012",
-                            name: "oth12change16",
-                            expression: "\n            var votes16 = $feature.PRS_OTH_16;\n            var votes12 = $feature.PRS_OTH_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return `${Text(diff, \"#,###\")} (${Text(change, \"#%\")})`\n          "
-                        })
-                    ]
-                })
+                popupTemplate: popupTemplate
             });
             resultsTotal2012Layer = new FeatureLayer({
                 portalItem: {
