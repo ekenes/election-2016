@@ -1172,7 +1172,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     return sizeFactor * scaleFactor;
   `;
 
-  const offsetExpressionBase = `
+  const offsetXExpressionBase = `
     var sizeFactor = When(
       percentStateVotes >= 10, 40,
       percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),
@@ -1194,6 +1194,30 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
     );
     var diameter = sizeFactor * scaleFactor;
     var offset = diameter / 2;
+  `;
+
+  const offsetYExpressionBase = `
+    var sizeFactor = When(
+      percentStateVotes >= 10, 40,
+      percentStateVotes >= 5, 30 + ((10/5) * (percentStateVotes - 5)),
+      percentStateVotes >= 1, 20 + ((10/4) * (percentStateVotes - 1)),
+      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
+      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),
+      // percentStateVotes > 0, (20 * percentStateVotes),
+      0
+    );
+
+    var scaleFactorBase = ( ${referenceScale} / $view.scale );
+
+    var scaleFactor = When(
+      scaleFactorBase >= 1, 1,  // 1
+      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
+      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45
+      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125
+      scaleFactorBase * 3  // 0.1875
+    );
+    var diameter = sizeFactor * scaleFactor;
+    var offset = diameter * 0.67;
   `;
 
   const sizeTotalExpressionBase = `
@@ -1802,7 +1826,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                   var change = dem16 - dem12;
                   var value = IIF( change > 0, change, 0);
                   var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                  ${offsetExpressionBase}
+                  ${offsetXExpressionBase}
                   return offset * -1;
                 `,
                 returnType: "Default"
@@ -1821,7 +1845,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                   var change = dem16 - dem12;
                   var value = IIF( change < 0, Abs(change), 0);
                   var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                  ${offsetExpressionBase}
+                  ${offsetXExpressionBase}
                   return offset * -1;
                 `,
                 returnType: "Default"
@@ -1840,7 +1864,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                   var change = rep16 - rep12;
                   var value = IIF( change > 0, change, 0);
                   var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                  ${offsetExpressionBase}
+                  ${offsetXExpressionBase}
                   return offset;
                 `,
                 returnType: "Default"
@@ -1859,7 +1883,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                   var change = rep16 - rep12;
                   var value = IIF( change < 0, Abs(change), 0);
                   var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                  ${offsetExpressionBase}
+                  ${offsetXExpressionBase}
                   return offset;
                 `,
                 returnType: "Default"
@@ -1878,7 +1902,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                   var change = oth16 - oth12;
                   var value = IIF( change > 0, change, 0);
                   var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                  ${offsetExpressionBase}
+                  ${offsetYExpressionBase}
                   return offset;
                 `,
                 returnType: "Default"
@@ -1897,7 +1921,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                   var change = oth16 - oth12;
                   var value = IIF( change < 0, Abs(change), 0);
                   var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                  ${offsetExpressionBase}
+                  ${offsetYExpressionBase}
                   return offset;
                 `,
                 returnType: "Default"
@@ -2705,7 +2729,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 expression: `
                   var percentStateVotes = ( $feature.PRS_DEM_12 / $feature.TOTAL_STATE_VOTES_12 ) * 100;
 
-                  ${offsetExpressionBase}
+                  ${offsetXExpressionBase}
                   return offset * -1;
                 `,
                 returnType: "Default"
@@ -2720,7 +2744,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 title: "Increase in Republican votes",
                 expression: `
                   var percentStateVotes = ( $feature.PRS_REP_12 / $feature.TOTAL_STATE_VOTES_12 ) * 100;
-                  ${offsetExpressionBase}
+                  ${offsetXExpressionBase}
                   return offset;
                 `,
                 returnType: "Default"
@@ -2736,7 +2760,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 expression: `
                   var percentStateVotes = ( $feature.PRS_OTH_12 / $feature.TOTAL_STATE_VOTES_12 ) * 100;
 
-                  ${offsetExpressionBase}
+                  ${offsetYExpressionBase}
                   return offset;
                 `,
                 returnType: "Default"
@@ -3131,7 +3155,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 expression: `
                   var percentStateVotes = ( $feature.PRS_DEM_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;
 
-                  ${offsetExpressionBase}
+                  ${offsetXExpressionBase}
                   return offset * -1;
                 `,
                 returnType: "Default"
@@ -3146,7 +3170,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 title: "Increase in Republican votes",
                 expression: `
                   var percentStateVotes = ( $feature.PRS_REP_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                  ${offsetExpressionBase}
+                  ${offsetXExpressionBase}
                   return offset;
                 `,
                 returnType: "Default"
@@ -3162,7 +3186,7 @@ import { UniqueValueRenderer } from "esri/rasterRenderers";
                 expression: `
                   var percentStateVotes = ( $feature.PRS_OTH_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;
 
-                  ${offsetExpressionBase}
+                  ${offsetYExpressionBase}
                   return offset;
                 `,
                 returnType: "Default"
