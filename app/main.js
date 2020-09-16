@@ -2302,6 +2302,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             type: "CIMSolidFill",
                                                             enable: true,
                                                             color: dColorCIM
+                                                        }, {
+                                                            type: "CIMSolidStroke",
+                                                            enable: true,
+                                                            color: [42, 78, 150, 255],
+                                                            width: 1
                                                         }
                                                     ]
                                                 }
@@ -2372,6 +2377,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             type: "CIMSolidFill",
                                                             enable: true,
                                                             color: rColorCIM
+                                                        }, {
+                                                            type: "CIMSolidStroke",
+                                                            enable: true,
+                                                            color: [153, 54, 3, 255],
+                                                            width: 1
                                                         }
                                                     ]
                                                 }
@@ -2442,6 +2452,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                             type: "CIMSolidFill",
                                                             enable: true,
                                                             color: oColorCIM,
+                                                        }, {
+                                                            type: "CIMSolidStroke",
+                                                            enable: true,
+                                                            color: [161, 148, 0, 255],
+                                                            width: 1
                                                         }
                                                     ]
                                                 }
