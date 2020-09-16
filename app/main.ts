@@ -386,7 +386,7 @@ import { TextContent } from "esri/popup/content";
       percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
       percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
       percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
-      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),
+      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
       // percentStateVotes > 0, (20 * percentStateVotes),
       0
     );
@@ -409,7 +409,7 @@ import { TextContent } from "esri/popup/content";
       percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
       percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
       percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
-      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),
+      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
       // percentStateVotes > 0, (20 * percentStateVotes),
       0
     );
@@ -433,7 +433,7 @@ import { TextContent } from "esri/popup/content";
       percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
       percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
       percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
-      percentStateVotes > 0, 2 + ((8/0.5) * percentStateVotes),
+      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
       // percentStateVotes > 0, (20 * percentStateVotes),
       0
     );
