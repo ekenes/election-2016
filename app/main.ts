@@ -35,8 +35,8 @@ import { TextContent } from "esri/popup/content";
   const view = new MapView({
     container: "viewDiv",
     map: map,
-    center: [-112, 40],
-    scale: referenceScale,
+    center: [-95, 40],
+    scale: referenceScale * 8,
     constraints: {
       minScale: 0,
       maxScale
@@ -4783,7 +4783,7 @@ import { TextContent } from "esri/popup/content";
     view,
     leadingLayers: [ changeLayer ],
     trailingLayers: [ results2016Layer, polygonLayer ],
-    position: 10
+    position: 90
   });
   view.ui.add(swipe);
 
