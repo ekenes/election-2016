@@ -72,95 +72,35 @@ import { TextContent } from "esri/popup/content";
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
-        var dem12 = $feature.SUM_PRS_DEM_12;
-        var rep12 = $feature.SUM_PRS_REP_12;
-        var oth12 = $feature.SUM_PRS_OTH_12;
-
-        var winner12 = Decode( Max([dem12, rep12, oth12]),
-          dem12, 'Democrat 2012',
-          rep12, 'Republican 2012',
-          oth12, 'Other 2012',
-        'n/a' );
-
         var dem16 = $feature.SUM_PRS_DEM_16;
         var rep16 = $feature.SUM_PRS_REP_16;
         var oth16 = $feature.SUM_PRS_OTH_16;
 
         var winner16 = Decode( Max([dem16, rep16, oth16]),
-          dem16, 'Democrat 2016',
-          rep16, 'Republican 2016',
-          oth16, 'Other 2016',
+          dem16, 'Democrat',
+          rep16, 'Republican',
+          oth16, 'Other',
         'n/a' );
 
-        return Concatenate([winner12, winner16], ", ");
+        return winner16
       `,
       valueExpressionTitle: "Outright winner",
       defaultSymbol: null,
       uniqueValueInfos: [{
-        value: "Republican 2012, Republican 2016",
-        label: "Republican 2012 & 2016",
+        value: "Republican",
+        label: "Republican",
         symbol: new SimpleFillSymbol({
           color: rColor,
           outline: null
         })
       }, {
-        value: "Democrat 2012, Democrat 2016",
-        label: "Democrat 2012 & 2016",
+        value: "Democrat",
+        label: "Democrat",
         symbol: new SimpleFillSymbol({
           color: dColor,
           outline: null
         })
-      },
-      {
-        value: "Democrat 2012, Republican 2016",
-        label: "Democrat 2012, Republican 2016",
-        symbol: new CIMSymbol({
-          data: {
-            type: "CIMSymbolReference",
-            symbol: {
-              type: "CIMPolygonSymbol",
-              symbolLayers: [
-                {
-                  type: "CIMHatchFill",
-                  enable: true,
-                  lineSymbol: {
-                    type: "CIMLineSymbol",
-                    symbolLayers: [
-                      {
-                        type: "CIMSolidStroke",
-                        effects: [
-                          {
-                            type: "CIMGeometricEffectDashes",
-                            // dashTemplate: [5, 5],
-                            lineDashEnding: "FullPattern"
-                          }
-                        ],
-                        enable: true,
-                        width: 1,
-                        color: dColorCIM
-                      }
-                    ]
-                  },
-                  rotation: 45, // rotation of the lines
-                  separation: 4 // distance between lines in hatch fill
-                },
-                {
-                  type: "CIMSolidFill",
-                  enable: true,
-                  color: rColorCIM
-                },
-                {
-                  type: "CIMSolidStroke",
-                  enable: true,
-                  width: 4,
-                  color: borderColorCIM100
-                }
-              ]
-            }
-          }
-        })
-      }
-    ]
+      }]
     }),
     popupTemplate: new PopupTemplate({
       title: "{STATE}",

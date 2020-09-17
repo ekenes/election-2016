@@ -81,74 +81,24 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 title: "2012 & 2016 Election results",
                 opacity: 0.3,
                 renderer: new rasterRenderers_1.UniqueValueRenderer({
-                    valueExpression: "\n        var dem12 = $feature.SUM_PRS_DEM_12;\n        var rep12 = $feature.SUM_PRS_REP_12;\n        var oth12 = $feature.SUM_PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
+                    valueExpression: "\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat',\n          rep16, 'Republican',\n          oth16, 'Other',\n        'n/a' );\n\n        return winner16\n      ",
                     valueExpressionTitle: "Outright winner",
                     defaultSymbol: null,
                     uniqueValueInfos: [{
-                            value: "Republican 2012, Republican 2016",
-                            label: "Republican 2012 & 2016",
+                            value: "Republican",
+                            label: "Republican",
                             symbol: new symbols_1.SimpleFillSymbol({
                                 color: rColor,
                                 outline: null
                             })
                         }, {
-                            value: "Democrat 2012, Democrat 2016",
-                            label: "Democrat 2012 & 2016",
+                            value: "Democrat",
+                            label: "Democrat",
                             symbol: new symbols_1.SimpleFillSymbol({
                                 color: dColor,
                                 outline: null
                             })
-                        },
-                        {
-                            value: "Democrat 2012, Republican 2016",
-                            label: "Democrat 2012, Republican 2016",
-                            symbol: new symbols_1.CIMSymbol({
-                                data: {
-                                    type: "CIMSymbolReference",
-                                    symbol: {
-                                        type: "CIMPolygonSymbol",
-                                        symbolLayers: [
-                                            {
-                                                type: "CIMHatchFill",
-                                                enable: true,
-                                                lineSymbol: {
-                                                    type: "CIMLineSymbol",
-                                                    symbolLayers: [
-                                                        {
-                                                            type: "CIMSolidStroke",
-                                                            effects: [
-                                                                {
-                                                                    type: "CIMGeometricEffectDashes",
-                                                                    // dashTemplate: [5, 5],
-                                                                    lineDashEnding: "FullPattern"
-                                                                }
-                                                            ],
-                                                            enable: true,
-                                                            width: 1,
-                                                            color: dColorCIM
-                                                        }
-                                                    ]
-                                                },
-                                                rotation: 45,
-                                                separation: 4 // distance between lines in hatch fill
-                                            },
-                                            {
-                                                type: "CIMSolidFill",
-                                                enable: true,
-                                                color: rColorCIM
-                                            },
-                                            {
-                                                type: "CIMSolidStroke",
-                                                enable: true,
-                                                width: 4,
-                                                color: borderColorCIM100
-                                            }
-                                        ]
-                                    }
-                                }
-                            })
-                        }
-                    ]
+                        }]
                 }),
                 popupTemplate: new PopupTemplate({
                     title: "{STATE}",
