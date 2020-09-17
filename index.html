@@ -20,6 +20,32 @@
   </head>
   <body>
     <div id="viewDiv"></div>
+    <div id="change-legend" class="esri-widget">
+      <div class="heading">
+        Change in U.S. presidential voting behavior from <br>2012-2016
+      </div>
+      <div class="subheading">
+        County results
+      </div>
+      <div class="img-container">
+        <img class="parties" src="assets/party-colors.png">
+      </div>
+      <div class="donut-container">
+        <table class="esri-widget">
+          <tr><td><img class="legend-icons" src="assets/full-circle.png"></td><td>Increase in votes</td></tr>
+          <tr><td><img class="legend-icons" src="assets/donut.png"></td><td>Decrease in votes</td></tr>
+        </table>
+      </div>
+      <div class="description">
+        <!-- Symbol size represents the number of votes as a percentage of the total votes cast in the state. -->
+        This example from Utah County, Utah shows a significant decrease in <span style="font-weight: 500; color:rgba(220, 75, 0, 1)">Republican</span> votes and a significant
+        increase in <span style="font-weight: 500; color:rgba(181, 166, 0, 1)">third party</span> votes.
+      </div>
+      <div class="img-container">
+        <img class="example" src="assets/example-change.png">
+      </div>
+      <div id="change-legend-container"></div>
+    </div>
     <script>require(["app/main"]);</script>
   </body>
 </html>

@@ -7,6 +7,57 @@ body,
   width: 100%;
 }
 
+.legend-icons {
+  width: 20px;
+}
+
+#change-legend {
+  padding: 5px;
+  width: 250px;
+}
+
+.description {
+  margin: 10px;
+}
+
+.heading {
+  color: #323232;
+  font-weight: 800;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  margin: 10px;
+}
+
+.subheading {
+  color: #323232;
+  font-weight: 600;
+  text-align: left;
+  margin-left: 15px;
+}
+
+#change-legend-container {
+  width: 100%;
+}
+
+.img-container {
+  margin-left: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+img.parties {
+  width: 180px;
+}
+
+img.donut {
+  width: 150px;
+}
+
+img.example {
+  width: 150px;
+}
 table td {
   padding: 3px;
 }

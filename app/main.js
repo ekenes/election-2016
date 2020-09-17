@@ -38,7 +38,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, swipe, legend;
+        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, swipe;
         return __generator(this, function (_a) {
             map = new EsriMap({
                 basemap: {
@@ -238,11 +238,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 portalItem: {
                     id: "4f03bcde997e4badbef186d0c05f5a9a"
                 },
-                title: "2012 & 2016 Election results",
+                title: "U.S. States",
                 opacity: 0.3,
                 renderer: new rasterRenderers_1.UniqueValueRenderer({
                     valueExpression: "\n        var dem12 = $feature.SUM_PRS_DEM_12;\n        var rep12 = $feature.SUM_PRS_REP_12;\n        var oth12 = $feature.SUM_PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
-                    valueExpressionTitle: "Outright winner",
+                    valueExpressionTitle: "Flipped states",
                     defaultSymbol: null,
                     uniqueValueInfos: [{
                             value: "Democrat 2012, Republican 2016",
@@ -2070,10 +2070,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 position: 90
             });
             view.ui.add(swipe);
-            legend = new Legend({
-                view: view
+            new Legend({
+                view: view,
+                container: "change-legend-container",
+                layerInfos: [{
+                        layer: polygonChangeLayer
+                    }]
             });
-            view.ui.add(legend, "bottom-left");
+            view.ui.add("change-legend", "bottom-left");
             return [2 /*return*/];
         });
     }); })();

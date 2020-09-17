@@ -7,6 +7,7 @@ import FieldInfo = require("esri/popup/FieldInfo");
 import FieldInfoFormat = require("esri/popup/support/FieldInfoFormat");
 import Swipe = require("esri/widgets/Swipe");
 import Legend = require("esri/widgets/Legend");
+import LegendLayerInfo = require("esri/tasks/support/LegendLayer");
 import LabelClass = require("esri/layers/support/LabelClass");
 import Color = require("esri/Color");
 import Font = require("esri/symbols/Font");
@@ -375,7 +376,7 @@ import { TextContent } from "esri/popup/content";
     portalItem: {
       id: "4f03bcde997e4badbef186d0c05f5a9a"
     },
-    title: "2012 & 2016 Election results",
+    title: "U.S. States",
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
@@ -401,7 +402,7 @@ import { TextContent } from "esri/popup/content";
 
         return Concatenate([winner12, winner16], ", ");
       `,
-      valueExpressionTitle: "Outright winner",
+      valueExpressionTitle: "Flipped states",
       defaultSymbol: null,
       uniqueValueInfos: [{
         value: "Democrat 2012, Republican 2016",
@@ -2825,9 +2826,13 @@ import { TextContent } from "esri/popup/content";
   });
   view.ui.add(swipe);
 
-  const legend = new Legend({
-    view
+  new Legend({
+    view,
+    container: "change-legend-container",
+    layerInfos: [{
+      layer: polygonChangeLayer
+    }] as any
   });
-  view.ui.add(legend, "bottom-left");
+  view.ui.add("change-legend", "bottom-left");
 
 })();
