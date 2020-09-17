@@ -50,6 +50,8 @@ import { TextContent } from "esri/popup/content";
   // PRS_REP_16
   // PRS_OTH_16
 
+  // ↑↓
+
   const rColorCIM = [220, 75, 0, 255]; // [237, 81, 81, 255];
   const dColorCIM = [60, 108, 204, 255]; // [20, 158, 206, 255];
   const oColorCIM = [224, 206, 0, 255]; // [167, 198, 54, 255];   145, 217, 0
@@ -223,13 +225,17 @@ import { TextContent } from "esri/popup/content";
         }),
         new TextContent({
           text: `
-            Votes per party in 2016 and the change from 2012:
-
-            <ul>
-              <li><span style='color:${dColor}; font-weight:bolder'>Democrat:</span>  {SUM_PRS_DEM_16} (<span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span>)</li>
-              <li><span style='color:${rColor}; font-weight:bolder'>Republican:</span>  {SUM_PRS_REP_16} (<span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span>)</li>
-              <li><span style='color:${oHaloColor}; font-weight:bolder'>Other:</span>  {SUM_PRS_OTH_16} (<span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span>)</li>
-            </ul>
+            <div class="table-container">
+              Votes in 2016 and the change from 2012
+              <br/>
+              <br/>
+              <table class="esri-widget popup">
+                <tr class="head"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>
+                <tr class="dem"><td><span style='color:${dColor}; font-weight:bolder'>Democrat</span></td><td class="num">{SUM_PRS_DEM_16}</td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>
+                <tr class="rep"><td><span style='color:${rColor}; font-weight:bolder'>Republican</span></td><td class="num">{SUM_PRS_REP_16}</td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>
+                <tr class="oth"><td><span style='color:${oHaloColor}; font-weight:bolder'>Other</span></td><td class="num">{SUM_PRS_OTH_16}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
+              </table>
+            </div>
           `
         })
       ],
@@ -301,7 +307,9 @@ import { TextContent } from "esri/popup/content";
             var votes12 = $feature.SUM_PRS_DEM_12;
             var diff = votes16 - votes12;
             var change = ( (votes16 - votes12) / votes12 );
-            return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+            var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+            return changeText;
           `
         }),
         new ExpressionInfo({
@@ -312,7 +320,9 @@ import { TextContent } from "esri/popup/content";
             var votes12 = $feature.SUM_PRS_REP_12;
             var diff = votes16 - votes12;
             var change = ( (votes16 - votes12) / votes12 );
-            return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+            var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+            return changeText;
           `
         }),
         new ExpressionInfo({
@@ -323,7 +333,48 @@ import { TextContent } from "esri/popup/content";
             var votes12 = $feature.SUM_PRS_OTH_12;
             var diff = votes16 - votes12;
             var change = ( (votes16 - votes12) / votes12 );
-            return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+            var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+            return changeText;
+          `
+        }),
+        new ExpressionInfo({
+          title: "Democrat diff from 2012",
+          name: "dem12diff16",
+          expression: `
+            var votes16 = $feature.SUM_PRS_DEM_16;
+            var votes12 = $feature.SUM_PRS_DEM_12;
+            var diff = votes16 - votes12;
+            var change = ( (votes16 - votes12) / votes12 );
+            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+            var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+            return diffText;
+          `
+        }),
+        new ExpressionInfo({
+          title: "Republican diff from 2012",
+          name: "rep12diff16",
+          expression: `
+            var votes16 = $feature.SUM_PRS_REP_16;
+            var votes12 = $feature.SUM_PRS_REP_12;
+            var diff = votes16 - votes12;
+            var change = ( (votes16 - votes12) / votes12 );
+            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+            var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+            return diffText;
+          `
+        }),
+        new ExpressionInfo({
+          title: "Other diff from 2012",
+          name: "oth12diff16",
+          expression: `
+            var votes16 = $feature.SUM_PRS_OTH_16;
+            var votes12 = $feature.SUM_PRS_OTH_12;
+            var diff = votes16 - votes12;
+            var change = ( (votes16 - votes12) / votes12 );
+            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+            var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+            return diffText;
           `
         }),
         new ExpressionInfo({
@@ -514,13 +565,17 @@ import { TextContent } from "esri/popup/content";
       }),
       new TextContent({
         text: `
-          Votes per party in 2016 and the change from 2012:
-
-          <ul>
-            <li><span style='color:${dColor}; font-weight:bolder'>Democrat:</span>  {PRS_DEM_16} (<span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span>)</li>
-            <li><span style='color:${rColor}; font-weight:bolder'>Republican:</span>  {PRS_REP_16} (<span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span>)</li>
-            <li><span style='color:${oHaloColor}; font-weight:bolder'>Other:</span>  {PRS_OTH_16} (<span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span>)</li>
-          </ul>
+          <div class="table-container">
+            Votes in 2016 and the change from 2012
+            <br/>
+            <br/>
+            <table class="esri-widget popup">
+              <tr class="head"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>
+              <tr class="dem"><td><span style='color:${dColor}; font-weight:bolder'>Democrat</span></td><td class="num">{PRS_DEM_16}</td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>
+              <tr class="rep"><td><span style='color:${rColor}; font-weight:bolder'>Republican</span></td><td class="num">{PRS_REP_16}</td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>
+              <tr class="oth"><td><span style='color:${oHaloColor}; font-weight:bolder'>Other</span></td><td class="num">{PRS_OTH_16}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
+            </table>
+          </div>
         `
       })
     ],
@@ -592,7 +647,9 @@ import { TextContent } from "esri/popup/content";
           var votes12 = $feature.PRS_DEM_12;
           var diff = votes16 - votes12;
           var change = ( (votes16 - votes12) / votes12 );
-          return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          return changeText;
         `
       }),
       new ExpressionInfo({
@@ -603,7 +660,9 @@ import { TextContent } from "esri/popup/content";
           var votes12 = $feature.PRS_REP_12;
           var diff = votes16 - votes12;
           var change = ( (votes16 - votes12) / votes12 );
-          return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          return changeText;
         `
       }),
       new ExpressionInfo({
@@ -614,7 +673,48 @@ import { TextContent } from "esri/popup/content";
           var votes12 = $feature.PRS_OTH_12;
           var diff = votes16 - votes12;
           var change = ( (votes16 - votes12) / votes12 );
-          return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          return changeText;
+        `
+      }),
+      new ExpressionInfo({
+        title: "Democrat diff from 2012",
+        name: "dem12diff16",
+        expression: `
+          var votes16 = $feature.PRS_DEM_16;
+          var votes12 = $feature.PRS_DEM_12;
+          var diff = votes16 - votes12;
+          var change = ( (votes16 - votes12) / votes12 );
+          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(change, '↓#,###.#%'));
+          return diffText;
+        `
+      }),
+      new ExpressionInfo({
+        title: "Republican diff from 2012",
+        name: "rep12diff16",
+        expression: `
+          var votes16 = $feature.PRS_REP_16;
+          var votes12 = $feature.PRS_REP_12;
+          var diff = votes16 - votes12;
+          var change = ( (votes16 - votes12) / votes12 );
+          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(change, '↓#,###.#%'));
+          return diffText;
+        `
+      }),
+      new ExpressionInfo({
+        title: "Other diff from 2012",
+        name: "oth12diff16",
+        expression: `
+          var votes16 = $feature.PRS_OTH_16;
+          var votes12 = $feature.PRS_OTH_12;
+          var diff = votes16 - votes12;
+          var change = ( (votes16 - votes12) / votes12 );
+          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
+          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(change, '↓#,###.#%'));
+          return diffText;
         `
       }),
       new ExpressionInfo({

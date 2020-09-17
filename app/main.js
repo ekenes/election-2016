@@ -207,7 +207,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             text: "\n            The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n            candidate won {STATE} by a margin of {expression/winner-margin} points.\n            The {expression/winner-votes} votes cast for the winner comprise\n            {expression/winner-percent-state-votes} of the total votes cast in the state.\n          "
                         }),
                         new content_1.TextContent({
-                            text: "\n            Votes per party in 2016 and the change from 2012:\n\n            <ul>\n              <li><span style='color:" + dColor + "; font-weight:bolder'>Democrat:</span>  {SUM_PRS_DEM_16} (<span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span>)</li>\n              <li><span style='color:" + rColor + "; font-weight:bolder'>Republican:</span>  {SUM_PRS_REP_16} (<span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span>)</li>\n              <li><span style='color:" + oHaloColor + "; font-weight:bolder'>Other:</span>  {SUM_PRS_OTH_16} (<span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span>)</li>\n            </ul>\n          "
+                            text: "\n            <div class=\"table-container\">\n              Votes in 2016 and the change from 2012\n              <br/>\n              <br/>\n              <table class=\"esri-widget popup\">\n                <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n                <tr class=\"dem\"><td><span style='color:" + dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{SUM_PRS_DEM_16}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n                <tr class=\"rep\"><td><span style='color:" + rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{SUM_PRS_REP_16}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n                <tr class=\"oth\"><td><span style='color:" + oHaloColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{SUM_PRS_OTH_16}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n              </table>\n            </div>\n          "
                         })
                     ],
                     expressionInfos: [
@@ -234,17 +234,32 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         new ExpressionInfo({
                             title: "Democrat change from 2012",
                             name: "dem12change16",
-                            expression: "\n            var votes16 = $feature.SUM_PRS_DEM_16;\n            var votes12 = $feature.SUM_PRS_DEM_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          "
+                            expression: "\n            var votes16 = $feature.SUM_PRS_DEM_16;\n            var votes12 = $feature.SUM_PRS_DEM_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n            var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n            return changeText;\n          "
                         }),
                         new ExpressionInfo({
                             title: "Republican change from 2012",
                             name: "rep12change16",
-                            expression: "\n            var votes16 = $feature.SUM_PRS_REP_16;\n            var votes12 = $feature.SUM_PRS_REP_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          "
+                            expression: "\n            var votes16 = $feature.SUM_PRS_REP_16;\n            var votes12 = $feature.SUM_PRS_REP_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n            var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n            return changeText;\n          "
                         }),
                         new ExpressionInfo({
                             title: "Other change from 2012",
                             name: "oth12change16",
-                            expression: "\n            var votes16 = $feature.SUM_PRS_OTH_16;\n            var votes12 = $feature.SUM_PRS_OTH_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          "
+                            expression: "\n            var votes16 = $feature.SUM_PRS_OTH_16;\n            var votes12 = $feature.SUM_PRS_OTH_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n            var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n            return changeText;\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Democrat diff from 2012",
+                            name: "dem12diff16",
+                            expression: "\n            var votes16 = $feature.SUM_PRS_DEM_16;\n            var votes12 = $feature.SUM_PRS_DEM_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n            var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n            return diffText;\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Republican diff from 2012",
+                            name: "rep12diff16",
+                            expression: "\n            var votes16 = $feature.SUM_PRS_REP_16;\n            var votes12 = $feature.SUM_PRS_REP_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n            var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n            return diffText;\n          "
+                        }),
+                        new ExpressionInfo({
+                            title: "Other diff from 2012",
+                            name: "oth12diff16",
+                            expression: "\n            var votes16 = $feature.SUM_PRS_OTH_16;\n            var votes12 = $feature.SUM_PRS_OTH_12;\n            var diff = votes16 - votes12;\n            var change = ( (votes16 - votes12) / votes12 );\n            var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n            var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n            return diffText;\n          "
                         }),
                         new ExpressionInfo({
                             title: "change-color",
@@ -329,7 +344,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         text: "\n          The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n          candidate won this county by a margin of {expression/winner-margin}.\n          The {expression/winner-votes} votes cast for the winner comprise\n          {expression/winner-percent-state-votes} of the total votes cast in the state.\n        "
                     }),
                     new content_1.TextContent({
-                        text: "\n          Votes per party in 2016 and the change from 2012:\n\n          <ul>\n            <li><span style='color:" + dColor + "; font-weight:bolder'>Democrat:</span>  {PRS_DEM_16} (<span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span>)</li>\n            <li><span style='color:" + rColor + "; font-weight:bolder'>Republican:</span>  {PRS_REP_16} (<span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span>)</li>\n            <li><span style='color:" + oHaloColor + "; font-weight:bolder'>Other:</span>  {PRS_OTH_16} (<span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span>)</li>\n          </ul>\n        "
+                        text: "\n          <div class=\"table-container\">\n            Votes in 2016 and the change from 2012\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{PRS_DEM_16}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{PRS_REP_16}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + oHaloColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{PRS_OTH_16}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
                     })
                 ],
                 expressionInfos: [
@@ -356,17 +371,32 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     new ExpressionInfo({
                         title: "Democrat change from 2012",
                         name: "dem12change16",
-                        expression: "\n          var votes16 = $feature.PRS_DEM_16;\n          var votes12 = $feature.PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n        "
+                        expression: "\n          var votes16 = $feature.PRS_DEM_16;\n          var votes12 = $feature.PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return changeText;\n        "
                     }),
                     new ExpressionInfo({
                         title: "Republican change from 2012",
                         name: "rep12change16",
-                        expression: "\n          var votes16 = $feature.PRS_REP_16;\n          var votes12 = $feature.PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n        "
+                        expression: "\n          var votes16 = $feature.PRS_REP_16;\n          var votes12 = $feature.PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return changeText;\n        "
                     }),
                     new ExpressionInfo({
                         title: "Other change from 2012",
                         name: "oth12change16",
-                        expression: "\n          var votes16 = $feature.PRS_OTH_16;\n          var votes12 = $feature.PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n        "
+                        expression: "\n          var votes16 = $feature.PRS_OTH_16;\n          var votes12 = $feature.PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return changeText;\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "Democrat diff from 2012",
+                        name: "dem12diff16",
+                        expression: "\n          var votes16 = $feature.PRS_DEM_16;\n          var votes12 = $feature.PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "Republican diff from 2012",
+                        name: "rep12diff16",
+                        expression: "\n          var votes16 = $feature.PRS_REP_16;\n          var votes12 = $feature.PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
+                    }),
+                    new ExpressionInfo({
+                        title: "Other diff from 2012",
+                        name: "oth12diff16",
+                        expression: "\n          var votes16 = $feature.PRS_OTH_16;\n          var votes12 = $feature.PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
                     }),
                     new ExpressionInfo({
                         title: "change-color",
