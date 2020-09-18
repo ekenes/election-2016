@@ -3451,7 +3451,7 @@ import { TextContent } from "esri/popup/content";
           haloColor: new Color(haloColor),
           haloSize,
           color: new Color(rColor),
-          xoffset: 60,
+          xoffset: 50,
           yoffset: -20
         })
       }),

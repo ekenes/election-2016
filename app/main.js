@@ -2696,7 +2696,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                     haloColor: new Color(haloColor),
                                     haloSize: haloSize,
                                     color: new Color(rColor),
-                                    xoffset: 60,
+                                    xoffset: 50,
                                     yoffset: -20
                                 })
                             }),
