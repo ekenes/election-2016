@@ -113,9 +113,6 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             xsmall: 544
                         }
                     });
-                    view.watch("scale", function (scale) {
-                        console.log(scale);
-                    });
                     rColorCIM = [220, 75, 0, 255];
                     dColorCIM = [60, 108, 204, 255];
                     oColorCIM = [224, 206, 0, 255];

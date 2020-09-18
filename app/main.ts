@@ -50,10 +50,6 @@ import { TextContent } from "esri/popup/content";
     }
   });
 
-  view.watch("scale", (scale) => {
-    console.log(scale);
-  });
-
   // PRS_DEM_12
   // PRS_REP_12
   // PRS_OTH_12
