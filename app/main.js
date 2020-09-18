@@ -79,7 +79,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 totalLegend.style.overflow = "auto";
             }
         }
-        var map, maxScale, referenceScale, scaleThreshold, stateReferenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, statePopupTemplate, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, sizeTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, offsetYTotalChangeExpressionBase, changeStatesLayer, sizeTotalExpressionBase, offsetXTotalExpressionBase, offsetYTotalExpressionBase, totalStatesLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
+        var map, maxScale, referenceScale, scaleThreshold, stateReferenceScale, view, dem12Field, rep12Field, oth12Field, stateVotes12Field, dem16Field, rep16Field, oth16Field, stateVotes16Field, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, statePopupTemplate, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, sizeTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, offsetYTotalChangeExpressionBase, changeStatesLayer, sizeTotalExpressionBase, offsetXTotalExpressionBase, offsetYTotalExpressionBase, totalStatesLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -113,6 +113,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             xsmall: 544
                         }
                     });
+                    dem12Field = "PRS_DEM_12";
+                    rep12Field = "PRS_REP_12";
+                    oth12Field = "PRS_OTH_12";
+                    stateVotes12Field = "TOTAL_STATE_VOTES_12";
+                    dem16Field = "PRS_DEM_16";
+                    rep16Field = "PRS_REP_16";
+                    oth16Field = "PRS_OTH_16";
+                    stateVotes16Field = "TOTAL_STATE_VOTES_16";
                     rColorCIM = [220, 75, 0, 255];
                     dColorCIM = [60, 108, 204, 255];
                     oColorCIM = [224, 206, 0, 255];
@@ -269,14 +277,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             defaultSymbol: null,
                             uniqueValueInfos: [{
                                     value: "Republican",
-                                    label: "Republican",
+                                    label: "R - Trump (304)",
                                     symbol: new symbols_1.SimpleFillSymbol({
                                         color: rColor,
                                         outline: null
                                     })
                                 }, {
                                     value: "Democrat",
-                                    label: "Democrat",
+                                    label: "D - Clinton (227)",
                                     symbol: new symbols_1.SimpleFillSymbol({
                                         color: dColor,
                                         outline: null

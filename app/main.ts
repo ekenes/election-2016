@@ -58,6 +58,16 @@ import { TextContent } from "esri/popup/content";
   // PRS_REP_16
   // PRS_OTH_16
 
+  const dem12Field = "PRS_DEM_12"
+  const rep12Field = "PRS_REP_12"
+  const oth12Field = "PRS_OTH_12"
+  const stateVotes12Field = "TOTAL_STATE_VOTES_12";
+
+  const dem16Field = "PRS_DEM_16"
+  const rep16Field = "PRS_REP_16"
+  const oth16Field = "PRS_OTH_16"
+  const stateVotes16Field = "TOTAL_STATE_VOTES_16";
+
   // ↑↓
 
   const rColorCIM = [220, 75, 0, 255]; // [237, 81, 81, 255];
@@ -363,14 +373,14 @@ import { TextContent } from "esri/popup/content";
       defaultSymbol: null,
       uniqueValueInfos: [{
         value: "Republican",
-        label: "Republican",
+        label: "R - Trump (304)",
         symbol: new SimpleFillSymbol({
           color: rColor,
           outline: null
         })
       }, {
         value: "Democrat",
-        label: "Democrat",
+        label: "D - Clinton (227)",
         symbol: new SimpleFillSymbol({
           color: dColor,
           outline: null
