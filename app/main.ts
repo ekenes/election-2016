@@ -2881,4 +2881,31 @@ import { TextContent } from "esri/popup/content";
     }
   });
 
+  function updateLegendHeight () {
+    changeLegend.style.height = null;
+    changeLegend.style.overflow = null;
+
+    totalLegend.style.height = null;
+    totalLegend.style.overflow = null;
+
+    if(view.heightBreakpoint === "small"){
+      changeLegend.style.height = "450px";
+      changeLegend.style.overflow = "auto";
+
+      totalLegend.style.height = "450px";
+      totalLegend.style.overflow = "auto";
+
+    }
+    if (view.heightBreakpoint === "xsmall"){
+      changeLegend.style.height = "300px";
+      changeLegend.style.overflow = "auto";
+
+      totalLegend.style.height = "300px";
+      totalLegend.style.overflow = "auto";
+    }
+  }
+
+  view.watch("heightBreakpoint", updateLegendHeight);
+  await view.when(updateLegendHeight);
+
 })();
