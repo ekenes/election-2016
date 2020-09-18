@@ -7,6 +7,14 @@ body,
   width: 100%;
 }
 
+#info-toggle {
+  height: 32px;
+  width: 32px;
+}
+#info-toggle:hover{
+  cursor: pointer;
+}
+
 .legend-icons {
   width: 20px;
 }

@@ -56,7 +56,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 totalLegend.style.overflow = "auto";
             }
         }
-        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, swipe, totalLegend, changeLegend;
+        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -2092,6 +2092,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     view.ui.add(swipe);
                     totalLegend = document.getElementById("total-legend");
                     changeLegend = document.getElementById("change-legend");
+                    infoToggle = document.getElementById("info-toggle");
                     new Legend({
                         view: view,
                         container: "change-legend-container",
@@ -2109,33 +2110,35 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     });
                     view.ui.add(changeLegend, "bottom-left");
                     view.ui.add(totalLegend, "bottom-right");
-                    // view.ui.add(new Expand({
-                    //   view,
-                    //   content: changeLegend,
-                    //   expandIconClass: "esri-icon-layer-list",
-                    //   expanded: true
-                    // }), "bottom-left");
-                    // view.ui.add(new Expand({
-                    //   view,
-                    //   content: totalLegend,
-                    //   expandIconClass: "esri-icon-layer-list",
-                    //   expanded: true
-                    // }), "bottom-right");
+                    view.ui.add(infoToggle, "top-left");
+                    visibilityEnabled = true;
+                    toggleInfoVisibility = function () {
+                        changeLegend.style.display = changeLegend.style.display === "none" ? "block" : "none";
+                        totalLegend.style.display = totalLegend.style.display === "none" ? "block" : "none";
+                        visibilityEnabled = !visibilityEnabled;
+                    };
+                    infoToggle.addEventListener("click", toggleInfoVisibility);
                     swipe.watch("position", function (position) {
+                        if (!visibilityEnabled) {
+                            return;
+                        }
                         var threshold = 50;
                         if (position <= 85) {
+                            totalLegend.style.display = "block";
                             var opacity = (35 - (position - threshold)) * 3.5;
                             totalLegend.style.opacity = (opacity * 0.01).toString();
                         }
                         else {
-                            totalLegend.style.opacity = "0";
+                            totalLegend.style.display = "none";
                         }
                         if (position <= 50) {
+                            changeLegend.style.display = "block";
                             var opacity = (35 - (threshold - position)) * 3.5;
                             changeLegend.style.opacity = (opacity * 0.01).toString();
                         }
                         if (position <= 15) {
                             changeLegend.style.opacity = "0";
+                            changeLegend.style.display = "none";
                         }
                     });
                     view.watch("heightBreakpoint", updateLegendHeight);
