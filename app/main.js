@@ -1994,6 +1994,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
                         },
+                        opacity: 1,
                         legendEnabled: false,
                         renderer: new renderers_1.SimpleRenderer({
                             symbol: new symbols_1.CIMSymbol({
@@ -2883,6 +2884,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
                         },
+                        opacity: 1,
                         legendEnabled: false,
                         renderer: new renderers_1.SimpleRenderer({
                             symbol: new symbols_1.CIMSymbol({
@@ -3184,7 +3186,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // DEMOCRAT label classes
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) >= 500000",
+                                where: "ABS(SUM_PRS_DEM_16) >= 5000000",
                                 labelExpressionInfo: {
                                     expression: "\n            Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
                                 },
@@ -3204,7 +3206,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) >= 100000 AND ABS(SUM_PRS_DEM_16) < 500000",
+                                where: "ABS(SUM_PRS_DEM_16) >= 1000000 AND ABS(SUM_PRS_DEM_16) < 5000000",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
                                 },
@@ -3224,7 +3226,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) >= 50000 AND ABS(SUM_PRS_DEM_16) < 100000",
+                                where: "ABS(SUM_PRS_DEM_16) >= 500000 AND ABS(SUM_PRS_DEM_16) < 1000000",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
                                 },
@@ -3244,7 +3246,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) >= 10000 AND ABS(SUM_PRS_DEM_16) < 50000",
+                                where: "ABS(SUM_PRS_DEM_16) >= 100000 AND ABS(SUM_PRS_DEM_16) < 500000",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
                                 },
@@ -3264,7 +3266,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) < 10000",
+                                where: "ABS(SUM_PRS_DEM_16) < 100000",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
                                 },
@@ -3285,7 +3287,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // REPUBLICAN label classes
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) >= 500000",
+                                where: "ABS(SUM_PRS_REP_16) >= 5000000",
                                 labelExpressionInfo: {
                                     expression: "\n            Text($feature.SUM_PRS_REP_16, '#,###');\n          "
                                 },
@@ -3305,7 +3307,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) >= 100000 AND ABS(SUM_PRS_REP_16) < 500000",
+                                where: "ABS(SUM_PRS_REP_16) >= 1000000 AND ABS(SUM_PRS_REP_16) < 5000000",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_REP_16, '#,###');\n          "
                                 },
@@ -3325,7 +3327,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) >= 50000 AND ABS(SUM_PRS_REP_16) < 100000",
+                                where: "ABS(SUM_PRS_REP_16) >= 500000 AND ABS(SUM_PRS_REP_16) < 1000000",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_REP_16, '#,###');\n          "
                                 },
@@ -3345,7 +3347,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) >= 10000 AND ABS(SUM_PRS_REP_16) < 50000",
+                                where: "ABS(SUM_PRS_REP_16) >= 100000 AND ABS(SUM_PRS_REP_16) < 500000",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_REP_16, '#,###');\n          "
                                 },
@@ -3365,7 +3367,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) < 10000",
+                                where: "ABS(SUM_PRS_REP_16) < 100000",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_REP_16, '#,###');\n          "
                                 },
@@ -3386,7 +3388,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // OTHER label classes
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_OTH_16) >= 500000",
+                                where: "ABS(SUM_PRS_OTH_16) >= 5000000",
                                 labelExpressionInfo: {
                                     expression: "\n            Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
                                 },
@@ -3406,7 +3408,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_OTH_16) >= 100000 AND ABS(SUM_PRS_OTH_16) < 500000",
+                                where: "ABS(SUM_PRS_OTH_16) >= 1000000 AND ABS(SUM_PRS_OTH_16) < 5000000",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
                                 },
@@ -3426,7 +3428,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "\n          (ABS(SUM_PRS_OTH_16) >= 50000 AND ABS(SUM_PRS_OTH_16) < 100000)\n        ",
+                                where: "\n          (ABS(SUM_PRS_OTH_16) >= 500000 AND ABS(SUM_PRS_OTH_16) < 1000000)\n        ",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
                                 },
@@ -3446,7 +3448,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "\n          (ABS(SUM_PRS_OTH_16) >= 10000 AND ABS(SUM_PRS_OTH_16) < 50000)\n        ",
+                                where: "\n          (ABS(SUM_PRS_OTH_16) >= 100000 AND ABS(SUM_PRS_OTH_16) < 500000)\n        ",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
                                 },
@@ -3466,7 +3468,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "\n          (ABS(SUM_PRS_OTH_16) < 10000)\n        ",
+                                where: "\n          (ABS(SUM_PRS_OTH_16) < 100000)\n        ",
                                 labelExpressionInfo: {
                                     expression: "\n          Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
                                 },

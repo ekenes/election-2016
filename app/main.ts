@@ -2633,6 +2633,7 @@ import { TextContent } from "esri/popup/content";
     portalItem: {
       id: "4f03bcde997e4badbef186d0c05f5a9a"
     },
+    opacity: 1,
     legendEnabled: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
@@ -3753,6 +3754,7 @@ const offsetYTotalExpressionBase = `
     portalItem: {
       id: "4f03bcde997e4badbef186d0c05f5a9a"
     },
+    opacity: 1,
     legendEnabled: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
@@ -4078,7 +4080,7 @@ const offsetYTotalExpressionBase = `
 
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) >= 500000",
+        where: "ABS(SUM_PRS_DEM_16) >= 5000000",
         labelExpressionInfo: {
           expression: `
             Text($feature.SUM_PRS_DEM_16, '#,###');
@@ -4100,7 +4102,7 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) >= 100000 AND ABS(SUM_PRS_DEM_16) < 500000",
+        where: "ABS(SUM_PRS_DEM_16) >= 1000000 AND ABS(SUM_PRS_DEM_16) < 5000000",
         labelExpressionInfo: {
           expression: `
           Text($feature.SUM_PRS_DEM_16, '#,###');
@@ -4122,7 +4124,7 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) >= 50000 AND ABS(SUM_PRS_DEM_16) < 100000",
+        where: "ABS(SUM_PRS_DEM_16) >= 500000 AND ABS(SUM_PRS_DEM_16) < 1000000",
         labelExpressionInfo: {
           expression: `
           Text($feature.SUM_PRS_DEM_16, '#,###');
@@ -4144,7 +4146,7 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) >= 10000 AND ABS(SUM_PRS_DEM_16) < 50000",
+        where: "ABS(SUM_PRS_DEM_16) >= 100000 AND ABS(SUM_PRS_DEM_16) < 500000",
         labelExpressionInfo: {
           expression: `
           Text($feature.SUM_PRS_DEM_16, '#,###');
@@ -4166,7 +4168,7 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) < 10000",
+        where: "ABS(SUM_PRS_DEM_16) < 100000",
         labelExpressionInfo: {
           expression: `
           Text($feature.SUM_PRS_DEM_16, '#,###');
@@ -4192,7 +4194,7 @@ const offsetYTotalExpressionBase = `
 
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) >= 500000",
+        where: "ABS(SUM_PRS_REP_16) >= 5000000",
         labelExpressionInfo: {
           expression: `
             Text($feature.SUM_PRS_REP_16, '#,###');
@@ -4214,7 +4216,7 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) >= 100000 AND ABS(SUM_PRS_REP_16) < 500000",
+        where: "ABS(SUM_PRS_REP_16) >= 1000000 AND ABS(SUM_PRS_REP_16) < 5000000",
         labelExpressionInfo: {
           expression: `
           Text($feature.SUM_PRS_REP_16, '#,###');
@@ -4236,7 +4238,7 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) >= 50000 AND ABS(SUM_PRS_REP_16) < 100000",
+        where: "ABS(SUM_PRS_REP_16) >= 500000 AND ABS(SUM_PRS_REP_16) < 1000000",
         labelExpressionInfo: {
           expression: `
           Text($feature.SUM_PRS_REP_16, '#,###');
@@ -4258,7 +4260,7 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) >= 10000 AND ABS(SUM_PRS_REP_16) < 50000",
+        where: "ABS(SUM_PRS_REP_16) >= 100000 AND ABS(SUM_PRS_REP_16) < 500000",
         labelExpressionInfo: {
           expression: `
           Text($feature.SUM_PRS_REP_16, '#,###');
@@ -4280,7 +4282,7 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) < 10000",
+        where: "ABS(SUM_PRS_REP_16) < 100000",
         labelExpressionInfo: {
           expression: `
           Text($feature.SUM_PRS_REP_16, '#,###');
@@ -4305,7 +4307,7 @@ const offsetYTotalExpressionBase = `
 
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_OTH_16) >= 500000",
+        where: "ABS(SUM_PRS_OTH_16) >= 5000000",
         labelExpressionInfo: {
           expression: `
             Text($feature.SUM_PRS_OTH_16, '#,###');
@@ -4327,7 +4329,7 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_OTH_16) >= 100000 AND ABS(SUM_PRS_OTH_16) < 500000",
+        where: "ABS(SUM_PRS_OTH_16) >= 1000000 AND ABS(SUM_PRS_OTH_16) < 5000000",
         labelExpressionInfo: {
           expression: `
           Text($feature.SUM_PRS_OTH_16, '#,###');
@@ -4350,7 +4352,7 @@ const offsetYTotalExpressionBase = `
       new LabelClass({
         minScale: 9244700,
         where: `
-          (ABS(SUM_PRS_OTH_16) >= 50000 AND ABS(SUM_PRS_OTH_16) < 100000)
+          (ABS(SUM_PRS_OTH_16) >= 500000 AND ABS(SUM_PRS_OTH_16) < 1000000)
         `,
         labelExpressionInfo: {
           expression: `
@@ -4375,7 +4377,7 @@ const offsetYTotalExpressionBase = `
       new LabelClass({
         minScale: 9244700,
         where: `
-          (ABS(SUM_PRS_OTH_16) >= 10000 AND ABS(SUM_PRS_OTH_16) < 50000)
+          (ABS(SUM_PRS_OTH_16) >= 100000 AND ABS(SUM_PRS_OTH_16) < 500000)
         `,
         labelExpressionInfo: {
           expression: `
@@ -4399,7 +4401,7 @@ const offsetYTotalExpressionBase = `
       new LabelClass({
         minScale: 9244700,
         where: `
-          (ABS(SUM_PRS_OTH_16) < 10000)
+          (ABS(SUM_PRS_OTH_16) < 100000)
         `,
         labelExpressionInfo: {
           expression: `
