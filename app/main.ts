@@ -74,7 +74,7 @@ import { TextContent } from "esri/popup/content";
     portalItem: {
       id: "4f03bcde997e4badbef186d0c05f5a9a"
     },
-    title: "U.S. states",
+    title: "Results by state",
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
@@ -90,7 +90,6 @@ import { TextContent } from "esri/popup/content";
 
         return winner16
       `,
-      valueExpressionTitle: "Winner by party",
       defaultSymbol: null,
       uniqueValueInfos: [{
         value: "Republican",
@@ -381,7 +380,7 @@ import { TextContent } from "esri/popup/content";
     portalItem: {
       id: "4f03bcde997e4badbef186d0c05f5a9a"
     },
-    title: "U.S. states",
+    title: "Swing states",
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
@@ -407,7 +406,6 @@ import { TextContent } from "esri/popup/content";
 
         return Concatenate([winner12, winner16], ", ");
       `,
-      valueExpressionTitle: "Flipped states",
       defaultSymbol: null,
       uniqueValueInfos: [{
         value: "Democrat 2012, Republican 2016",
@@ -1390,6 +1388,11 @@ import { TextContent } from "esri/popup/content";
                           type: "CIMSolidFill",
                           enable: true,
                           color: oColorCIM,
+                        }, {
+                          type: "CIMSolidStroke",
+                          enable: true,
+                          color: [161, 148, 0, 255],
+                          width: 1
                         }
                       ]
                     }

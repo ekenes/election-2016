@@ -104,11 +104,10 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
                         },
-                        title: "U.S. states",
+                        title: "Results by state",
                         opacity: 0.3,
                         renderer: new rasterRenderers_1.UniqueValueRenderer({
                             valueExpression: "\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat',\n          rep16, 'Republican',\n          oth16, 'Other',\n        'n/a' );\n\n        return winner16\n      ",
-                            valueExpressionTitle: "Winner by party",
                             defaultSymbol: null,
                             uniqueValueInfos: [{
                                     value: "Republican",
@@ -264,11 +263,10 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
                         },
-                        title: "U.S. states",
+                        title: "Swing states",
                         opacity: 0.3,
                         renderer: new rasterRenderers_1.UniqueValueRenderer({
                             valueExpression: "\n        var dem12 = $feature.SUM_PRS_DEM_12;\n        var rep12 = $feature.SUM_PRS_REP_12;\n        var oth12 = $feature.SUM_PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
-                            valueExpressionTitle: "Flipped states",
                             defaultSymbol: null,
                             uniqueValueInfos: [{
                                     value: "Democrat 2012, Republican 2016",
@@ -910,6 +908,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
                                                                     color: oColorCIM,
+                                                                }, {
+                                                                    type: "CIMSolidStroke",
+                                                                    enable: true,
+                                                                    color: [161, 148, 0, 255],
+                                                                    width: 1
                                                                 }
                                                             ]
                                                         }
