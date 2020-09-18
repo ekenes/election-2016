@@ -7,7 +7,6 @@ import FieldInfo = require("esri/popup/FieldInfo");
 import FieldInfoFormat = require("esri/popup/support/FieldInfoFormat");
 import Swipe = require("esri/widgets/Swipe");
 import Legend = require("esri/widgets/Legend");
-import Expand = require("esri/widgets/Expand");
 import LabelClass = require("esri/layers/support/LabelClass");
 import Color = require("esri/Color");
 import Font = require("esri/symbols/Font");
@@ -40,6 +39,12 @@ import { TextContent } from "esri/popup/content";
     },
     highlightOptions: {
       fillOpacity: 0
+    },
+    breakpoints: {
+      large: 1200,
+      medium: 992,
+      small: 768,
+      xsmall: 544
     }
   });
 

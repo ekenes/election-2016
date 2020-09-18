@@ -80,6 +80,12 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         },
                         highlightOptions: {
                             fillOpacity: 0
+                        },
+                        breakpoints: {
+                            large: 1200,
+                            medium: 992,
+                            small: 768,
+                            xsmall: 544
                         }
                     });
                     rColorCIM = [220, 75, 0, 255];
