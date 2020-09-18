@@ -2864,35 +2864,38 @@ import { TextContent } from "esri/popup/content";
     changeLegend.style.display = changeLegend.style.display === "none" ? "block" : "none";
     totalLegend.style.display = totalLegend.style.display === "none" ? "block" : "none";
     visibilityEnabled = !visibilityEnabled;
+    updateLegendOpacity();
   }
 
   infoToggle.addEventListener("click", toggleInfoVisibility);
 
-  swipe.watch( "position", (position) => {
+  swipe.watch( "position", updateLegendOpacity);
+
+  function updateLegendOpacity() {
     if (!visibilityEnabled){
       return;
     }
 
     const threshold = 50;
-    if (position <= 85){
+    if (swipe.position <= 85){
       totalLegend.style.display = "block";
-      const opacity = (35 - (position - threshold)) * 3.5;
+      const opacity = (35 - (swipe.position - threshold)) * 3.5;
       totalLegend.style.opacity = ( opacity * 0.01 ).toString();
     } else {
       totalLegend.style.display = "none";
     }
 
-    if (position <= 50){
+    if (swipe.position <= 50){
       changeLegend.style.display = "block";
-      const opacity = (35 - (threshold - position)) * 3.5;
+      const opacity = (35 - (threshold - swipe.position)) * 3.5;
       changeLegend.style.opacity = ( opacity * 0.01 ).toString();
     }
 
-    if (position <= 15){
+    if (swipe.position <= 15){
       changeLegend.style.opacity = "0";
       changeLegend.style.display = "none";
     }
-  });
+  }
 
   function updateLegendHeight () {
     changeLegend.style.height = null;

@@ -38,6 +38,29 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
+        function updateLegendOpacity() {
+            if (!visibilityEnabled) {
+                return;
+            }
+            var threshold = 50;
+            if (swipe.position <= 85) {
+                totalLegend.style.display = "block";
+                var opacity = (35 - (swipe.position - threshold)) * 3.5;
+                totalLegend.style.opacity = (opacity * 0.01).toString();
+            }
+            else {
+                totalLegend.style.display = "none";
+            }
+            if (swipe.position <= 50) {
+                changeLegend.style.display = "block";
+                var opacity = (35 - (threshold - swipe.position)) * 3.5;
+                changeLegend.style.opacity = (opacity * 0.01).toString();
+            }
+            if (swipe.position <= 15) {
+                changeLegend.style.opacity = "0";
+                changeLegend.style.display = "none";
+            }
+        }
         function updateLegendHeight() {
             changeLegend.style.height = null;
             changeLegend.style.overflow = null;
@@ -2125,31 +2148,10 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         changeLegend.style.display = changeLegend.style.display === "none" ? "block" : "none";
                         totalLegend.style.display = totalLegend.style.display === "none" ? "block" : "none";
                         visibilityEnabled = !visibilityEnabled;
+                        updateLegendOpacity();
                     };
                     infoToggle.addEventListener("click", toggleInfoVisibility);
-                    swipe.watch("position", function (position) {
-                        if (!visibilityEnabled) {
-                            return;
-                        }
-                        var threshold = 50;
-                        if (position <= 85) {
-                            totalLegend.style.display = "block";
-                            var opacity = (35 - (position - threshold)) * 3.5;
-                            totalLegend.style.opacity = (opacity * 0.01).toString();
-                        }
-                        else {
-                            totalLegend.style.display = "none";
-                        }
-                        if (position <= 50) {
-                            changeLegend.style.display = "block";
-                            var opacity = (35 - (threshold - position)) * 3.5;
-                            changeLegend.style.opacity = (opacity * 0.01).toString();
-                        }
-                        if (position <= 15) {
-                            changeLegend.style.opacity = "0";
-                            changeLegend.style.display = "none";
-                        }
-                    });
+                    swipe.watch("position", updateLegendOpacity);
                     view.watch("heightBreakpoint", updateLegendHeight);
                     return [4 /*yield*/, view.when(updateLegendHeight)];
                 case 1:
