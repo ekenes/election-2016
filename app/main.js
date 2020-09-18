@@ -111,6 +111,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             medium: 992,
                             small: 768,
                             xsmall: 544
+                        },
+                        popup: {
+                            collapseEnabled: false
                         }
                     });
                     dem12Field = "PRS_DEM_12";

@@ -47,6 +47,9 @@ import { TextContent } from "esri/popup/content";
       medium: 992,
       small: 768,
       xsmall: 544
+    },
+    popup: {
+      collapseEnabled: false
     }
   });
 
