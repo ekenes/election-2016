@@ -7,7 +7,7 @@ import FieldInfo = require("esri/popup/FieldInfo");
 import FieldInfoFormat = require("esri/popup/support/FieldInfoFormat");
 import Swipe = require("esri/widgets/Swipe");
 import Legend = require("esri/widgets/Legend");
-import LegendLayerInfo = require("esri/tasks/support/LegendLayer");
+import Expand = require("esri/widgets/Expand");
 import LabelClass = require("esri/layers/support/LabelClass");
 import Color = require("esri/Color");
 import Font = require("esri/symbols/Font");
@@ -69,7 +69,7 @@ import { TextContent } from "esri/popup/content";
     portalItem: {
       id: "4f03bcde997e4badbef186d0c05f5a9a"
     },
-    title: "2012 & 2016 Election results",
+    title: "U.S. states",
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
@@ -85,7 +85,7 @@ import { TextContent } from "esri/popup/content";
 
         return winner16
       `,
-      valueExpressionTitle: "Outright winner",
+      valueExpressionTitle: "Winner by party",
       defaultSymbol: null,
       uniqueValueInfos: [{
         value: "Republican",
@@ -376,7 +376,7 @@ import { TextContent } from "esri/popup/content";
     portalItem: {
       id: "4f03bcde997e4badbef186d0c05f5a9a"
     },
-    title: "U.S. States",
+    title: "U.S. states",
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
@@ -2826,6 +2826,9 @@ import { TextContent } from "esri/popup/content";
   });
   view.ui.add(swipe);
 
+  const totalLegend = document.getElementById("total-legend") as HTMLDivElement;
+  const changeLegend = document.getElementById("change-legend") as HTMLDivElement;
+
   new Legend({
     view,
     container: "change-legend-container",
@@ -2834,5 +2837,48 @@ import { TextContent } from "esri/popup/content";
     }] as any
   });
   view.ui.add("change-legend", "bottom-left");
+
+  new Legend({
+    view,
+    container: "total-legend-container",
+    layerInfos: [{
+      layer: polygonLayer
+    }] as any
+  });
+
+  view.ui.add(changeLegend, "bottom-left");
+  view.ui.add(totalLegend, "bottom-right");
+  // view.ui.add(new Expand({
+  //   view,
+  //   content: changeLegend,
+  //   expandIconClass: "esri-icon-layer-list",
+  //   expanded: true
+  // }), "bottom-left");
+
+  // view.ui.add(new Expand({
+  //   view,
+  //   content: totalLegend,
+  //   expandIconClass: "esri-icon-layer-list",
+  //   expanded: true
+  // }), "bottom-right");
+
+  swipe.watch( "position", (position) => {
+    const threshold = 50;
+    if (position <= 85){
+      const opacity = (35 - (position - threshold)) * 3.5;
+      totalLegend.style.opacity = ( opacity * 0.01 ).toString();
+    } else {
+      totalLegend.style.opacity = "0";
+    }
+
+    if (position <= 50){
+      const opacity = (35 - (threshold - position)) * 3.5;
+      changeLegend.style.opacity = ( opacity * 0.01 ).toString();
+    }
+
+    if (position <= 15){
+      changeLegend.style.opacity = "0";
+    }
+  });
 
 })();

@@ -20,7 +20,7 @@
   </head>
   <body>
     <div id="viewDiv"></div>
-    <div id="change-legend" class="esri-widget">
+    <div id="change-legend" class="esri-widget legend-containers">
       <div class="heading">
         Change in U.S. presidential voting behavior from <br>2012-2016
       </div>
@@ -45,6 +45,25 @@
         <img class="example" src="assets/example-change.png">
       </div>
       <div id="change-legend-container"></div>
+    </div>
+
+    <div id="total-legend" class="esri-widget legend-containers">
+      <div class="heading">
+        2016 U.S. presidential votes per party
+      </div>
+      <div class="subheading">
+        County results
+      </div>
+      <div class="img-container">
+        <img class="parties" src="assets/party-colors.png">
+      </div>
+      <div class="description">
+        As you zoom in, the total votes will be displayed next to the symbol.
+      </div>
+      <div class="img-container">
+        <img class="example" src="assets/example-total.png">
+      </div>
+      <div id="total-legend-container"></div>
     </div>
     <script>require(["app/main"]);</script>
   </body>

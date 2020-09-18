@@ -38,7 +38,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, swipe;
+        var map, maxScale, referenceScale, view, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, swipe, totalLegend, changeLegend;
         return __generator(this, function (_a) {
             map = new EsriMap({
                 basemap: {
@@ -78,11 +78,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 portalItem: {
                     id: "4f03bcde997e4badbef186d0c05f5a9a"
                 },
-                title: "2012 & 2016 Election results",
+                title: "U.S. states",
                 opacity: 0.3,
                 renderer: new rasterRenderers_1.UniqueValueRenderer({
                     valueExpression: "\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat',\n          rep16, 'Republican',\n          oth16, 'Other',\n        'n/a' );\n\n        return winner16\n      ",
-                    valueExpressionTitle: "Outright winner",
+                    valueExpressionTitle: "Winner by party",
                     defaultSymbol: null,
                     uniqueValueInfos: [{
                             value: "Republican",
@@ -238,7 +238,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 portalItem: {
                     id: "4f03bcde997e4badbef186d0c05f5a9a"
                 },
-                title: "U.S. States",
+                title: "U.S. states",
                 opacity: 0.3,
                 renderer: new rasterRenderers_1.UniqueValueRenderer({
                     valueExpression: "\n        var dem12 = $feature.SUM_PRS_DEM_12;\n        var rep12 = $feature.SUM_PRS_REP_12;\n        var oth12 = $feature.SUM_PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
@@ -2070,6 +2070,8 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 position: 90
             });
             view.ui.add(swipe);
+            totalLegend = document.getElementById("total-legend");
+            changeLegend = document.getElementById("change-legend");
             new Legend({
                 view: view,
                 container: "change-legend-container",
@@ -2078,6 +2080,44 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     }]
             });
             view.ui.add("change-legend", "bottom-left");
+            new Legend({
+                view: view,
+                container: "total-legend-container",
+                layerInfos: [{
+                        layer: polygonLayer
+                    }]
+            });
+            view.ui.add(changeLegend, "bottom-left");
+            view.ui.add(totalLegend, "bottom-right");
+            // view.ui.add(new Expand({
+            //   view,
+            //   content: changeLegend,
+            //   expandIconClass: "esri-icon-layer-list",
+            //   expanded: true
+            // }), "bottom-left");
+            // view.ui.add(new Expand({
+            //   view,
+            //   content: totalLegend,
+            //   expandIconClass: "esri-icon-layer-list",
+            //   expanded: true
+            // }), "bottom-right");
+            swipe.watch("position", function (position) {
+                var threshold = 50;
+                if (position <= 85) {
+                    var opacity = (35 - (position - threshold)) * 3.5;
+                    totalLegend.style.opacity = (opacity * 0.01).toString();
+                }
+                else {
+                    totalLegend.style.opacity = "0";
+                }
+                if (position <= 50) {
+                    var opacity = (35 - (threshold - position)) * 3.5;
+                    changeLegend.style.opacity = (opacity * 0.01).toString();
+                }
+                if (position <= 15) {
+                    changeLegend.style.opacity = "0";
+                }
+            });
             return [2 /*return*/];
         });
     }); })();

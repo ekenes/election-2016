@@ -11,7 +11,7 @@ body,
   width: 20px;
 }
 
-#change-legend {
+.legend-containers {
   padding: 5px;
   width: 250px;
 }
@@ -35,6 +35,19 @@ body,
   font-weight: 600;
   text-align: left;
   margin-left: 15px;
+}
+
+#total-legend {
+  opacity: 0;
+  z-index: -1;
+}
+
+#change-legend {
+  z-index: -1;
+}
+
+#total-legend-container {
+  width: 100%;
 }
 
 #change-legend-container {
