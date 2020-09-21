@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/widgets/Swipe", "esri/widgets/Legend", "esri/layers/support/LabelClass", "esri/Color", "esri/symbols/Font", "esri/renderers", "esri/symbols", "esri/rasterRenderers", "esri/popup/content"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, Swipe, Legend, LabelClass, Color, Font, renderers_1, symbols_1, rasterRenderers_1, content_1) {
+define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/widgets/Swipe", "esri/widgets/Legend", "esri/layers/support/LabelClass", "esri/Color", "esri/symbols/Font", "esri/renderers", "esri/symbols", "esri/rasterRenderers", "esri/popup/content", "./config"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, Swipe, Legend, LabelClass, Color, Font, renderers_1, symbols_1, rasterRenderers_1, content_1, config_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -79,7 +79,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 totalLegend.style.overflow = "auto";
             }
         }
-        var map, maxScale, referenceScale, scaleThreshold, stateReferenceScale, view, dem12Field, rep12Field, oth12Field, stateVotes12Field, dem16Field, rep16Field, oth16Field, stateVotes16Field, rColorCIM, dColorCIM, oColorCIM, borderColorCIM100, rColor, dColor, oColor, haloColor, oHaloColor, haloSize, statePopupTemplate, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, sizeTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, offsetYTotalChangeExpressionBase, changeStatesLayer, sizeTotalExpressionBase, offsetXTotalExpressionBase, offsetYTotalExpressionBase, totalStatesLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
+        var map, view, statePopupTemplate, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, sizeTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, offsetYTotalChangeExpressionBase, changeStatesLayer, sizeTotalExpressionBase, offsetXTotalExpressionBase, offsetYTotalExpressionBase, totalStatesLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -90,18 +90,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }
                         }
                     });
-                    maxScale = 4622324 / 16;
-                    referenceScale = 2311162;
-                    scaleThreshold = 9244600;
-                    stateReferenceScale = 18489200;
                     view = new MapView({
                         container: "viewDiv",
                         map: map,
                         center: [-95, 40],
-                        scale: referenceScale * 8,
+                        scale: config_1.referenceScale * 8,
                         constraints: {
                             minScale: 0,
-                            maxScale: maxScale
+                            maxScale: config_1.maxScale
                         },
                         highlightOptions: {
                             fillOpacity: 0
@@ -116,26 +112,6 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             collapseEnabled: false
                         }
                     });
-                    dem12Field = "PRS_DEM_12";
-                    rep12Field = "PRS_REP_12";
-                    oth12Field = "PRS_OTH_12";
-                    stateVotes12Field = "TOTAL_STATE_VOTES_12";
-                    dem16Field = "PRS_DEM_16";
-                    rep16Field = "PRS_REP_16";
-                    oth16Field = "PRS_OTH_16";
-                    stateVotes16Field = "TOTAL_STATE_VOTES_16";
-                    rColorCIM = [220, 75, 0, 255];
-                    dColorCIM = [60, 108, 204, 255];
-                    oColorCIM = [224, 206, 0, 255];
-                    borderColorCIM100 = [133, 32, 1, 255];
-                    rColor = "rgba(220, 75, 0, 1)" // "#ed5151";  dc4b00
-                    ;
-                    dColor = "rgba(60, 108, 204,1)" // "#149ece";  3c6ccc
-                    ;
-                    oColor = "rgba(224, 206, 0, 1)";
-                    haloColor = "#f7f7f7";
-                    oHaloColor = "rgba(181, 166, 0, 1)";
-                    haloSize = 1;
                     statePopupTemplate = new PopupTemplate({
                         title: "{STATE}",
                         fieldInfos: [
@@ -193,7 +169,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 text: "\n          The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n          candidate won {STATE} by a margin of {expression/winner-margin} points.\n          The {expression/winner-votes} votes cast for the winner comprise\n          {expression/winner-percent-state-votes} of the total votes cast in the state.\n        "
                             }),
                             new content_1.TextContent({
-                                text: "\n          <div class=\"table-container\">\n            Votes in 2016 and the change from 2012\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{SUM_PRS_DEM_16}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{SUM_PRS_REP_16}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + oHaloColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{SUM_PRS_OTH_16}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
+                                text: "\n          <div class=\"table-container\">\n            Votes in 2016 and the change from 2012\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{SUM_PRS_DEM_16}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{SUM_PRS_REP_16}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{SUM_PRS_OTH_16}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
                             })
                         ],
                         expressionInfos: [
@@ -210,7 +186,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             new ExpressionInfo({
                                 title: "winner-color",
                                 name: "winner-color",
-                                expression: "\n          var dem = $feature.SUM_PRS_DEM_16;\n          var rep = $feature.SUM_PRS_REP_16;\n          var oth = $feature.SUM_PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"" + dColor + "\",\n            rep, \"" + rColor + "\",\n            oth, \"" + oColor + "\",\n          \"#000000\"\n          );\n        "
+                                expression: "\n          var dem = $feature.SUM_PRS_DEM_16;\n          var rep = $feature.SUM_PRS_REP_16;\n          var oth = $feature.SUM_PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"" + config_1.dColor + "\",\n            rep, \"" + config_1.rColor + "\",\n            oth, \"" + config_1.oColor + "\",\n          \"#000000\"\n          );\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner",
@@ -282,14 +258,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                     value: "Republican",
                                     label: "R - Trump (304)",
                                     symbol: new symbols_1.SimpleFillSymbol({
-                                        color: rColor,
+                                        color: config_1.rColor,
                                         outline: null
                                     })
                                 }, {
                                     value: "Democrat",
                                     label: "D - Clinton (227)",
                                     symbol: new symbols_1.SimpleFillSymbol({
-                                        color: dColor,
+                                        color: config_1.dColor,
                                         outline: null
                                     })
                                 }]
@@ -310,14 +286,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                     value: "Democrat 2012, Republican 2016",
                                     label: "Flipped Republican in 2016",
                                     symbol: new symbols_1.SimpleFillSymbol({
-                                        color: rColor,
+                                        color: config_1.rColor,
                                         outline: null
                                     })
                                 }, {
                                     value: "Republican 2012, Democrat 2016",
                                     label: "Flipped Democrat in 2016",
                                     symbol: new symbols_1.SimpleFillSymbol({
-                                        color: dColor,
+                                        color: config_1.dColor,
                                         outline: null
                                     })
                                 }]
@@ -325,9 +301,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         popupTemplate: statePopupTemplate,
                         popupEnabled: false
                     });
-                    sizeExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 30, 40,\n      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),\n      // percentStateVotes > 0, (20 * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
-                    offsetXExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 30, 40,\n      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),\n      // percentStateVotes > 0, (20 * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
-                    offsetYExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 30, 40,\n      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),\n      // percentStateVotes > 0, (20 * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter * 0.67;\n  ";
+                    sizeExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 30, 40,\n      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
+                    offsetXExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 30, 40,\n      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
+                    offsetYExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 30, 40,\n      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter * 0.67;\n  ";
                     popupTemplate = new PopupTemplate({
                         title: "{Name_1}, {STATE_NAME}",
                         fieldInfos: [
@@ -385,7 +361,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 text: "\n          The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n          candidate won this county by a margin of {expression/winner-margin}.\n          The {expression/winner-votes} votes cast for the winner comprise\n          {expression/winner-percent-state-votes} of the total votes cast in the state.\n        "
                             }),
                             new content_1.TextContent({
-                                text: "\n          <div class=\"table-container\">\n            Votes in 2016 and the change from 2012\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{PRS_DEM_16}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{PRS_REP_16}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + oHaloColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{PRS_OTH_16}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
+                                text: "\n          <div class=\"table-container\">\n            Votes in 2016 and the change from 2012\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{PRS_DEM_16}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{PRS_REP_16}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{PRS_OTH_16}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
                             })
                         ],
                         expressionInfos: [
@@ -402,7 +378,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             new ExpressionInfo({
                                 title: "winner-color",
                                 name: "winner-color",
-                                expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"" + dColor + "\",\n            rep, \"" + rColor + "\",\n            oth, \"" + oColor + "\",\n          \"#000000\"\n          );\n        "
+                                expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"" + config_1.dColor + "\",\n            rep, \"" + config_1.rColor + "\",\n            oth, \"" + config_1.oColor + "\",\n          \"#000000\"\n          );\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner",
@@ -462,7 +438,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         ]
                     });
                     changeLayer = new FeatureLayer({
-                        minScale: scaleThreshold,
+                        minScale: config_1.scaleThreshold,
                         portalItem: {
                             id: "ba48def248cb45bebb234aa346c97676"
                         },
@@ -535,7 +511,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: dColorCIM
+                                                                    color: config_1.dColorCIM
                                                                 }
                                                             ]
                                                         }
@@ -605,7 +581,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
-                                                                    color: dColorCIM,
+                                                                    color: config_1.dColorCIM,
                                                                     width: 2
                                                                 }
                                                             ]
@@ -675,7 +651,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: rColorCIM
+                                                                    color: config_1.rColorCIM
                                                                 }
                                                             ]
                                                         }
@@ -744,7 +720,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
-                                                                    color: rColorCIM,
+                                                                    color: config_1.rColorCIM,
                                                                     width: 2
                                                                 }
                                                             ]
@@ -815,7 +791,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: oColorCIM,
+                                                                    color: config_1.oColorCIM,
                                                                 }, {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
@@ -889,7 +865,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
-                                                                    color: oColorCIM,
+                                                                    color: config_1.oColorCIM,
                                                                     width: 2
                                                                 }
                                                             ]
@@ -1056,9 +1032,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -50,
                                     yoffset: -25
                                 })
@@ -1077,9 +1053,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -40,
                                     yoffset: -20
                                 })
@@ -1098,9 +1074,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -40,
                                     yoffset: -10
                                 })
@@ -1119,9 +1095,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -30,
                                     yoffset: -10
                                 })
@@ -1140,9 +1116,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -20,
                                     yoffset: -10
                                 })
@@ -1162,9 +1138,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 60,
                                     yoffset: -20
                                 })
@@ -1183,9 +1159,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 35,
                                     yoffset: -20
                                 })
@@ -1204,9 +1180,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 20,
                                     yoffset: -20
                                 })
@@ -1225,9 +1201,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 20,
                                     yoffset: -10
                                 })
@@ -1246,9 +1222,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 10,
                                     yoffset: -10
                                 })
@@ -1268,9 +1244,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 40
                                 })
@@ -1289,9 +1265,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 40
                                 })
@@ -1310,9 +1286,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 30
                                 })
@@ -1331,9 +1307,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 20
                                 })
@@ -1352,9 +1328,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 10,
                                     yoffset: 10
                                 })
@@ -1363,7 +1339,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         popupTemplate: popupTemplate
                     });
                     results2016Layer = new FeatureLayer({
-                        minScale: scaleThreshold,
+                        minScale: config_1.scaleThreshold,
                         portalItem: {
                             id: "ba48def248cb45bebb234aa346c97676"
                         },
@@ -1436,7 +1412,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: oColorCIM,
+                                                                    color: config_1.oColorCIM,
                                                                 }, {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
@@ -1511,7 +1487,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: dColorCIM
+                                                                    color: config_1.dColorCIM
                                                                 }, {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
@@ -1586,7 +1562,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: rColorCIM
+                                                                    color: config_1.rColorCIM
                                                                 }, {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
@@ -1691,9 +1667,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -50,
                                     yoffset: -25
                                 })
@@ -1712,9 +1688,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -40,
                                     yoffset: -20
                                 })
@@ -1733,9 +1709,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -40,
                                     yoffset: -20
                                 })
@@ -1754,9 +1730,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -30,
                                     yoffset: -20
                                 })
@@ -1775,9 +1751,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -20,
                                     yoffset: -10
                                 })
@@ -1797,9 +1773,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 50,
                                     yoffset: -20
                                 })
@@ -1818,9 +1794,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 40,
                                     yoffset: -20
                                 })
@@ -1839,9 +1815,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 30,
                                     yoffset: -20
                                 })
@@ -1860,9 +1836,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 20,
                                     yoffset: -10
                                 })
@@ -1881,9 +1857,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 10,
                                     yoffset: -10
                                 })
@@ -1903,9 +1879,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 40
                                 })
@@ -1924,9 +1900,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 40
                                 })
@@ -1945,9 +1921,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 30
                                 })
@@ -1966,9 +1942,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 20
                                 })
@@ -1987,9 +1963,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 10,
                                     yoffset: 10
                                 })
@@ -1997,11 +1973,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         ],
                         popupTemplate: popupTemplate
                     });
-                    sizeTotalChangeExpressionBase = "\n    var sizeFactor = When(\n      value >= 500000, 30,\n      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),\n      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),\n      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),\n      value > 0, 8 + (((10-8) / (10000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
-                    offsetXTotalChangeExpressionBase = "\n    var sizeFactor = When(\n      value >= 500000, 30,\n      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),\n      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),\n      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),\n      value > 0, 8 + (((10-8) / (10000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
-                    offsetYTotalChangeExpressionBase = "\n    var sizeFactor = When(\n      value >= 500000, 30,\n      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),\n      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),\n      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),\n      value > 0, 8 + (((10-8) / (10000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter * 0.67;\n  ";
+                    sizeTotalChangeExpressionBase = "\n    var sizeFactor = When(\n      value >= 500000, 30,\n      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),\n      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),\n      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),\n      value > 0, 8 + (((10-8) / (10000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
+                    offsetXTotalChangeExpressionBase = "\n    var sizeFactor = When(\n      value >= 500000, 30,\n      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),\n      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),\n      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),\n      value > 0, 8 + (((10-8) / (10000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
+                    offsetYTotalChangeExpressionBase = "\n    var sizeFactor = When(\n      value >= 500000, 30,\n      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),\n      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),\n      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),\n      value > 0, 8 + (((10-8) / (10000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter * 0.67;\n  ";
                     changeStatesLayer = new FeatureLayer({
-                        maxScale: scaleThreshold,
+                        maxScale: config_1.scaleThreshold,
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
                         },
@@ -2075,7 +2051,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: dColorCIM
+                                                                    color: config_1.dColorCIM
                                                                 }
                                                             ]
                                                         }
@@ -2145,7 +2121,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
-                                                                    color: dColorCIM,
+                                                                    color: config_1.dColorCIM,
                                                                     width: 2
                                                                 }
                                                             ]
@@ -2215,7 +2191,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: rColorCIM
+                                                                    color: config_1.rColorCIM
                                                                 }
                                                             ]
                                                         }
@@ -2284,7 +2260,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
-                                                                    color: rColorCIM,
+                                                                    color: config_1.rColorCIM,
                                                                     width: 2
                                                                 }
                                                             ]
@@ -2355,7 +2331,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: oColorCIM,
+                                                                    color: config_1.oColorCIM,
                                                                 }, {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
@@ -2429,7 +2405,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
-                                                                    color: oColorCIM,
+                                                                    color: config_1.oColorCIM,
                                                                     width: 2
                                                                 }
                                                             ]
@@ -2595,9 +2571,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -50,
                                     yoffset: -25
                                 })
@@ -2615,9 +2591,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -40,
                                     yoffset: -20
                                 })
@@ -2635,9 +2611,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -40,
                                     yoffset: -10
                                 })
@@ -2655,9 +2631,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -30,
                                     yoffset: -10
                                 })
@@ -2675,9 +2651,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -20,
                                     yoffset: -10
                                 })
@@ -2696,9 +2672,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 50,
                                     yoffset: -20
                                 })
@@ -2716,9 +2692,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 35,
                                     yoffset: -20
                                 })
@@ -2736,9 +2712,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 20,
                                     yoffset: -20
                                 })
@@ -2756,9 +2732,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 20,
                                     yoffset: -10
                                 })
@@ -2776,9 +2752,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 10,
                                     yoffset: -10
                                 })
@@ -2797,9 +2773,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 35
                                 })
@@ -2817,9 +2793,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 30
                                 })
@@ -2837,9 +2813,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 25
                                 })
@@ -2857,9 +2833,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 15
                                 })
@@ -2877,9 +2853,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 10,
                                     yoffset: 10
                                 })
@@ -2887,11 +2863,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         ],
                         popupTemplate: statePopupTemplate
                     });
-                    sizeTotalExpressionBase = "\n    var sizeFactor = When(\n      value >= 5000000, 40,\n      value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),\n      value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),\n      value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),\n      value > 0, 8 + (((10-8) / (100000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
-                    offsetXTotalExpressionBase = "\n  var sizeFactor = When(\n    value >= 5000000, 40,\n    value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),\n    value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),\n    value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),\n    value > 0, 8 + (((10-8) / (100000-0)) * value),\n    0\n  );\n\n  var scaleFactorBase = ( " + stateReferenceScale + " / $view.scale );\n  var scaleFactor = When(\n    scaleFactorBase >= 1, 1,  // 1\n    scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n    scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n    scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n    scaleFactorBase * 1  // 0.1875\n  );\n  var diameter = sizeFactor * scaleFactor;\n  var offset = diameter / 2;\n";
-                    offsetYTotalExpressionBase = "\n  var sizeFactor = When(\n    value >= 5000000, 40,\n    value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),\n    value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),\n    value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),\n    value > 0, 8 + (((10-8) / (100000-0)) * value),\n    0\n  );\n\n  var scaleFactorBase = ( " + stateReferenceScale + " / $view.scale );\n  var scaleFactor = When(\n    scaleFactorBase >= 1, 1,  // 1\n    scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n    scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n    scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n    scaleFactorBase * 1  // 0.1875\n  );\n  var diameter = sizeFactor * scaleFactor;\n  var offset = diameter * 0.67;\n";
+                    sizeTotalExpressionBase = "\n    var sizeFactor = When(\n      value >= 5000000, 40,\n      value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),\n      value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),\n      value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),\n      value > 0, 8 + (((10-8) / (100000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
+                    offsetXTotalExpressionBase = "\n  var sizeFactor = When(\n    value >= 5000000, 40,\n    value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),\n    value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),\n    value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),\n    value > 0, 8 + (((10-8) / (100000-0)) * value),\n    0\n  );\n\n  var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n  var scaleFactor = When(\n    scaleFactorBase >= 1, 1,  // 1\n    scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n    scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n    scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n    scaleFactorBase * 1  // 0.1875\n  );\n  var diameter = sizeFactor * scaleFactor;\n  var offset = diameter / 2;\n";
+                    offsetYTotalExpressionBase = "\n  var sizeFactor = When(\n    value >= 5000000, 40,\n    value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),\n    value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),\n    value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),\n    value > 0, 8 + (((10-8) / (100000-0)) * value),\n    0\n  );\n\n  var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n  var scaleFactor = When(\n    scaleFactorBase >= 1, 1,  // 1\n    scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n    scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n    scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n    scaleFactorBase * 1  // 0.1875\n  );\n  var diameter = sizeFactor * scaleFactor;\n  var offset = diameter * 0.67;\n";
                     totalStatesLayer = new FeatureLayer({
-                        maxScale: scaleThreshold,
+                        maxScale: config_1.scaleThreshold,
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
                         },
@@ -2965,7 +2941,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: dColorCIM
+                                                                    color: config_1.dColorCIM
                                                                 }
                                                             ]
                                                         }
@@ -3034,7 +3010,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: rColorCIM
+                                                                    color: config_1.rColorCIM
                                                                 }
                                                             ]
                                                         }
@@ -3104,7 +3080,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                                 {
                                                                     type: "CIMSolidFill",
                                                                     enable: true,
-                                                                    color: oColorCIM,
+                                                                    color: config_1.oColorCIM,
                                                                 }, {
                                                                     type: "CIMSolidStroke",
                                                                     enable: true,
@@ -3208,9 +3184,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -50,
                                     yoffset: -25
                                 })
@@ -3228,9 +3204,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -40,
                                     yoffset: -20
                                 })
@@ -3248,9 +3224,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -40,
                                     yoffset: -10
                                 })
@@ -3268,9 +3244,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -30,
                                     yoffset: -10
                                 })
@@ -3288,9 +3264,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(dColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.dColor),
                                     xoffset: -20,
                                     yoffset: -10
                                 })
@@ -3309,9 +3285,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 60,
                                     yoffset: -20
                                 })
@@ -3329,9 +3305,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 35,
                                     yoffset: -20
                                 })
@@ -3349,9 +3325,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 20,
                                     yoffset: -20
                                 })
@@ -3369,9 +3345,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 20,
                                     yoffset: -10
                                 })
@@ -3389,9 +3365,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(rColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.rColor),
                                     xoffset: 10,
                                     yoffset: -10
                                 })
@@ -3410,9 +3386,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 35
                                 })
@@ -3430,9 +3406,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 30
                                 })
@@ -3450,9 +3426,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 25
                                 })
@@ -3470,9 +3446,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 20,
                                     yoffset: 15
                                 })
@@ -3490,9 +3466,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                         family: "Noto Sans",
                                         size: "10pt"
                                     }),
-                                    haloColor: new Color(haloColor),
-                                    haloSize: haloSize,
-                                    color: new Color(oHaloColor),
+                                    haloColor: new Color(config_1.haloColor),
+                                    haloSize: config_1.haloSize,
+                                    color: new Color(config_1.oTextColor),
                                     xoffset: 10,
                                     yoffset: 10
                                 })

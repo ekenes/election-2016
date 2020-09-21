@@ -15,6 +15,7 @@ import { SimpleRenderer } from "esri/renderers";
 import { CIMSymbol, SimpleFillSymbol, TextSymbol } from "esri/symbols";
 import { UniqueValueRenderer } from "esri/rasterRenderers";
 import { TextContent } from "esri/popup/content";
+import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM, oColorCIM, rColorCIM, haloColor, haloSize, scaleThreshold, stateReferenceScale } from "./config";
 
 ( async () => {
   const map = new EsriMap({
@@ -24,11 +25,6 @@ import { TextContent } from "esri/popup/content";
       }
     }
   });
-
-  const maxScale = 4622324/16;
-  const referenceScale = 2311162;
-  const scaleThreshold = 9244600;  // 9244649;
-  const stateReferenceScale = 18489200;
 
   const view = new MapView({
     container: "viewDiv",
@@ -52,38 +48,6 @@ import { TextContent } from "esri/popup/content";
       collapseEnabled: false
     }
   });
-
-  // PRS_DEM_12
-  // PRS_REP_12
-  // PRS_OTH_12
-
-  // PRS_DEM_16
-  // PRS_REP_16
-  // PRS_OTH_16
-
-  const dem12Field = "PRS_DEM_12"
-  const rep12Field = "PRS_REP_12"
-  const oth12Field = "PRS_OTH_12"
-  const stateVotes12Field = "TOTAL_STATE_VOTES_12";
-
-  const dem16Field = "PRS_DEM_16"
-  const rep16Field = "PRS_REP_16"
-  const oth16Field = "PRS_OTH_16"
-  const stateVotes16Field = "TOTAL_STATE_VOTES_16";
-
-  // ↑↓
-
-  const rColorCIM = [220, 75, 0, 255]; // [237, 81, 81, 255];
-  const dColorCIM = [60, 108, 204, 255]; // [20, 158, 206, 255];
-  const oColorCIM = [224, 206, 0, 255]; // [167, 198, 54, 255];   145, 217, 0
-  const borderColorCIM100 = [133, 32, 1, 255];
-
-  const rColor = "rgba(220, 75, 0, 1)"// "#ed5151";  dc4b00
-  const dColor = "rgba(60, 108, 204,1)"// "#149ece";  3c6ccc
-  const oColor = "rgba(224, 206, 0, 1)";// "rgba(224, 206, 0, 1)"// "#a7c636";  #91d900  #a87132
-  const haloColor = "#f7f7f7";
-  const oHaloColor = "rgba(181, 166, 0, 1)";// = "#4b4b4b";
-  const haloSize = 1;
 
   const statePopupTemplate = new PopupTemplate({
     title: "{STATE}",
@@ -156,7 +120,7 @@ import { TextContent } from "esri/popup/content";
               <tr class="head"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>
               <tr class="dem"><td><span style='color:${dColor}; font-weight:bolder'>Democrat</span></td><td class="num">{SUM_PRS_DEM_16}</td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>
               <tr class="rep"><td><span style='color:${rColor}; font-weight:bolder'>Republican</span></td><td class="num">{SUM_PRS_REP_16}</td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>
-              <tr class="oth"><td><span style='color:${oHaloColor}; font-weight:bolder'>Other</span></td><td class="num">{SUM_PRS_OTH_16}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
+              <tr class="oth"><td><span style='color:${oTextColor}; font-weight:bolder'>Other</span></td><td class="num">{SUM_PRS_OTH_16}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
             </table>
           </div>
         `
@@ -452,7 +416,6 @@ import { TextContent } from "esri/popup/content";
       percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
       percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
       percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
-      // percentStateVotes > 0, (20 * percentStateVotes),
       0
     );
 
@@ -475,7 +438,6 @@ import { TextContent } from "esri/popup/content";
       percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
       percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
       percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
-      // percentStateVotes > 0, (20 * percentStateVotes),
       0
     );
 
@@ -499,7 +461,6 @@ import { TextContent } from "esri/popup/content";
       percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
       percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
       percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
-      // percentStateVotes > 0, (20 * percentStateVotes),
       0
     );
 
@@ -587,7 +548,7 @@ import { TextContent } from "esri/popup/content";
               <tr class="head"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>
               <tr class="dem"><td><span style='color:${dColor}; font-weight:bolder'>Democrat</span></td><td class="num">{PRS_DEM_16}</td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>
               <tr class="rep"><td><span style='color:${rColor}; font-weight:bolder'>Republican</span></td><td class="num">{PRS_REP_16}</td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>
-              <tr class="oth"><td><span style='color:${oHaloColor}; font-weight:bolder'>Other</span></td><td class="num">{PRS_OTH_16}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
+              <tr class="oth"><td><span style='color:${oTextColor}; font-weight:bolder'>Other</span></td><td class="num">{PRS_OTH_16}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
             </table>
           </div>
         `
@@ -1747,7 +1708,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 40
         })
@@ -1773,7 +1734,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 40
         })
@@ -1801,7 +1762,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 30
         })
@@ -1830,7 +1791,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 20
         })
@@ -1858,7 +1819,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 10,
           yoffset: 10
         })
@@ -2467,7 +2428,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 40
         })
@@ -2490,7 +2451,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 40
         })
@@ -2515,7 +2476,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 30
         })
@@ -2541,7 +2502,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 20
         })
@@ -2566,7 +2527,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 10,
           yoffset: 10
         })
@@ -3581,7 +3542,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 35
         })
@@ -3606,7 +3567,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 30
         })
@@ -3633,7 +3594,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 25
         })
@@ -3661,7 +3622,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 15
         })
@@ -3688,7 +3649,7 @@ import { TextContent } from "esri/popup/content";
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 10,
           yoffset: 10
         })
@@ -4335,7 +4296,7 @@ const offsetYTotalExpressionBase = `
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 35
         })
@@ -4357,7 +4318,7 @@ const offsetYTotalExpressionBase = `
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 30
         })
@@ -4381,7 +4342,7 @@ const offsetYTotalExpressionBase = `
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 25
         })
@@ -4406,7 +4367,7 @@ const offsetYTotalExpressionBase = `
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 20,
           yoffset: 15
         })
@@ -4430,7 +4391,7 @@ const offsetYTotalExpressionBase = `
           }),
           haloColor: new Color(haloColor),
           haloSize,
-          color: new Color(oHaloColor),
+          color: new Color(oTextColor),
           xoffset: 10,
           yoffset: 10
         })
