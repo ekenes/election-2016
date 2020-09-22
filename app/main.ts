@@ -125,7 +125,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
     view,
     leadingLayers: [ countyChangeLayer, stateChangeLayer, swingStatesLayer ],
     trailingLayers: [ countyResultsLayer, stateResultsLayer, stateElectoralResultsLayer ],
-    position: 90
+    position: 75
   });
   view.ui.add(swipe);
 
@@ -225,6 +225,6 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
   }
 
   view.watch(`heightBreakpoint`, updateLegendHeight);
-  await view.when(updateLegendHeight);
+  await view.when(updateLegendHeight).then(updateLegendOpacity);
 
 })();

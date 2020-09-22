@@ -188,7 +188,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         view: view,
                         leadingLayers: [countyChangeLayer, stateChangeLayer, swingStatesLayer],
                         trailingLayers: [countyResultsLayer, stateResultsLayer, stateElectoralResultsLayer],
-                        position: 90
+                        position: 75
                     });
                     view.ui.add(swipe);
                     totalLegend = document.getElementById("total-legend");
@@ -228,7 +228,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     infoToggle.addEventListener("click", toggleInfoVisibility);
                     swipe.watch("position", updateLegendOpacity);
                     view.watch("heightBreakpoint", updateLegendHeight);
-                    return [4 /*yield*/, view.when(updateLegendHeight)];
+                    return [4 /*yield*/, view.when(updateLegendHeight).then(updateLegendOpacity)];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];
