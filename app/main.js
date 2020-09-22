@@ -79,7 +79,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 totalLegend.style.overflow = "auto";
             }
         }
-        var map, view, stateElectoralResultsLayer, swingStatesLayer, countyChangeLayer, countyResultsLayer, stateChangeLayer, stateResultsLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
+        var map, view, stateElectoralResultsLayer, swingStatesLayer, countyChangeLayer, countyResultsLayer, stateChangeLayer, stateResultsLayer, swipe, totalLegend, changeLegend, infoToggle, endYearChangeSpan, startYearChangeSpan, endYearTotalSpan, visibilityEnabled, toggleInfoVisibility;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -194,6 +194,12 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     totalLegend = document.getElementById("total-legend");
                     changeLegend = document.getElementById("change-legend");
                     infoToggle = document.getElementById("info-toggle");
+                    endYearChangeSpan = document.getElementById("end-year-change");
+                    startYearChangeSpan = document.getElementById("start-year-change");
+                    endYearTotalSpan = document.getElementById("end-year-total");
+                    endYearChangeSpan.innerHTML = config_1.years.next.toString();
+                    startYearChangeSpan.innerHTML = config_1.years.previous.toString();
+                    endYearTotalSpan.innerHTML = config_1.years.next.toString();
                     new Legend({
                         view: view,
                         container: "change-legend-container",

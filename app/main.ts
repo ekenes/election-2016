@@ -4,7 +4,7 @@ import FeatureLayer = require("esri/layers/FeatureLayer");
 import Swipe = require("esri/widgets/Swipe");
 import Legend = require("esri/widgets/Legend");
 
-import { referenceScale, maxScale, scaleThreshold, basemapPortalItem, statesLayerPortalItem, countiesLayerPortalItem } from "./config";
+import { referenceScale, maxScale, scaleThreshold, basemapPortalItem, statesLayerPortalItem, countiesLayerPortalItem, years } from "./config";
 import { statePopupTemplate, countyPopupTemplate } from "./popupUtils";
 import { countyChangeLabelingInfo, countyResultsLabelingInfo, stateChangeLabelingInfo, stateResultsLabelingInfo } from "./labelingUtils";
 import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, stateElectoralResultsRenderer, stateResultsRenderer, swingStateRenderer } from "./rendererUtils";
@@ -132,6 +132,14 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
   const totalLegend = document.getElementById(`total-legend`) as HTMLDivElement;
   const changeLegend = document.getElementById(`change-legend`) as HTMLDivElement;
   const infoToggle = document.getElementById(`info-toggle`) as HTMLDivElement;
+
+  const endYearChangeSpan = document.getElementById(`end-year-change`) as HTMLSpanElement;
+  const startYearChangeSpan = document.getElementById(`start-year-change`) as HTMLSpanElement;
+  const endYearTotalSpan = document.getElementById(`end-year-total`) as HTMLSpanElement;
+
+  endYearChangeSpan.innerHTML = years.next.toString();
+  startYearChangeSpan.innerHTML = years.previous.toString();
+  endYearTotalSpan.innerHTML = years.next.toString();
 
   new Legend({
     view,
