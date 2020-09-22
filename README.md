@@ -25,6 +25,10 @@ in Utah County, Utah.
 
 ![example-change](https://ekenes.github.io/election-2016/assets/example-change.png)
 
+Click or tap a symbol to view more details about the shift in voting between the two elections.
+
+![popup](https://ekenes.github.io/election-2016/assets/popup.png)
+
 ## Configuration
 
 You can use this app to visualize the results and voting changes between two other elections.
