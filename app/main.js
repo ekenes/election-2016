@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/widgets/Swipe", "esri/widgets/Legend", "esri/layers/support/LabelClass", "esri/Color", "esri/symbols/Font", "esri/renderers", "esri/symbols", "esri/rasterRenderers", "esri/popup/content", "./config"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, Swipe, Legend, LabelClass, Color, Font, renderers_1, symbols_1, rasterRenderers_1, content_1, config_1) {
+define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/PopupTemplate", "esri/popup/ExpressionInfo", "esri/popup/FieldInfo", "esri/popup/support/FieldInfoFormat", "esri/widgets/Swipe", "esri/widgets/Legend", "esri/layers/support/LabelClass", "esri/Color", "esri/symbols/Font", "esri/renderers", "esri/symbols", "esri/rasterRenderers", "esri/popup/content", "./config", "./expressionUtils", "./symbolUtils"], function (require, exports, EsriMap, MapView, FeatureLayer, PopupTemplate, ExpressionInfo, FieldInfo, FieldInfoFormat, Swipe, Legend, LabelClass, Color, Font, renderers_1, symbols_1, rasterRenderers_1, content_1, config_1, expressionUtils_1, symbolUtils_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -79,7 +79,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 totalLegend.style.overflow = "auto";
             }
         }
-        var map, view, statePopupTemplate, polygonLayer, polygonChangeLayer, sizeExpressionBase, offsetXExpressionBase, offsetYExpressionBase, popupTemplate, changeLayer, results2016Layer, sizeTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, offsetYTotalChangeExpressionBase, changeStatesLayer, sizeTotalExpressionBase, offsetXTotalExpressionBase, offsetYTotalExpressionBase, totalStatesLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
+        var map, view, statePopupTemplate, polygonLayer, polygonChangeLayer, popupTemplate, changeLayer, results2016Layer, changeStatesLayer, totalStatesLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -116,48 +116,48 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         title: "{STATE}",
                         fieldInfos: [
                             new FieldInfo({
-                                fieldName: "SUM_PRS_DEM_12",
-                                label: "2012 Democrat votes",
+                                fieldName: config_1.fieldInfos.democrat.state.previous.name,
+                                label: config_1.fieldInfos.democrat.state.previous.label,
                                 format: new FieldInfoFormat({
                                     places: 0,
                                     digitSeparator: true
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "SUM_PRS_REP_12",
-                                label: "2012 Republican votes",
+                                fieldName: config_1.fieldInfos.republican.state.previous.name,
+                                label: config_1.fieldInfos.republican.state.previous.label,
                                 format: new FieldInfoFormat({
                                     places: 0,
                                     digitSeparator: true
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "SUM_PRS_OTH_12",
-                                label: "2012 Other votes",
+                                fieldName: config_1.fieldInfos.other.state.previous.name,
+                                label: config_1.fieldInfos.other.state.previous.label,
                                 format: new FieldInfoFormat({
                                     places: 0,
                                     digitSeparator: true
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "SUM_PRS_DEM_16",
-                                label: "2016 Democrat votes",
+                                fieldName: config_1.fieldInfos.democrat.state.next.name,
+                                label: config_1.fieldInfos.democrat.state.next.label,
                                 format: new FieldInfoFormat({
                                     places: 0,
                                     digitSeparator: true
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "SUM_PRS_REP_16",
-                                label: "2016 Republican votes",
+                                fieldName: config_1.fieldInfos.republican.state.next.name,
+                                label: config_1.fieldInfos.republican.state.next.label,
                                 format: new FieldInfoFormat({
                                     places: 0,
                                     digitSeparator: true
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "SUM_PRS_OTH_16",
-                                label: "2016 Other votes",
+                                fieldName: config_1.fieldInfos.other.state.next.name,
+                                label: config_1.fieldInfos.other.state.next.label,
                                 format: new FieldInfoFormat({
                                     places: 0,
                                     digitSeparator: true
@@ -169,79 +169,79 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 text: "\n          The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n          candidate won {STATE} by a margin of {expression/winner-margin} points.\n          The {expression/winner-votes} votes cast for the winner comprise\n          {expression/winner-percent-state-votes} of the total votes cast in the state.\n        "
                             }),
                             new content_1.TextContent({
-                                text: "\n          <div class=\"table-container\">\n            Votes in 2016 and the change from 2012\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{SUM_PRS_DEM_16}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{SUM_PRS_REP_16}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{SUM_PRS_OTH_16}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
+                                text: "\n          <div class=\"table-container\">\n            Votes in 2016 and the change from 2012\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{" + config_1.fieldInfos.democrat.state.next.name + "}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{" + config_1.fieldInfos.republican.state.next.name + "}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{" + config_1.fieldInfos.other.state.next.name + "}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
                             })
                         ],
                         expressionInfos: [
                             new ExpressionInfo({
                                 title: "winner % of state votes",
                                 name: "winner-percent-state-votes",
-                                expression: "\n          var dem = $feature.SUM_PRS_DEM_16;\n          var rep = $feature.SUM_PRS_REP_16;\n          var oth = $feature.SUM_PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          var winnerTotal = Max(all);\n          return Text(winnerTotal/Sum(all), \"#%\");\n        "
+                                expression: "\n          " + expressionUtils_1.votesNextBase + "\n\n          var winnerTotal = Max(all);\n          return Text(winnerTotal/Sum(all), \"#%\");\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner votes",
                                 name: "winner-votes",
-                                expression: "\n          var dem = $feature.SUM_PRS_DEM_16;\n          var rep = $feature.SUM_PRS_REP_16;\n          var oth = $feature.SUM_PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          return Text(Max(all), \"#,###\");\n        "
+                                expression: "\n          " + expressionUtils_1.votesNextBase + "\n\n          return Text(Max(all), \"#,###\");\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner-color",
                                 name: "winner-color",
-                                expression: "\n          var dem = $feature.SUM_PRS_DEM_16;\n          var rep = $feature.SUM_PRS_REP_16;\n          var oth = $feature.SUM_PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"" + config_1.dColor + "\",\n            rep, \"" + config_1.rColor + "\",\n            oth, \"" + config_1.oColor + "\",\n          \"#000000\"\n          );\n        "
+                                expression: "\n          " + expressionUtils_1.votesNextBase + "\n\n          Decode( Max(all),\n            dem, \"" + config_1.dColor + "\",\n            rep, \"" + config_1.rColor + "\",\n            oth, \"" + config_1.oColor + "\",\n          \"#000000\"\n          );\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner",
                                 name: "winner",
-                                expression: "\n          var dem = $feature.SUM_PRS_DEM_16;\n          var rep = $feature.SUM_PRS_REP_16;\n          var oth = $feature.SUM_PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"Democrat\",\n            rep, \"Republican\",\n            oth, \"other\",\n          \"tie\"\n          );\n        "
+                                expression: "\n          " + expressionUtils_1.votesNextBase + "\n\n          Decode( Max(all),\n            dem, \"Democrat\",\n            rep, \"Republican\",\n            oth, \"other\",\n          \"tie\"\n          );\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Democrat change from 2012",
                                 name: "dem12change16",
-                                expression: "\n          var votes16 = $feature.SUM_PRS_DEM_16;\n          var votes12 = $feature.SUM_PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return changeText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Republican change from 2012",
                                 name: "rep12change16",
-                                expression: "\n          var votes16 = $feature.SUM_PRS_REP_16;\n          var votes12 = $feature.SUM_PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return changeText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Other change from 2012",
                                 name: "oth12change16",
-                                expression: "\n          var votes16 = $feature.SUM_PRS_OTH_16;\n          var votes12 = $feature.SUM_PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return changeText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Democrat diff from 2012",
                                 name: "dem12diff16",
-                                expression: "\n          var votes16 = $feature.SUM_PRS_DEM_16;\n          var votes12 = $feature.SUM_PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return diffText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Republican diff from 2012",
                                 name: "rep12diff16",
-                                expression: "\n          var votes16 = $feature.SUM_PRS_REP_16;\n          var votes12 = $feature.SUM_PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return diffText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Other diff from 2012",
                                 name: "oth12diff16",
-                                expression: "\n          var votes16 = $feature.SUM_PRS_OTH_16;\n          var votes12 = $feature.SUM_PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return diffText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "change-color",
                                 name: "dem-change-color",
-                                expression: "\n          var votes16 = $feature.SUM_PRS_DEM_16;\n          var votes12 = $feature.SUM_PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, \"green\", \"red\");\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n          " + expressionUtils_1.colorDiffPopupBase + "\n        "
                             }),
                             new ExpressionInfo({
                                 title: "change-color",
                                 name: "rep-change-color",
-                                expression: "\n          var votes16 = $feature.SUM_PRS_REP_16;\n          var votes12 = $feature.SUM_PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, \"green\", \"red\");\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n          " + expressionUtils_1.colorDiffPopupBase + "\n        "
                             }),
                             new ExpressionInfo({
                                 title: "change-color",
                                 name: "oth-change-color",
-                                expression: "\n          var votes16 = $feature.SUM_PRS_OTH_16;\n          var votes12 = $feature.SUM_PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, \"green\", \"red\");\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n          " + expressionUtils_1.colorDiffPopupBase + "\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner-margin",
                                 name: "winner-margin",
-                                expression: "\n          var fields = [\n            $feature.SUM_PRS_DEM_16,\n            $feature.SUM_PRS_REP_16,\n            $feature.SUM_PRS_OTH_16\n          ];\n\n          var top2 = Top(Reverse(Sort(fields)), 2);\n          var winner = First(top2);\n          var secondPlace = top2[1];\n          var total = Sum(fields);\n          return Text( (winner - secondPlace) / total, \"#.#%\");\n        "
+                                expression: "\n          var fields = [\n            $feature." + config_1.fieldInfos.democrat.state.next.name + ",\n            $feature." + config_1.fieldInfos.republican.state.next.name + ",\n            $feature." + config_1.fieldInfos.other.state.next.name + "\n          ];\n\n          var top2 = Top(Reverse(Sort(fields)), 2);\n          var winner = First(top2);\n          var secondPlace = top2[1];\n          var total = Sum(fields);\n          return Text( (winner - secondPlace) / total, \"#.#%\");\n        "
                             })
                         ]
                     });
@@ -252,7 +252,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         title: "Results by state",
                         opacity: 0.3,
                         renderer: new rasterRenderers_1.UniqueValueRenderer({
-                            valueExpression: "\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat',\n          rep16, 'Republican',\n          oth16, 'Other',\n        'n/a' );\n\n        return winner16\n      ",
+                            valueExpression: "\n        var dem = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n        var rep16 = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n        var oth16 = $feature." + config_1.fieldInfos.other.state.next.name + ";\n\n        var winner16 = Decode( Max([dem, rep16, oth16]),\n          dem, 'Democrat',\n          rep16, 'Republican',\n          oth16, 'Other',\n        'n/a' );\n\n        return winner16\n      ",
                             defaultSymbol: null,
                             uniqueValueInfos: [{
                                     value: "Republican",
@@ -280,7 +280,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         title: "Swing states",
                         opacity: 0.3,
                         renderer: new rasterRenderers_1.UniqueValueRenderer({
-                            valueExpression: "\n        var dem12 = $feature.SUM_PRS_DEM_12;\n        var rep12 = $feature.SUM_PRS_REP_12;\n        var oth12 = $feature.SUM_PRS_OTH_12;\n\n        var winner12 = Decode( Max([dem12, rep12, oth12]),\n          dem12, 'Democrat 2012',\n          rep12, 'Republican 2012',\n          oth12, 'Other 2012',\n        'n/a' );\n\n        var dem16 = $feature.SUM_PRS_DEM_16;\n        var rep16 = $feature.SUM_PRS_REP_16;\n        var oth16 = $feature.SUM_PRS_OTH_16;\n\n        var winner16 = Decode( Max([dem16, rep16, oth16]),\n          dem16, 'Democrat 2016',\n          rep16, 'Republican 2016',\n          oth16, 'Other 2016',\n        'n/a' );\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
+                            valueExpression: "\n        var demPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n        var repPrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n        var othPrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n\n        var winner12 = Decode( Max([demPrevious, repPrevious, othPrevious]),\n          demPrevious, 'Democrat 2012',\n          repPrevious, 'Republican 2012',\n          othPrevious, 'Other 2012',\n        'n/a' );\n\n        var demNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n        var repNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n        var othNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n\n        var winner16 = Decode( Max([demNext, repNext, othNext]),\n        demNext, 'Democrat 2016',\n        repNext, 'Republican 2016',\n        othNext, 'Other 2016',\n        'n/a' );\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
                             defaultSymbol: null,
                             uniqueValueInfos: [{
                                     value: "Democrat 2012, Republican 2016",
@@ -301,14 +301,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         popupTemplate: statePopupTemplate,
                         popupEnabled: false
                     });
-                    sizeExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 30, 40,\n      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
-                    offsetXExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 30, 40,\n      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
-                    offsetYExpressionBase = "\n    var sizeFactor = When(\n      percentStateVotes >= 30, 40,\n      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),\n      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),\n      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),\n      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.referenceScale + " / $view.scale );\n\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125\n      scaleFactorBase * 3  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter * 0.67;\n  ";
                     popupTemplate = new PopupTemplate({
                         title: "{Name_1}, {STATE_NAME}",
                         fieldInfos: [
                             new FieldInfo({
-                                fieldName: "PRS_DEM_12",
+                                fieldName: config_1.fieldInfos.democrat.county.previous.name,
                                 label: "2012 Democrat votes",
                                 format: new FieldInfoFormat({
                                     places: 0,
@@ -316,7 +313,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "PRS_REP_12",
+                                fieldName: config_1.fieldInfos.republican.county.previous.name,
                                 label: "2012 Republican votes",
                                 format: new FieldInfoFormat({
                                     places: 0,
@@ -324,7 +321,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "PRS_OTH_12",
+                                fieldName: config_1.fieldInfos.other.county.previous.name,
                                 label: "2012 Other votes",
                                 format: new FieldInfoFormat({
                                     places: 0,
@@ -332,7 +329,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "PRS_DEM_16",
+                                fieldName: config_1.fieldInfos.democrat.county.next.name,
                                 label: "2016 Democrat votes",
                                 format: new FieldInfoFormat({
                                     places: 0,
@@ -340,7 +337,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "PRS_REP_16",
+                                fieldName: config_1.fieldInfos.republican.county.next.name,
                                 label: "2016 Republican votes",
                                 format: new FieldInfoFormat({
                                     places: 0,
@@ -348,7 +345,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 })
                             }),
                             new FieldInfo({
-                                fieldName: "PRS_OTH_16",
+                                fieldName: config_1.fieldInfos.other.county.next.name,
                                 label: "2016 Other votes",
                                 format: new FieldInfoFormat({
                                     places: 0,
@@ -361,79 +358,79 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 text: "\n          The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n          candidate won this county by a margin of {expression/winner-margin}.\n          The {expression/winner-votes} votes cast for the winner comprise\n          {expression/winner-percent-state-votes} of the total votes cast in the state.\n        "
                             }),
                             new content_1.TextContent({
-                                text: "\n          <div class=\"table-container\">\n            Votes in 2016 and the change from 2012\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{PRS_DEM_16}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{PRS_REP_16}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{PRS_OTH_16}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
+                                text: "\n          <div class=\"table-container\">\n            Votes in 2016 and the change from 2012\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{" + config_1.fieldInfos.democrat.county.next.name + "}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{" + config_1.fieldInfos.republican.county.next.name + "}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{" + config_1.fieldInfos.other.county.next.name + "}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
                             })
                         ],
                         expressionInfos: [
                             new ExpressionInfo({
                                 title: "winner % of state votes",
                                 name: "winner-percent-state-votes",
-                                expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          var winnerTotal = Max(all);\n          return Text(winnerTotal/$feature.TOTAL_STATE_VOTES_16, \"#%\");\n        "
+                                expression: "\n          var dem = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n          var rep = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n          var oth = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var all = [dem, rep, oth];\n\n          var winnerTotal = Max(all);\n          return Text(winnerTotal/$feature." + config_1.fieldInfos.normalizationFields.county.next + ", \"#%\");\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner votes",
                                 name: "winner-votes",
-                                expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          return Text(Max(all), \"#,###\");\n        "
+                                expression: "\n          var dem = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n          var rep = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n          var oth = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var all = [dem, rep, oth];\n\n          return Text(Max(all), \"#,###\");\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner-color",
                                 name: "winner-color",
-                                expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"" + config_1.dColor + "\",\n            rep, \"" + config_1.rColor + "\",\n            oth, \"" + config_1.oColor + "\",\n          \"#000000\"\n          );\n        "
+                                expression: "\n          var dem = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n          var rep = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n          var oth = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"" + config_1.dColor + "\",\n            rep, \"" + config_1.rColor + "\",\n            oth, \"" + config_1.oColor + "\",\n          \"#000000\"\n          );\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner",
                                 name: "winner",
-                                expression: "\n          var dem = $feature.PRS_DEM_16;\n          var rep = $feature.PRS_REP_16;\n          var oth = $feature.PRS_OTH_16;\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"Democrat\",\n            rep, \"Republican\",\n            oth, \"other\",\n          \"tie\"\n          );\n        "
+                                expression: "\n          var dem = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n          var rep = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n          var oth = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var all = [dem, rep, oth];\n\n          Decode( Max(all),\n            dem, \"Democrat\",\n            rep, \"Republican\",\n            oth, \"other\",\n          \"tie\"\n          );\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Democrat change from 2012",
                                 name: "dem12change16",
-                                expression: "\n          var votes16 = $feature.PRS_DEM_16;\n          var votes12 = $feature.PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return changeText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Republican change from 2012",
                                 name: "rep12change16",
-                                expression: "\n          var votes16 = $feature.PRS_REP_16;\n          var votes12 = $feature.PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return changeText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Other change from 2012",
                                 name: "oth12change16",
-                                expression: "\n          var votes16 = $feature.PRS_OTH_16;\n          var votes12 = $feature.PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(abs(change), '\u2193#,###.#%'));\n          return changeText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Democrat diff from 2012",
                                 name: "dem12diff16",
-                                expression: "\n          var votes16 = $feature.PRS_DEM_16;\n          var votes12 = $feature.PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n          var diff = votesNext - votesPrevious;\n          var change = ( (votesNext - votesPrevious) / votesPrevious );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Republican diff from 2012",
                                 name: "rep12diff16",
-                                expression: "\n          var votes16 = $feature.PRS_REP_16;\n          var votes12 = $feature.PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n          var diff = votesNext - votesPrevious;\n          var change = ( (votesNext - votesPrevious) / votesPrevious );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Other diff from 2012",
                                 name: "oth12diff16",
-                                expression: "\n          var votes16 = $feature.PRS_OTH_16;\n          var votes12 = $feature.PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n          var diff = votesNext - votesPrevious;\n          var change = ( (votesNext - votesPrevious) / votesPrevious );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "change-color",
                                 name: "dem-change-color",
-                                expression: "\n          var votes16 = $feature.PRS_DEM_16;\n          var votes12 = $feature.PRS_DEM_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, \"green\", \"red\");\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n          " + expressionUtils_1.colorDiffPopupBase + "\n        "
                             }),
                             new ExpressionInfo({
                                 title: "change-color",
                                 name: "rep-change-color",
-                                expression: "\n          var votes16 = $feature.PRS_REP_16;\n          var votes12 = $feature.PRS_REP_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, \"green\", \"red\");\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n          " + expressionUtils_1.colorDiffPopupBase + "\n        "
                             }),
                             new ExpressionInfo({
                                 title: "change-color",
                                 name: "oth-change-color",
-                                expression: "\n          var votes16 = $feature.PRS_OTH_16;\n          var votes12 = $feature.PRS_OTH_12;\n          var diff = votes16 - votes12;\n          var change = ( (votes16 - votes12) / votes12 );\n          return IIF(diff > 0, \"green\", \"red\");\n        "
+                                expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n          " + expressionUtils_1.colorDiffPopupBase + "\n        "
                             }),
                             new ExpressionInfo({
                                 title: "winner-margin",
                                 name: "winner-margin",
-                                expression: "\n          var fields = [\n            $feature.PRS_DEM_16,\n            $feature.PRS_REP_16,\n            $feature.PRS_OTH_16\n          ];\n\n          var top2 = Top(Reverse(Sort(fields)), 2);\n          var winner = First(top2);\n          var secondPlace = top2[1];\n          var total = Sum(fields);\n          return Text( (winner - secondPlace) / total, \"#.#%\");\n        "
+                                expression: "\n          var fields = [\n            $feature." + config_1.fieldInfos.democrat.county.next.name + ",\n            $feature." + config_1.fieldInfos.republican.county.next.name + ",\n            $feature." + config_1.fieldInfos.other.county.next.name + "\n          ];\n\n          var top2 = Top(Reverse(Sort(fields)), 2);\n          var winner = First(top2);\n          var secondPlace = top2[1];\n          var total = Sum(fields);\n          return Text( (winner - secondPlace) / total, \"#.#%\");\n        "
                             })
                         ]
                     });
@@ -462,49 +459,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -532,49 +487,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMLineSymbol",
                                                             symbolLayers: [
@@ -602,49 +515,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -671,49 +542,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMLineSymbol",
                                                             symbolLayers: [
@@ -742,49 +571,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -816,49 +603,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMLineSymbol",
                                                             symbolLayers: [
@@ -885,7 +630,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Democrat votes",
-                                                expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n\n                " + sizeExpressionBase,
+                                                expression: "\n                  var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n                  var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n                  var change = votesNext - votesPrevious;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -896,7 +641,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Democrat votes",
-                                                expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                " + sizeExpressionBase,
+                                                expression: "\n                  var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n                  var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n                  var change = votesNext - votesPrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -907,7 +652,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                " + sizeExpressionBase,
+                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -918,7 +663,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Republican votes",
-                                                expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                " + sizeExpressionBase,
+                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -929,7 +674,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                " + sizeExpressionBase,
+                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -940,7 +685,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Other votes",
-                                                expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                " + sizeExpressionBase,
+                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -952,7 +697,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Democrat votes",
-                                                expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetXExpressionBase + "\n                  return offset * -1;\n                ",
+                                                expression: "\n                  var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n                  var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n                  var change = votesNext - votesPrevious;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset * -1;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -963,7 +708,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Democrat votes",
-                                                expression: "\n                  var dem16 = $feature.PRS_DEM_16;\n                  var dem12 = $feature.PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetXExpressionBase + "\n                  return offset * -1;\n                ",
+                                                expression: "\n                  var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n                  var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n                  var change = votesNext - votesPrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset * -1;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -974,7 +719,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetXExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -985,7 +730,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Republican votes",
-                                                expression: "\n                  var rep16 = $feature.PRS_REP_16;\n                  var rep12 = $feature.PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetXExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -996,7 +741,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetYExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetYExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -1007,7 +752,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Other votes",
-                                                expression: "\n                  var oth16 = $feature.PRS_OTH_16;\n                  var oth12 = $feature.PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetYExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetYExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         }
@@ -1020,9 +765,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // DEMOCRAT label classes
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + " - " + config_1.fieldInfos.democrat.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_DEM_16;\n            var value12 = $feature.PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1041,9 +786,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 10",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + " - " + config_1.fieldInfos.democrat.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 5 AND ABS(((" + config_1.fieldInfos.democrat.county.next.name + " - " + config_1.fieldInfos.democrat.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_DEM_16;\n            var value12 = $feature.PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1062,9 +807,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 5",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + " - " + config_1.fieldInfos.democrat.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 1 AND ABS(((" + config_1.fieldInfos.democrat.county.next.name + " - " + config_1.fieldInfos.democrat.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 5",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_DEM_16;\n            var value12 = $feature.PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1083,9 +828,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 1",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + " - " + config_1.fieldInfos.democrat.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 0.5 AND ABS(((" + config_1.fieldInfos.democrat.county.next.name + " - " + config_1.fieldInfos.democrat.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 1",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_DEM_16;\n            var value12 = $feature.PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1104,9 +849,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + " - " + config_1.fieldInfos.democrat.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 0.5",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_DEM_16;\n            var value12 = $feature.PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1126,9 +871,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // REPUBLICAN label classes
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + " - " + config_1.fieldInfos.republican.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_REP_16;\n            var value12 = $feature.PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1147,9 +892,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 10",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + " - " + config_1.fieldInfos.republican.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 5 AND ABS(((" + config_1.fieldInfos.republican.county.next.name + " - " + config_1.fieldInfos.republican.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_REP_16;\n            var value12 = $feature.PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1168,9 +913,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 5",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + " - " + config_1.fieldInfos.republican.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 1 AND ABS(((" + config_1.fieldInfos.republican.county.next.name + " - " + config_1.fieldInfos.republican.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 5",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_REP_16;\n            var value12 = $feature.PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1189,9 +934,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 1",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + " - " + config_1.fieldInfos.republican.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 0.5 AND ABS(((" + config_1.fieldInfos.republican.county.next.name + " - " + config_1.fieldInfos.republican.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 1",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_REP_16;\n            var value12 = $feature.PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1210,9 +955,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + " - " + config_1.fieldInfos.republican.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 0.5",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_REP_16;\n            var value12 = $feature.PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1232,9 +977,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // OTHER label classes
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+                                where: "ABS(((" + config_1.fieldInfos.other.county.next.name + " - " + config_1.fieldInfos.other.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_OTH_16;\n            var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1253,9 +998,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 10",
+                                where: "ABS(((" + config_1.fieldInfos.other.county.next.name + " - " + config_1.fieldInfos.other.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 5 AND ABS(((" + config_1.fieldInfos.other.county.next.name + " - " + config_1.fieldInfos.other.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 10",
                                 labelExpressionInfo: {
-                                    expression: "\n          var value16 = $feature.PRS_OTH_16;\n          var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n          var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1274,9 +1019,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "\n          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 5)\n        ",
+                                where: "\n          (ABS(((" + config_1.fieldInfos.other.county.next.name + " - " + config_1.fieldInfos.other.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 1 AND ABS(((" + config_1.fieldInfos.other.county.next.name + " - " + config_1.fieldInfos.other.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 5)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n          var value16 = $feature.PRS_OTH_16;\n          var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n          var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1295,9 +1040,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "\n          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)\n        ",
+                                where: "\n          (ABS(((" + config_1.fieldInfos.other.county.next.name + " - " + config_1.fieldInfos.other.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 0.5 AND ABS(((" + config_1.fieldInfos.other.county.next.name + " - " + config_1.fieldInfos.other.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 1)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n          var value16 = $feature.PRS_OTH_16;\n          var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n          var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1316,9 +1061,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "\n          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5)\n        ",
+                                where: "\n          (ABS(((" + config_1.fieldInfos.other.county.next.name + " - " + config_1.fieldInfos.other.county.previous.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 0.5)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.PRS_OTH_16;\n            var value12 = $feature.PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1363,49 +1108,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -1438,49 +1141,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -1513,49 +1174,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -1586,7 +1205,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Democrat votes",
-                                                expression: "\n                  var percentStateVotes = ( $feature.PRS_DEM_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n\n                " + sizeExpressionBase,
+                                                expression: "\n                  var percentStateVotes = ( $feature." + config_1.fieldInfos.democrat.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n                " + expressionUtils_1.sizeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -1597,7 +1216,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var percentStateVotes = ( $feature.PRS_REP_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n\n                " + sizeExpressionBase,
+                                                expression: "\n                  var percentStateVotes = ( $feature." + config_1.fieldInfos.republican.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n                " + expressionUtils_1.sizeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -1608,7 +1227,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var percentStateVotes = ( $feature.PRS_OTH_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n\n                " + sizeExpressionBase,
+                                                expression: "\n                  var percentStateVotes = ( $feature." + config_1.fieldInfos.other.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n                " + expressionUtils_1.sizeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -1620,7 +1239,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Democrat votes",
-                                                expression: "\n                  var percentStateVotes = ( $feature.PRS_DEM_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n\n                  " + offsetXExpressionBase + "\n                  return offset * -1;\n                ",
+                                                expression: "\n                  var percentStateVotes = ( $feature." + config_1.fieldInfos.democrat.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset * -1;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -1631,7 +1250,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var percentStateVotes = ( $feature.PRS_REP_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n                  " + offsetXExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var percentStateVotes = ( $feature." + config_1.fieldInfos.republican.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -1642,7 +1261,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var percentStateVotes = ( $feature.PRS_OTH_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;\n\n                  " + offsetYExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var percentStateVotes = ( $feature." + config_1.fieldInfos.other.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n                  " + expressionUtils_1.offsetYExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         }
@@ -1655,9 +1274,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // DEMOCRAT label classes
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.democrat.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1676,9 +1295,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 10",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 5 AND ABS(((" + config_1.fieldInfos.democrat.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.democrat.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1697,9 +1316,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 5",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 1 AND ABS(((" + config_1.fieldInfos.democrat.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 5",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.democrat.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1718,9 +1337,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 1",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 0.5 AND ABS(((" + config_1.fieldInfos.democrat.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 1",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.democrat.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1739,9 +1358,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+                                where: "ABS(((" + config_1.fieldInfos.democrat.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 0.5",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.democrat.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1761,9 +1380,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // REPUBLICAN label classes
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_REP_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.republican.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1782,9 +1401,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 10",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 5 AND ABS(((" + config_1.fieldInfos.republican.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_REP_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.republican.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1803,9 +1422,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 5",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 1 AND ABS(((" + config_1.fieldInfos.republican.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 5",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_REP_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.republican.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1824,9 +1443,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 1",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 0.5 AND ABS(((" + config_1.fieldInfos.republican.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 1",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_REP_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.republican.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1845,9 +1464,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+                                where: "ABS(((" + config_1.fieldInfos.republican.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 0.5",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_REP_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.republican.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1867,9 +1486,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // OTHER label classes
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+                                where: "ABS(((" + config_1.fieldInfos.other.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.other.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1888,9 +1507,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 10",
+                                where: "ABS(((" + config_1.fieldInfos.other.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 5 AND ABS(((" + config_1.fieldInfos.other.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 10",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.other.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1909,9 +1528,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "\n          (ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 5)\n        ",
+                                where: "\n          (ABS(((" + config_1.fieldInfos.other.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 1 AND ABS(((" + config_1.fieldInfos.other.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 5)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.other.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1930,9 +1549,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "\n          (ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 1)\n        ",
+                                where: "\n          (ABS(((" + config_1.fieldInfos.other.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) >= 0.5 AND ABS(((" + config_1.fieldInfos.other.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 1)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.other.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1951,9 +1570,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 577791,
-                                where: "\n          (ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 0.5)\n        ",
+                                where: "\n          (ABS(((" + config_1.fieldInfos.other.county.next.name + ") / " + config_1.fieldInfos.normalizationFields.county.next + ") * 100) < 0.5)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.other.county.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 labelPlacement: "center-center",
@@ -1973,9 +1592,6 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         ],
                         popupTemplate: popupTemplate
                     });
-                    sizeTotalChangeExpressionBase = "\n    var sizeFactor = When(\n      value >= 500000, 30,\n      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),\n      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),\n      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),\n      value > 0, 8 + (((10-8) / (10000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
-                    offsetXTotalChangeExpressionBase = "\n    var sizeFactor = When(\n      value >= 500000, 30,\n      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),\n      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),\n      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),\n      value > 0, 8 + (((10-8) / (10000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter / 2;\n  ";
-                    offsetYTotalChangeExpressionBase = "\n    var sizeFactor = When(\n      value >= 500000, 30,\n      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),\n      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),\n      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),\n      value > 0, 8 + (((10-8) / (10000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    var diameter = sizeFactor * scaleFactor;\n    var offset = diameter * 0.67;\n  ";
                     changeStatesLayer = new FeatureLayer({
                         maxScale: config_1.scaleThreshold,
                         portalItem: {
@@ -2002,49 +1618,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -2072,49 +1646,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMLineSymbol",
                                                             symbolLayers: [
@@ -2142,49 +1674,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -2211,49 +1701,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMLineSymbol",
                                                             symbolLayers: [
@@ -2282,49 +1730,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -2356,49 +1762,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMLineSymbol",
                                                             symbolLayers: [
@@ -2425,7 +1789,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Democrat votes",
-                                                expression: "\n                  var dem16 = $feature.SUM_PRS_DEM_16;\n                  var dem12 = $feature.SUM_PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change > 0, change, 0);\n                " + sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n                  var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n                  var change = votesNext - votesPrevious;\n                  var value = IIF( change > 0, change, 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -2436,7 +1800,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Democrat votes",
-                                                expression: "\n                  var dem16 = $feature.SUM_PRS_DEM_16;\n                  var dem12 = $feature.SUM_PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n                  var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n                  var change = votesNext - votesPrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -2447,7 +1811,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var rep16 = $feature.SUM_PRS_REP_16;\n                  var rep12 = $feature.SUM_PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                " + sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -2458,7 +1822,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Republican votes",
-                                                expression: "\n                  var rep16 = $feature.SUM_PRS_REP_16;\n                  var rep12 = $feature.SUM_PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -2469,7 +1833,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var oth16 = $feature.SUM_PRS_OTH_16;\n                  var oth12 = $feature.SUM_PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                " + sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -2480,7 +1844,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Other votes",
-                                                expression: "\n                  var oth16 = $feature.SUM_PRS_OTH_16;\n                  var oth12 = $feature.SUM_PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -2492,7 +1856,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Democrat votes",
-                                                expression: "\n                  var dem16 = $feature.SUM_PRS_DEM_16;\n                  var dem12 = $feature.SUM_PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change > 0, change, 0);\n                  " + offsetXTotalChangeExpressionBase + "\n                  return offset * -1;\n                ",
+                                                expression: "\n                  var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n                  var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n                  var change = votesNext - votesPrevious;\n                  var value = IIF( change > 0, change, 0);\n                  " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n                  return offset * -1;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -2503,7 +1867,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Democrat votes",
-                                                expression: "\n                  var dem16 = $feature.SUM_PRS_DEM_16;\n                  var dem12 = $feature.SUM_PRS_DEM_12;\n                  var change = dem16 - dem12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + offsetXTotalChangeExpressionBase + "\n                  return offset * -1;\n                ",
+                                                expression: "\n                  var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n                  var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n                  var change = votesNext - votesPrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n                  return offset * -1;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -2514,7 +1878,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var rep16 = $feature.SUM_PRS_REP_16;\n                  var rep12 = $feature.SUM_PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  " + offsetXTotalChangeExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -2525,7 +1889,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Republican votes",
-                                                expression: "\n                  var rep16 = $feature.SUM_PRS_REP_16;\n                  var rep12 = $feature.SUM_PRS_REP_12;\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + offsetXTotalChangeExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -2536,7 +1900,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var oth16 = $feature.SUM_PRS_OTH_16;\n                  var oth12 = $feature.SUM_PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  " + offsetYTotalChangeExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  " + expressionUtils_1.offsetYTotalChangeExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -2547,7 +1911,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Other votes",
-                                                expression: "\n                  var oth16 = $feature.SUM_PRS_OTH_16;\n                  var oth12 = $feature.SUM_PRS_OTH_12;\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + offsetYTotalChangeExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + expressionUtils_1.offsetYTotalChangeExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         }
@@ -2560,9 +1924,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // DEMOCRAT label classes
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) >= 500000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + " - " + config_1.fieldInfos.democrat.state.previous.name + ") >= 500000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_DEM_16;\n            var value12 = $feature.SUM_PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2580,9 +1944,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) >= 100000 AND ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) < 500000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + " - " + config_1.fieldInfos.democrat.state.previous.name + ") >= 100000 AND ABS(" + config_1.fieldInfos.democrat.state.next.name + " - " + config_1.fieldInfos.democrat.state.previous.name + ") < 500000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_DEM_16;\n            var value12 = $feature.SUM_PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2600,9 +1964,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) >= 50000 AND ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) < 100000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + " - " + config_1.fieldInfos.democrat.state.previous.name + ") >= 50000 AND ABS(" + config_1.fieldInfos.democrat.state.next.name + " - " + config_1.fieldInfos.democrat.state.previous.name + ") < 100000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_DEM_16;\n            var value12 = $feature.SUM_PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2620,9 +1984,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) >= 10000 AND ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) < 50000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + " - " + config_1.fieldInfos.democrat.state.previous.name + ") >= 10000 AND ABS(" + config_1.fieldInfos.democrat.state.next.name + " - " + config_1.fieldInfos.democrat.state.previous.name + ") < 50000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_DEM_16;\n            var value12 = $feature.SUM_PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2640,9 +2004,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) < 10000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + " - " + config_1.fieldInfos.democrat.state.previous.name + ") < 10000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_DEM_16;\n            var value12 = $feature.SUM_PRS_DEM_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2661,9 +2025,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // REPUBLICAN label classes
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) >= 500000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + " - " + config_1.fieldInfos.republican.state.previous.name + ") >= 500000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_REP_16;\n            var value12 = $feature.SUM_PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2681,9 +2045,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) >= 100000 AND ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) < 500000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + " - " + config_1.fieldInfos.republican.state.previous.name + ") >= 100000 AND ABS(" + config_1.fieldInfos.republican.state.next.name + " - " + config_1.fieldInfos.republican.state.previous.name + ") < 500000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_REP_16;\n            var value12 = $feature.SUM_PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2701,9 +2065,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) >= 50000 AND ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) < 100000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + " - " + config_1.fieldInfos.republican.state.previous.name + ") >= 50000 AND ABS(" + config_1.fieldInfos.republican.state.next.name + " - " + config_1.fieldInfos.republican.state.previous.name + ") < 100000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_REP_16;\n            var value12 = $feature.SUM_PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2721,9 +2085,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) >= 10000 AND ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) < 50000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + " - " + config_1.fieldInfos.republican.state.previous.name + ") >= 10000 AND ABS(" + config_1.fieldInfos.republican.state.next.name + " - " + config_1.fieldInfos.republican.state.previous.name + ") < 50000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_REP_16;\n            var value12 = $feature.SUM_PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2741,9 +2105,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) < 10000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + " - " + config_1.fieldInfos.republican.state.previous.name + ") < 10000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_REP_16;\n            var value12 = $feature.SUM_PRS_REP_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2762,9 +2126,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // OTHER label classes
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) >= 500000",
+                                where: "ABS(" + config_1.fieldInfos.other.state.next.name + " - " + config_1.fieldInfos.other.state.previous.name + ") >= 500000",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_OTH_16;\n            var value12 = $feature.SUM_PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2782,9 +2146,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) >= 100000 AND ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) < 500000",
+                                where: "ABS(" + config_1.fieldInfos.other.state.next.name + " - " + config_1.fieldInfos.other.state.previous.name + ") >= 100000 AND ABS(" + config_1.fieldInfos.other.state.next.name + " - " + config_1.fieldInfos.other.state.previous.name + ") < 500000",
                                 labelExpressionInfo: {
-                                    expression: "\n          var value16 = $feature.SUM_PRS_OTH_16;\n          var value12 = $feature.SUM_PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n          var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n          var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2802,9 +2166,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "\n          (ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) >= 50000 AND ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) < 100000)\n        ",
+                                where: "\n          (ABS(" + config_1.fieldInfos.other.state.next.name + " - " + config_1.fieldInfos.other.state.previous.name + ") >= 50000 AND ABS(" + config_1.fieldInfos.other.state.next.name + " - " + config_1.fieldInfos.other.state.previous.name + ") < 100000)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n          var value16 = $feature.SUM_PRS_OTH_16;\n          var value12 = $feature.SUM_PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n          var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n          var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2822,9 +2186,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "\n          (ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) >= 10000 AND ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) < 50000)\n        ",
+                                where: "\n          (ABS(" + config_1.fieldInfos.other.state.next.name + " - " + config_1.fieldInfos.other.state.previous.name + ") >= 10000 AND ABS(" + config_1.fieldInfos.other.state.next.name + " - " + config_1.fieldInfos.other.state.previous.name + ") < 50000)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n          var value16 = $feature.SUM_PRS_OTH_16;\n          var value12 = $feature.SUM_PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n          var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n          var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2842,9 +2206,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "\n          (ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) < 10000)\n        ",
+                                where: "\n          (ABS(" + config_1.fieldInfos.other.state.next.name + " - " + config_1.fieldInfos.other.state.previous.name + ") < 10000)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n            var value16 = $feature.SUM_PRS_OTH_16;\n            var value12 = $feature.SUM_PRS_OTH_12;\n            var change = value16 - value12;\n            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));\n          "
+                                    expression: "\n            var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n            var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n            " + expressionUtils_1.diffLabelText + "\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -2863,9 +2227,6 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         ],
                         popupTemplate: statePopupTemplate
                     });
-                    sizeTotalExpressionBase = "\n    var sizeFactor = When(\n      value >= 5000000, 40,\n      value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),\n      value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),\n      value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),\n      value > 0, 8 + (((10-8) / (100000-0)) * value),\n      0\n    );\n\n    var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n    var scaleFactor = When(\n      scaleFactorBase >= 1, 1,  // 1\n      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n      scaleFactorBase * 1  // 0.1875\n    );\n    return sizeFactor * scaleFactor;\n  ";
-                    offsetXTotalExpressionBase = "\n  var sizeFactor = When(\n    value >= 5000000, 40,\n    value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),\n    value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),\n    value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),\n    value > 0, 8 + (((10-8) / (100000-0)) * value),\n    0\n  );\n\n  var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n  var scaleFactor = When(\n    scaleFactorBase >= 1, 1,  // 1\n    scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n    scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n    scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n    scaleFactorBase * 1  // 0.1875\n  );\n  var diameter = sizeFactor * scaleFactor;\n  var offset = diameter / 2;\n";
-                    offsetYTotalExpressionBase = "\n  var sizeFactor = When(\n    value >= 5000000, 40,\n    value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),\n    value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),\n    value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),\n    value > 0, 8 + (((10-8) / (100000-0)) * value),\n    0\n  );\n\n  var scaleFactorBase = ( " + config_1.stateReferenceScale + " / $view.scale );\n  var scaleFactor = When(\n    scaleFactorBase >= 1, 1,  // 1\n    scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6\n    scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45\n    scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125\n    scaleFactorBase * 1  // 0.1875\n  );\n  var diameter = sizeFactor * scaleFactor;\n  var offset = diameter * 0.67;\n";
                     totalStatesLayer = new FeatureLayer({
                         maxScale: config_1.scaleThreshold,
                         portalItem: {
@@ -2892,49 +2253,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -2961,49 +2280,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -3031,49 +2308,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                                 markerGraphics: [
                                                     {
                                                         type: "CIMMarkerGraphic",
-                                                        geometry: {
-                                                            rings: [
-                                                                [
-                                                                    [8.5, 0.2],
-                                                                    [7.06, 0.33],
-                                                                    [5.66, 0.7],
-                                                                    [4.35, 1.31],
-                                                                    [3.16, 2.14],
-                                                                    [2.14, 3.16],
-                                                                    [1.31, 4.35],
-                                                                    [0.7, 5.66],
-                                                                    [0.33, 7.06],
-                                                                    [0.2, 8.5],
-                                                                    [0.33, 9.94],
-                                                                    [0.7, 11.34],
-                                                                    [1.31, 12.65],
-                                                                    [2.14, 13.84],
-                                                                    [3.16, 14.86],
-                                                                    [4.35, 15.69],
-                                                                    [5.66, 16.3],
-                                                                    [7.06, 16.67],
-                                                                    [8.5, 16.8],
-                                                                    [9.94, 16.67],
-                                                                    [11.34, 16.3],
-                                                                    [12.65, 15.69],
-                                                                    [13.84, 14.86],
-                                                                    [14.86, 13.84],
-                                                                    [15.69, 12.65],
-                                                                    [16.3, 11.34],
-                                                                    [16.67, 9.94],
-                                                                    [16.8, 8.5],
-                                                                    [16.67, 7.06],
-                                                                    [16.3, 5.66],
-                                                                    [15.69, 4.35],
-                                                                    [14.86, 3.16],
-                                                                    [13.84, 2.14],
-                                                                    [12.65, 1.31],
-                                                                    [11.34, 0.7],
-                                                                    [9.94, 0.33],
-                                                                    [8.5, 0.2]
-                                                                ]
-                                                            ]
-                                                        },
+                                                        geometry: symbolUtils_1.cimCircleGeometry,
                                                         symbol: {
                                                             type: "CIMPolygonSymbol",
                                                             symbolLayers: [
@@ -3104,7 +2339,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Democrat votes",
-                                                expression: "\n                  var value = $feature.SUM_PRS_DEM_16;\n                " + sizeTotalExpressionBase,
+                                                expression: "\n                  var value = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n                " + expressionUtils_1.sizeTotalExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -3115,7 +2350,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Republican votes",
-                                                expression: "\n                  var value = $feature.SUM_PRS_REP_16;\n                " + sizeTotalExpressionBase,
+                                                expression: "\n                  var value = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                " + expressionUtils_1.sizeTotalExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -3126,7 +2361,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Other votes",
-                                                expression: "\n                  var value = $feature.SUM_PRS_OTH_16;\n                " + sizeTotalExpressionBase,
+                                                expression: "\n                  var value = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                " + expressionUtils_1.sizeTotalExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -3138,7 +2373,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Democrat votes",
-                                                expression: "\n                  var value = $feature.SUM_PRS_DEM_16;\n                  " + offsetXTotalExpressionBase + "\n                  return offset * -1;\n                ",
+                                                expression: "\n                  var value = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n                  " + expressionUtils_1.offsetXTotalExpressionBase + "\n                  return offset * -1;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -3149,7 +2384,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var value = $feature.SUM_PRS_REP_16;\n                  " + offsetXTotalExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var value = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  " + expressionUtils_1.offsetXTotalExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -3160,7 +2395,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var value = $feature.SUM_PRS_OTH_16;\n                  " + offsetYTotalExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var value = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  " + expressionUtils_1.offsetYTotalExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         }
@@ -3173,9 +2408,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // DEMOCRAT label classes
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) >= 5000000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + ") >= 5000000",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.democrat.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3193,9 +2428,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) >= 1000000 AND ABS(SUM_PRS_DEM_16) < 5000000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + ") >= 1000000 AND ABS(" + config_1.fieldInfos.democrat.state.next.name + ") < 5000000",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.democrat.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3213,9 +2448,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) >= 500000 AND ABS(SUM_PRS_DEM_16) < 1000000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + ") >= 500000 AND ABS(" + config_1.fieldInfos.democrat.state.next.name + ") < 1000000",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.democrat.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3233,9 +2468,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) >= 100000 AND ABS(SUM_PRS_DEM_16) < 500000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + ") >= 100000 AND ABS(" + config_1.fieldInfos.democrat.state.next.name + ") < 500000",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.democrat.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3253,9 +2488,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_DEM_16) < 100000",
+                                where: "ABS(" + config_1.fieldInfos.democrat.state.next.name + ") < 100000",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_DEM_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.democrat.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3274,9 +2509,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // REPUBLICAN label classes
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) >= 5000000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + ") >= 5000000",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.SUM_PRS_REP_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.republican.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3294,9 +2529,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) >= 1000000 AND ABS(SUM_PRS_REP_16) < 5000000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + ") >= 1000000 AND ABS(" + config_1.fieldInfos.republican.state.next.name + ") < 5000000",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_REP_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.republican.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3314,9 +2549,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) >= 500000 AND ABS(SUM_PRS_REP_16) < 1000000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + ") >= 500000 AND ABS(" + config_1.fieldInfos.republican.state.next.name + ") < 1000000",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_REP_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.republican.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3334,9 +2569,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) >= 100000 AND ABS(SUM_PRS_REP_16) < 500000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + ") >= 100000 AND ABS(" + config_1.fieldInfos.republican.state.next.name + ") < 500000",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_REP_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.republican.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3354,9 +2589,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_REP_16) < 100000",
+                                where: "ABS(" + config_1.fieldInfos.republican.state.next.name + ") < 100000",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_REP_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.republican.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3375,9 +2610,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             // OTHER label classes
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_OTH_16) >= 5000000",
+                                where: "ABS(" + config_1.fieldInfos.other.state.next.name + ") >= 5000000",
                                 labelExpressionInfo: {
-                                    expression: "\n            Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n            Text($feature." + config_1.fieldInfos.other.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3395,9 +2630,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "ABS(SUM_PRS_OTH_16) >= 1000000 AND ABS(SUM_PRS_OTH_16) < 5000000",
+                                where: "ABS(" + config_1.fieldInfos.other.state.next.name + ") >= 1000000 AND ABS(" + config_1.fieldInfos.other.state.next.name + ") < 5000000",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.other.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3415,9 +2650,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "\n          (ABS(SUM_PRS_OTH_16) >= 500000 AND ABS(SUM_PRS_OTH_16) < 1000000)\n        ",
+                                where: "\n          (ABS(" + config_1.fieldInfos.other.state.next.name + ") >= 500000 AND ABS(" + config_1.fieldInfos.other.state.next.name + ") < 1000000)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.other.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3435,9 +2670,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "\n          (ABS(SUM_PRS_OTH_16) >= 100000 AND ABS(SUM_PRS_OTH_16) < 500000)\n        ",
+                                where: "\n          (ABS(" + config_1.fieldInfos.other.state.next.name + ") >= 100000 AND ABS(" + config_1.fieldInfos.other.state.next.name + ") < 500000)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.other.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({
@@ -3455,9 +2690,9 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new LabelClass({
                                 minScale: 9244700,
-                                where: "\n          (ABS(SUM_PRS_OTH_16) < 100000)\n        ",
+                                where: "\n          (ABS(" + config_1.fieldInfos.other.state.next.name + ") < 100000)\n        ",
                                 labelExpressionInfo: {
-                                    expression: "\n          Text($feature.SUM_PRS_OTH_16, '#,###');\n          "
+                                    expression: "\n          Text($feature." + config_1.fieldInfos.other.state.next.name + ", '#,###');\n          "
                                 },
                                 deconflictionStrategy: "none",
                                 symbol: new symbols_1.TextSymbol({

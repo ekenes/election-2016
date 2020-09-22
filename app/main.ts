@@ -15,7 +15,9 @@ import { SimpleRenderer } from "esri/renderers";
 import { CIMSymbol, SimpleFillSymbol, TextSymbol } from "esri/symbols";
 import { UniqueValueRenderer } from "esri/rasterRenderers";
 import { TextContent } from "esri/popup/content";
-import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM, oColorCIM, rColorCIM, haloColor, haloSize, scaleThreshold, stateReferenceScale } from "./config";
+import { fieldInfos, referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM, oColorCIM, rColorCIM, haloColor, haloSize, scaleThreshold, stateReferenceScale } from "./config";
+import { colorDiffPopupBase, votesNextBase, diffTextBase, diffLabelText, sizeExpressionBase, offsetYTotalExpressionBase, offsetXTotalExpressionBase, offsetXExpressionBase, sizeTotalExpressionBase, offsetYTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, sizeTotalChangeExpressionBase, offsetYExpressionBase } from "./expressionUtils";
+import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
 
 ( async () => {
   const map = new EsriMap({
@@ -53,48 +55,48 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
     title: "{STATE}",
     fieldInfos: [
       new FieldInfo({
-        fieldName: "SUM_PRS_DEM_12",
-        label: "2012 Democrat votes",
+        fieldName: fieldInfos.democrat.state.previous.name,
+        label: fieldInfos.democrat.state.previous.label,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
         })
       }),
       new FieldInfo({
-        fieldName: "SUM_PRS_REP_12",
-        label: "2012 Republican votes",
+        fieldName: fieldInfos.republican.state.previous.name,
+        label: fieldInfos.republican.state.previous.label,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
         })
       }),
       new FieldInfo({
-        fieldName: "SUM_PRS_OTH_12",
-        label: "2012 Other votes",
+        fieldName: fieldInfos.other.state.previous.name,
+        label: fieldInfos.other.state.previous.label,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
         })
       }),
       new FieldInfo({
-        fieldName: "SUM_PRS_DEM_16",
-        label: "2016 Democrat votes",
+        fieldName: fieldInfos.democrat.state.next.name,
+        label: fieldInfos.democrat.state.next.label,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
         })
       }),
       new FieldInfo({
-        fieldName: "SUM_PRS_REP_16",
-        label: "2016 Republican votes",
+        fieldName: fieldInfos.republican.state.next.name,
+        label: fieldInfos.republican.state.next.label,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
         })
       }),
       new FieldInfo({
-        fieldName: "SUM_PRS_OTH_16",
-        label: "2016 Other votes",
+        fieldName: fieldInfos.other.state.next.name,
+        label: fieldInfos.other.state.next.label,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
@@ -118,9 +120,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
             <br/>
             <table class="esri-widget popup">
               <tr class="head"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>
-              <tr class="dem"><td><span style='color:${dColor}; font-weight:bolder'>Democrat</span></td><td class="num">{SUM_PRS_DEM_16}</td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>
-              <tr class="rep"><td><span style='color:${rColor}; font-weight:bolder'>Republican</span></td><td class="num">{SUM_PRS_REP_16}</td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>
-              <tr class="oth"><td><span style='color:${oTextColor}; font-weight:bolder'>Other</span></td><td class="num">{SUM_PRS_OTH_16}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
+              <tr class="dem"><td><span style='color:${dColor}; font-weight:bolder'>Democrat</span></td><td class="num">{${fieldInfos.democrat.state.next.name}}</td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>
+              <tr class="rep"><td><span style='color:${rColor}; font-weight:bolder'>Republican</span></td><td class="num">{${fieldInfos.republican.state.next.name}}</td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>
+              <tr class="oth"><td><span style='color:${oTextColor}; font-weight:bolder'>Other</span></td><td class="num">{${fieldInfos.other.state.next.name}}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
             </table>
           </div>
         `
@@ -131,10 +133,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "winner % of state votes",
         name: "winner-percent-state-votes",
         expression: `
-          var dem = $feature.SUM_PRS_DEM_16;
-          var rep = $feature.SUM_PRS_REP_16;
-          var oth = $feature.SUM_PRS_OTH_16;
-          var all = [dem, rep, oth];
+          ${votesNextBase}
 
           var winnerTotal = Max(all);
           return Text(winnerTotal/Sum(all), "#%");
@@ -144,10 +143,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "winner votes",
         name: "winner-votes",
         expression: `
-          var dem = $feature.SUM_PRS_DEM_16;
-          var rep = $feature.SUM_PRS_REP_16;
-          var oth = $feature.SUM_PRS_OTH_16;
-          var all = [dem, rep, oth];
+          ${votesNextBase}
 
           return Text(Max(all), "#,###");
         `
@@ -156,10 +152,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "winner-color",
         name: "winner-color",
         expression: `
-          var dem = $feature.SUM_PRS_DEM_16;
-          var rep = $feature.SUM_PRS_REP_16;
-          var oth = $feature.SUM_PRS_OTH_16;
-          var all = [dem, rep, oth];
+          ${votesNextBase}
 
           Decode( Max(all),
             dem, "${dColor}",
@@ -173,10 +166,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "winner",
         name: "winner",
         expression: `
-          var dem = $feature.SUM_PRS_DEM_16;
-          var rep = $feature.SUM_PRS_REP_16;
-          var oth = $feature.SUM_PRS_OTH_16;
-          var all = [dem, rep, oth];
+          ${votesNextBase}
 
           Decode( Max(all),
             dem, "Democrat",
@@ -190,12 +180,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Democrat change from 2012",
         name: "dem12change16",
         expression: `
-          var votes16 = $feature.SUM_PRS_DEM_16;
-          var votes12 = $feature.SUM_PRS_DEM_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          var votesNext = $feature.${fieldInfos.democrat.state.next.name};
+          var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
+          ${diffTextBase}
           return changeText;
         `
       }),
@@ -203,12 +190,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Republican change from 2012",
         name: "rep12change16",
         expression: `
-          var votes16 = $feature.SUM_PRS_REP_16;
-          var votes12 = $feature.SUM_PRS_REP_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          var votesNext = $feature.${fieldInfos.republican.state.next.name};
+          var votesPrevious = $feature.${fieldInfos.republican.state.previous.name};
+          ${diffTextBase}
           return changeText;
         `
       }),
@@ -216,12 +200,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Other change from 2012",
         name: "oth12change16",
         expression: `
-          var votes16 = $feature.SUM_PRS_OTH_16;
-          var votes12 = $feature.SUM_PRS_OTH_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          var votesNext = $feature.${fieldInfos.other.state.next.name};
+          var votesPrevious = $feature.${fieldInfos.other.state.previous.name};
+          ${diffTextBase}
           return changeText;
         `
       }),
@@ -229,12 +210,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Democrat diff from 2012",
         name: "dem12diff16",
         expression: `
-          var votes16 = $feature.SUM_PRS_DEM_16;
-          var votes12 = $feature.SUM_PRS_DEM_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          var votesNext = $feature.${fieldInfos.democrat.state.next.name};
+          var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
+          ${diffTextBase}
           return diffText;
         `
       }),
@@ -242,12 +220,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Republican diff from 2012",
         name: "rep12diff16",
         expression: `
-          var votes16 = $feature.SUM_PRS_REP_16;
-          var votes12 = $feature.SUM_PRS_REP_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          var votesNext = $feature.${fieldInfos.republican.state.next.name};
+          var votesPrevious = $feature.${fieldInfos.republican.state.previous.name};
+          ${diffTextBase}
           return diffText;
         `
       }),
@@ -255,12 +230,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Other diff from 2012",
         name: "oth12diff16",
         expression: `
-          var votes16 = $feature.SUM_PRS_OTH_16;
-          var votes12 = $feature.SUM_PRS_OTH_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          var votesNext = $feature.${fieldInfos.other.state.next.name};
+          var votesPrevious = $feature.${fieldInfos.other.state.previous.name};
+          ${diffTextBase}
           return diffText;
         `
       }),
@@ -268,33 +240,27 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "change-color",
         name: "dem-change-color",
         expression: `
-          var votes16 = $feature.SUM_PRS_DEM_16;
-          var votes12 = $feature.SUM_PRS_DEM_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          return IIF(diff > 0, "green", "red");
+          var votesNext = $feature.${fieldInfos.democrat.state.next.name};
+          var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
+          ${colorDiffPopupBase}
         `
       }),
       new ExpressionInfo({
         title: "change-color",
         name: "rep-change-color",
         expression: `
-          var votes16 = $feature.SUM_PRS_REP_16;
-          var votes12 = $feature.SUM_PRS_REP_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          return IIF(diff > 0, "green", "red");
+          var votesNext = $feature.${fieldInfos.republican.state.next.name};
+          var votesPrevious = $feature.${fieldInfos.republican.state.previous.name};
+          ${colorDiffPopupBase}
         `
       }),
       new ExpressionInfo({
         title: "change-color",
         name: "oth-change-color",
         expression: `
-          var votes16 = $feature.SUM_PRS_OTH_16;
-          var votes12 = $feature.SUM_PRS_OTH_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          return IIF(diff > 0, "green", "red");
+          var votesNext = $feature.${fieldInfos.other.state.next.name};
+          var votesPrevious = $feature.${fieldInfos.other.state.previous.name};
+          ${colorDiffPopupBase}
         `
       }),
       new ExpressionInfo({
@@ -302,9 +268,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         name: "winner-margin",
         expression: `
           var fields = [
-            $feature.SUM_PRS_DEM_16,
-            $feature.SUM_PRS_REP_16,
-            $feature.SUM_PRS_OTH_16
+            $feature.${fieldInfos.democrat.state.next.name},
+            $feature.${fieldInfos.republican.state.next.name},
+            $feature.${fieldInfos.other.state.next.name}
           ];
 
           var top2 = Top(Reverse(Sort(fields)), 2);
@@ -325,12 +291,12 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
-        var dem16 = $feature.SUM_PRS_DEM_16;
-        var rep16 = $feature.SUM_PRS_REP_16;
-        var oth16 = $feature.SUM_PRS_OTH_16;
+        var dem = $feature.${fieldInfos.democrat.state.next.name};
+        var rep16 = $feature.${fieldInfos.republican.state.next.name};
+        var oth16 = $feature.${fieldInfos.other.state.next.name};
 
-        var winner16 = Decode( Max([dem16, rep16, oth16]),
-          dem16, 'Democrat',
+        var winner16 = Decode( Max([dem, rep16, oth16]),
+          dem, 'Democrat',
           rep16, 'Republican',
           oth16, 'Other',
         'n/a' );
@@ -366,24 +332,24 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
-        var dem12 = $feature.SUM_PRS_DEM_12;
-        var rep12 = $feature.SUM_PRS_REP_12;
-        var oth12 = $feature.SUM_PRS_OTH_12;
+        var demPrevious = $feature.${fieldInfos.democrat.state.previous.name};
+        var repPrevious = $feature.${fieldInfos.republican.state.previous.name};
+        var othPrevious = $feature.${fieldInfos.other.state.previous.name};
 
-        var winner12 = Decode( Max([dem12, rep12, oth12]),
-          dem12, 'Democrat 2012',
-          rep12, 'Republican 2012',
-          oth12, 'Other 2012',
+        var winner12 = Decode( Max([demPrevious, repPrevious, othPrevious]),
+          demPrevious, 'Democrat 2012',
+          repPrevious, 'Republican 2012',
+          othPrevious, 'Other 2012',
         'n/a' );
 
-        var dem16 = $feature.SUM_PRS_DEM_16;
-        var rep16 = $feature.SUM_PRS_REP_16;
-        var oth16 = $feature.SUM_PRS_OTH_16;
+        var demNext = $feature.${fieldInfos.democrat.state.next.name};
+        var repNext = $feature.${fieldInfos.republican.state.next.name};
+        var othNext = $feature.${fieldInfos.other.state.next.name};
 
-        var winner16 = Decode( Max([dem16, rep16, oth16]),
-          dem16, 'Democrat 2016',
-          rep16, 'Republican 2016',
-          oth16, 'Other 2016',
+        var winner16 = Decode( Max([demNext, repNext, othNext]),
+        demNext, 'Democrat 2016',
+        repNext, 'Republican 2016',
+        othNext, 'Other 2016',
         'n/a' );
 
         return Concatenate([winner12, winner16], ", ");
@@ -409,79 +375,11 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
     popupEnabled: false
   });
 
-  const sizeExpressionBase = `
-    var sizeFactor = When(
-      percentStateVotes >= 30, 40,
-      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
-      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
-      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
-      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
-      0
-    );
-
-    var scaleFactorBase = ( ${referenceScale} / $view.scale );
-
-    var scaleFactor = When(
-      scaleFactorBase >= 1, 1,  // 1
-      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45
-      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125
-      scaleFactorBase * 3  // 0.1875
-    );
-    return sizeFactor * scaleFactor;
-  `;
-
-  const offsetXExpressionBase = `
-    var sizeFactor = When(
-      percentStateVotes >= 30, 40,
-      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
-      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
-      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
-      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
-      0
-    );
-
-    var scaleFactorBase = ( ${referenceScale} / $view.scale );
-
-    var scaleFactor = When(
-      scaleFactorBase >= 1, 1,  // 1
-      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45
-      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125
-      scaleFactorBase * 3  // 0.1875
-    );
-    var diameter = sizeFactor * scaleFactor;
-    var offset = diameter / 2;
-  `;
-
-  const offsetYExpressionBase = `
-    var sizeFactor = When(
-      percentStateVotes >= 30, 40,
-      percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
-      percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
-      percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
-      percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
-      0
-    );
-
-    var scaleFactorBase = ( ${referenceScale} / $view.scale );
-
-    var scaleFactor = When(
-      scaleFactorBase >= 1, 1,  // 1
-      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-      scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45
-      scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125
-      scaleFactorBase * 3  // 0.1875
-    );
-    var diameter = sizeFactor * scaleFactor;
-    var offset = diameter * 0.67;
-  `;
-
   const popupTemplate = new PopupTemplate({
     title: "{Name_1}, {STATE_NAME}",
     fieldInfos: [
       new FieldInfo({
-        fieldName: "PRS_DEM_12",
+        fieldName: fieldInfos.democrat.county.previous.name,
         label: "2012 Democrat votes",
         format: new FieldInfoFormat({
           places: 0,
@@ -489,7 +387,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         })
       }),
       new FieldInfo({
-        fieldName: "PRS_REP_12",
+        fieldName: fieldInfos.republican.county.previous.name,
         label: "2012 Republican votes",
         format: new FieldInfoFormat({
           places: 0,
@@ -497,7 +395,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         })
       }),
       new FieldInfo({
-        fieldName: "PRS_OTH_12",
+        fieldName: fieldInfos.other.county.previous.name,
         label: "2012 Other votes",
         format: new FieldInfoFormat({
           places: 0,
@@ -505,7 +403,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         })
       }),
       new FieldInfo({
-        fieldName: "PRS_DEM_16",
+        fieldName: fieldInfos.democrat.county.next.name,
         label: "2016 Democrat votes",
         format: new FieldInfoFormat({
           places: 0,
@@ -513,7 +411,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         })
       }),
       new FieldInfo({
-        fieldName: "PRS_REP_16",
+        fieldName: fieldInfos.republican.county.next.name,
         label: "2016 Republican votes",
         format: new FieldInfoFormat({
           places: 0,
@@ -521,7 +419,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         })
       }),
       new FieldInfo({
-        fieldName: "PRS_OTH_16",
+        fieldName: fieldInfos.other.county.next.name,
         label: "2016 Other votes",
         format: new FieldInfoFormat({
           places: 0,
@@ -546,9 +444,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
             <br/>
             <table class="esri-widget popup">
               <tr class="head"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>
-              <tr class="dem"><td><span style='color:${dColor}; font-weight:bolder'>Democrat</span></td><td class="num">{PRS_DEM_16}</td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>
-              <tr class="rep"><td><span style='color:${rColor}; font-weight:bolder'>Republican</span></td><td class="num">{PRS_REP_16}</td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>
-              <tr class="oth"><td><span style='color:${oTextColor}; font-weight:bolder'>Other</span></td><td class="num">{PRS_OTH_16}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
+              <tr class="dem"><td><span style='color:${dColor}; font-weight:bolder'>Democrat</span></td><td class="num">{${fieldInfos.democrat.county.next.name}}</td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class="num"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>
+              <tr class="rep"><td><span style='color:${rColor}; font-weight:bolder'>Republican</span></td><td class="num">{${fieldInfos.republican.county.next.name}}</td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class="num"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>
+              <tr class="oth"><td><span style='color:${oTextColor}; font-weight:bolder'>Other</span></td><td class="num">{${fieldInfos.other.county.next.name}}</td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class="num"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>
             </table>
           </div>
         `
@@ -559,22 +457,22 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "winner % of state votes",
         name: "winner-percent-state-votes",
         expression: `
-          var dem = $feature.PRS_DEM_16;
-          var rep = $feature.PRS_REP_16;
-          var oth = $feature.PRS_OTH_16;
+          var dem = $feature.${fieldInfos.democrat.county.next.name};
+          var rep = $feature.${fieldInfos.republican.county.next.name};
+          var oth = $feature.${fieldInfos.other.county.next.name};
           var all = [dem, rep, oth];
 
           var winnerTotal = Max(all);
-          return Text(winnerTotal/$feature.TOTAL_STATE_VOTES_16, "#%");
+          return Text(winnerTotal/$feature.${fieldInfos.normalizationFields.county.next}, "#%");
         `
       }),
       new ExpressionInfo({
         title: "winner votes",
         name: "winner-votes",
         expression: `
-          var dem = $feature.PRS_DEM_16;
-          var rep = $feature.PRS_REP_16;
-          var oth = $feature.PRS_OTH_16;
+          var dem = $feature.${fieldInfos.democrat.county.next.name};
+          var rep = $feature.${fieldInfos.republican.county.next.name};
+          var oth = $feature.${fieldInfos.other.county.next.name};
           var all = [dem, rep, oth];
 
           return Text(Max(all), "#,###");
@@ -584,9 +482,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "winner-color",
         name: "winner-color",
         expression: `
-          var dem = $feature.PRS_DEM_16;
-          var rep = $feature.PRS_REP_16;
-          var oth = $feature.PRS_OTH_16;
+          var dem = $feature.${fieldInfos.democrat.county.next.name};
+          var rep = $feature.${fieldInfos.republican.county.next.name};
+          var oth = $feature.${fieldInfos.other.county.next.name};
           var all = [dem, rep, oth];
 
           Decode( Max(all),
@@ -601,9 +499,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "winner",
         name: "winner",
         expression: `
-          var dem = $feature.PRS_DEM_16;
-          var rep = $feature.PRS_REP_16;
-          var oth = $feature.PRS_OTH_16;
+          var dem = $feature.${fieldInfos.democrat.county.next.name};
+          var rep = $feature.${fieldInfos.republican.county.next.name};
+          var oth = $feature.${fieldInfos.other.county.next.name};
           var all = [dem, rep, oth];
 
           Decode( Max(all),
@@ -618,12 +516,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Democrat change from 2012",
         name: "dem12change16",
         expression: `
-          var votes16 = $feature.PRS_DEM_16;
-          var votes12 = $feature.PRS_DEM_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          var votesNext = $feature.${fieldInfos.democrat.county.next.name};
+          var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
+          ${diffTextBase}
           return changeText;
         `
       }),
@@ -631,12 +526,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Republican change from 2012",
         name: "rep12change16",
         expression: `
-          var votes16 = $feature.PRS_REP_16;
-          var votes12 = $feature.PRS_REP_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          var votesNext = $feature.${fieldInfos.republican.county.next.name};
+          var votesPrevious = $feature.${fieldInfos.republican.county.previous.name};
+          ${diffTextBase}
           return changeText;
         `
       }),
@@ -644,12 +536,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Other change from 2012",
         name: "oth12change16",
         expression: `
-          var votes16 = $feature.PRS_OTH_16;
-          var votes12 = $feature.PRS_OTH_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-          var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(abs(change), '↓#,###.#%'));
+          var votesNext = $feature.${fieldInfos.other.county.next.name};
+          var votesPrevious = $feature.${fieldInfos.other.county.previous.name};
+          ${diffTextBase}
           return changeText;
         `
       }),
@@ -657,10 +546,10 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Democrat diff from 2012",
         name: "dem12diff16",
         expression: `
-          var votes16 = $feature.PRS_DEM_16;
-          var votes12 = $feature.PRS_DEM_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
+          var votesNext = $feature.${fieldInfos.democrat.county.next.name};
+          var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
+          var diff = votesNext - votesPrevious;
+          var change = ( (votesNext - votesPrevious) / votesPrevious );
           var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
           var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(change, '↓#,###.#%'));
           return diffText;
@@ -670,10 +559,10 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Republican diff from 2012",
         name: "rep12diff16",
         expression: `
-          var votes16 = $feature.PRS_REP_16;
-          var votes12 = $feature.PRS_REP_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
+          var votesNext = $feature.${fieldInfos.republican.county.next.name};
+          var votesPrevious = $feature.${fieldInfos.republican.county.previous.name};
+          var diff = votesNext - votesPrevious;
+          var change = ( (votesNext - votesPrevious) / votesPrevious );
           var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
           var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(change, '↓#,###.#%'));
           return diffText;
@@ -683,10 +572,10 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "Other diff from 2012",
         name: "oth12diff16",
         expression: `
-          var votes16 = $feature.PRS_OTH_16;
-          var votes12 = $feature.PRS_OTH_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
+          var votesNext = $feature.${fieldInfos.other.county.next.name};
+          var votesPrevious = $feature.${fieldInfos.other.county.previous.name};
+          var diff = votesNext - votesPrevious;
+          var change = ( (votesNext - votesPrevious) / votesPrevious );
           var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
           var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(change, '↓#,###.#%'));
           return diffText;
@@ -696,33 +585,27 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         title: "change-color",
         name: "dem-change-color",
         expression: `
-          var votes16 = $feature.PRS_DEM_16;
-          var votes12 = $feature.PRS_DEM_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          return IIF(diff > 0, "green", "red");
+          var votesNext = $feature.${fieldInfos.democrat.county.next.name};
+          var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
+          ${colorDiffPopupBase}
         `
       }),
       new ExpressionInfo({
         title: "change-color",
         name: "rep-change-color",
         expression: `
-          var votes16 = $feature.PRS_REP_16;
-          var votes12 = $feature.PRS_REP_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          return IIF(diff > 0, "green", "red");
+          var votesNext = $feature.${fieldInfos.republican.county.next.name};
+          var votesPrevious = $feature.${fieldInfos.republican.county.previous.name};
+          ${colorDiffPopupBase}
         `
       }),
       new ExpressionInfo({
         title: "change-color",
         name: "oth-change-color",
         expression: `
-          var votes16 = $feature.PRS_OTH_16;
-          var votes12 = $feature.PRS_OTH_12;
-          var diff = votes16 - votes12;
-          var change = ( (votes16 - votes12) / votes12 );
-          return IIF(diff > 0, "green", "red");
+          var votesNext = $feature.${fieldInfos.other.county.next.name};
+          var votesPrevious = $feature.${fieldInfos.other.county.previous.name};
+          ${colorDiffPopupBase}
         `
       }),
       new ExpressionInfo({
@@ -730,9 +613,9 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
         name: "winner-margin",
         expression: `
           var fields = [
-            $feature.PRS_DEM_16,
-            $feature.PRS_REP_16,
-            $feature.PRS_OTH_16
+            $feature.${fieldInfos.democrat.county.next.name},
+            $feature.${fieldInfos.republican.county.next.name},
+            $feature.${fieldInfos.other.county.next.name}
           ];
 
           var top2 = Top(Reverse(Sort(fields)), 2);
@@ -770,49 +653,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 markerGraphics: [
                   {
                     type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    geometry: cimCircleGeometry,
                     symbol: {
                       type: "CIMPolygonSymbol",
                       symbolLayers: [
@@ -840,49 +681,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 markerGraphics: [
                   {
                     type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    geometry: cimCircleGeometry,
                     symbol: {
                       type: "CIMLineSymbol",
                       symbolLayers: [
@@ -911,49 +710,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 markerGraphics: [
                   {
                     type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    geometry: cimCircleGeometry,
                     symbol: {
                       type: "CIMPolygonSymbol",
                       symbolLayers: [
@@ -981,49 +738,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 markerGraphics: [
                   {
                     type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    geometry: cimCircleGeometry,
                     symbol: {
                       type: "CIMLineSymbol",
                       symbolLayers: [
@@ -1053,49 +768,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 markerGraphics: [
                   {
                     type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    geometry: cimCircleGeometry,
                     symbol: {
                       type: "CIMPolygonSymbol",
                       symbolLayers: [
@@ -1128,49 +801,7 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 markerGraphics: [
                   {
                     type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    geometry: cimCircleGeometry,
                     symbol: {
                       type: "CIMLineSymbol",
                       symbolLayers: [
@@ -1199,13 +830,13 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Increase in Democrat votes",
                 expression: `
-                  var dem16 = $feature.PRS_DEM_16;
-                  var dem12 = $feature.PRS_DEM_12;
-                  var change = dem16 - dem12;
+                  var votesNext = $feature.${fieldInfos.democrat.county.next.name};
+                  var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
+                  var change = votesNext - votesPrevious;
                   var value = IIF( change > 0, change, 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-
-                ` + sizeExpressionBase,
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
+                  ${sizeExpressionBase}
+                `,
                 returnType: "Default"
               }
             },
@@ -1217,12 +848,13 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Decrease in Democrat votes",
                 expression: `
-                  var dem16 = $feature.PRS_DEM_16;
-                  var dem12 = $feature.PRS_DEM_12;
-                  var change = dem16 - dem12;
+                  var votesNext = $feature.${fieldInfos.democrat.county.next.name};
+                  var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
+                  var change = votesNext - votesPrevious;
                   var value = IIF( change < 0, Abs(change), 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                ` + sizeExpressionBase,
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
+                  ${sizeExpressionBase}
+                `,
                 returnType: "Default"
               }
             },
@@ -1234,12 +866,13 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Increase in Republican votes",
                 expression: `
-                  var rep16 = $feature.PRS_REP_16;
-                  var rep12 = $feature.PRS_REP_12;
+                  var rep16 = $feature.${fieldInfos.republican.county.next.name};
+                  var rep12 = $feature.${fieldInfos.republican.county.previous.name};
                   var change = rep16 - rep12;
                   var value = IIF( change > 0, change, 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                ` + sizeExpressionBase,
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
+                  ${sizeExpressionBase}
+                `,
                 returnType: "Default"
               }
             },
@@ -1251,12 +884,13 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Decrease in Republican votes",
                 expression: `
-                  var rep16 = $feature.PRS_REP_16;
-                  var rep12 = $feature.PRS_REP_12;
+                  var rep16 = $feature.${fieldInfos.republican.county.next.name};
+                  var rep12 = $feature.${fieldInfos.republican.county.previous.name};
                   var change = rep16 - rep12;
                   var value = IIF( change < 0, Abs(change), 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                ` + sizeExpressionBase,
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
+                  ${sizeExpressionBase}
+                `,
                 returnType: "Default"
               }
             },
@@ -1268,12 +902,13 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Increase in Other votes",
                 expression: `
-                  var oth16 = $feature.PRS_OTH_16;
-                  var oth12 = $feature.PRS_OTH_12;
+                  var oth16 = $feature.${fieldInfos.other.county.next.name};
+                  var oth12 = $feature.${fieldInfos.other.county.previous.name};
                   var change = oth16 - oth12;
                   var value = IIF( change > 0, change, 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                ` + sizeExpressionBase,
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
+                  ${sizeExpressionBase}
+                `,
                 returnType: "Default"
               }
             },
@@ -1285,12 +920,13 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Decrease in Other votes",
                 expression: `
-                  var oth16 = $feature.PRS_OTH_16;
-                  var oth12 = $feature.PRS_OTH_12;
+                  var oth16 = $feature.${fieldInfos.other.county.next.name};
+                  var oth12 = $feature.${fieldInfos.other.county.previous.name};
                   var change = oth16 - oth12;
                   var value = IIF( change < 0, Abs(change), 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
-                ` + sizeExpressionBase,
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
+                  ${sizeExpressionBase}
+                `,
                 returnType: "Default"
               }
             },
@@ -1305,11 +941,11 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Increase in Democrat votes",
                 expression: `
-                  var dem16 = $feature.PRS_DEM_16;
-                  var dem12 = $feature.PRS_DEM_12;
-                  var change = dem16 - dem12;
+                  var votesNext = $feature.${fieldInfos.democrat.county.next.name};
+                  var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
+                  var change = votesNext - votesPrevious;
                   var value = IIF( change > 0, change, 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${offsetXExpressionBase}
                   return offset * -1;
                 `,
@@ -1324,11 +960,11 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Decrease in Democrat votes",
                 expression: `
-                  var dem16 = $feature.PRS_DEM_16;
-                  var dem12 = $feature.PRS_DEM_12;
-                  var change = dem16 - dem12;
+                  var votesNext = $feature.${fieldInfos.democrat.county.next.name};
+                  var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
+                  var change = votesNext - votesPrevious;
                   var value = IIF( change < 0, Abs(change), 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${offsetXExpressionBase}
                   return offset * -1;
                 `,
@@ -1343,11 +979,11 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Increase in Republican votes",
                 expression: `
-                  var rep16 = $feature.PRS_REP_16;
-                  var rep12 = $feature.PRS_REP_12;
+                  var rep16 = $feature.${fieldInfos.republican.county.next.name};
+                  var rep12 = $feature.${fieldInfos.republican.county.previous.name};
                   var change = rep16 - rep12;
                   var value = IIF( change > 0, change, 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${offsetXExpressionBase}
                   return offset;
                 `,
@@ -1362,11 +998,11 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Decrease in Republican votes",
                 expression: `
-                  var rep16 = $feature.PRS_REP_16;
-                  var rep12 = $feature.PRS_REP_12;
+                  var rep16 = $feature.${fieldInfos.republican.county.next.name};
+                  var rep12 = $feature.${fieldInfos.republican.county.previous.name};
                   var change = rep16 - rep12;
                   var value = IIF( change < 0, Abs(change), 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${offsetXExpressionBase}
                   return offset;
                 `,
@@ -1381,11 +1017,11 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Increase in Other votes",
                 expression: `
-                  var oth16 = $feature.PRS_OTH_16;
-                  var oth12 = $feature.PRS_OTH_12;
+                  var oth16 = $feature.${fieldInfos.other.county.next.name};
+                  var oth12 = $feature.${fieldInfos.other.county.previous.name};
                   var change = oth16 - oth12;
                   var value = IIF( change > 0, change, 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${offsetYExpressionBase}
                   return offset;
                 `,
@@ -1400,11 +1036,11 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 type: "CIMExpressionInfo",
                 title: "Decrease in Other votes",
                 expression: `
-                  var oth16 = $feature.PRS_OTH_16;
-                  var oth12 = $feature.PRS_OTH_12;
+                  var oth16 = $feature.${fieldInfos.other.county.next.name};
+                  var oth12 = $feature.${fieldInfos.other.county.previous.name};
                   var change = oth16 - oth12;
                   var value = IIF( change < 0, Abs(change), 0);
-                  var percentStateVotes = ( value / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${offsetYExpressionBase}
                   return offset;
                 `,
@@ -1422,22 +1058,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        where: `ABS(((${fieldInfos.democrat.county.next.name} - ${fieldInfos.democrat.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 10`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_DEM_16;
-            var value12 = $feature.PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1448,22 +1083,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        where: `ABS(((${fieldInfos.democrat.county.next.name} - ${fieldInfos.democrat.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 5 AND ABS(((${fieldInfos.democrat.county.next.name} - ${fieldInfos.democrat.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 10`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_DEM_16;
-            var value12 = $feature.PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1474,22 +1108,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 5",
+        where: `ABS(((${fieldInfos.democrat.county.next.name} - ${fieldInfos.democrat.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 1 AND ABS(((${fieldInfos.democrat.county.next.name} - ${fieldInfos.democrat.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 5`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_DEM_16;
-            var value12 = $feature.PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1500,22 +1133,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 1",
+        where: `ABS(((${fieldInfos.democrat.county.next.name} - ${fieldInfos.democrat.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 0.5 AND ABS(((${fieldInfos.democrat.county.next.name} - ${fieldInfos.democrat.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 1`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_DEM_16;
-            var value12 = $feature.PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1526,22 +1158,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16 - PRS_DEM_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+        where: `ABS(((${fieldInfos.democrat.county.next.name} - ${fieldInfos.democrat.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 0.5`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_DEM_16;
-            var value12 = $feature.PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1556,22 +1187,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        where: `ABS(((${fieldInfos.republican.county.next.name} - ${fieldInfos.republican.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 10`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_REP_16;
-            var value12 = $feature.PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1582,22 +1212,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        where: `ABS(((${fieldInfos.republican.county.next.name} - ${fieldInfos.republican.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 5 AND ABS(((${fieldInfos.republican.county.next.name} - ${fieldInfos.republican.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 10`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_REP_16;
-            var value12 = $feature.PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1608,22 +1237,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 5",
+        where: `ABS(((${fieldInfos.republican.county.next.name} - ${fieldInfos.republican.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 1 AND ABS(((${fieldInfos.republican.county.next.name} - ${fieldInfos.republican.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 5`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_REP_16;
-            var value12 = $feature.PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1634,22 +1262,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 1",
+        where: `ABS(((${fieldInfos.republican.county.next.name} - ${fieldInfos.republican.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 0.5 AND ABS(((${fieldInfos.republican.county.next.name} - ${fieldInfos.republican.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 1`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_REP_16;
-            var value12 = $feature.PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1660,22 +1287,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16 - PRS_REP_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+        where: `ABS(((${fieldInfos.republican.county.next.name} - ${fieldInfos.republican.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 0.5`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_REP_16;
-            var value12 = $feature.PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1689,22 +1315,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        where: `ABS(((${fieldInfos.other.county.next.name} - ${fieldInfos.other.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 10`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_OTH_16;
-            var value12 = $feature.PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.other.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.other.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1715,22 +1340,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        where: `ABS(((${fieldInfos.other.county.next.name} - ${fieldInfos.other.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 5 AND ABS(((${fieldInfos.other.county.next.name} - ${fieldInfos.other.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 10`,
         labelExpressionInfo: {
           expression: `
-          var value16 = $feature.PRS_OTH_16;
-          var value12 = $feature.PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          var valueNext = $feature.${fieldInfos.other.county.next.name};
+          var valuePrevious = $feature.${fieldInfos.other.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1742,23 +1366,22 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       new LabelClass({
         minScale: 577791,
         where: `
-          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 5)
+          (ABS(((${fieldInfos.other.county.next.name} - ${fieldInfos.other.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 1 AND ABS(((${fieldInfos.other.county.next.name} - ${fieldInfos.other.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 5)
         `,
         labelExpressionInfo: {
           expression: `
-          var value16 = $feature.PRS_OTH_16;
-          var value12 = $feature.PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          var valueNext = $feature.${fieldInfos.other.county.next.name};
+          var valuePrevious = $feature.${fieldInfos.other.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1771,23 +1394,22 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       new LabelClass({
         minScale: 577791,
         where: `
-          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 1)
+          (ABS(((${fieldInfos.other.county.next.name} - ${fieldInfos.other.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 0.5 AND ABS(((${fieldInfos.other.county.next.name} - ${fieldInfos.other.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 1)
         `,
         labelExpressionInfo: {
           expression: `
-          var value16 = $feature.PRS_OTH_16;
-          var value12 = $feature.PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          var valueNext = $feature.${fieldInfos.other.county.next.name};
+          var valuePrevious = $feature.${fieldInfos.other.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1799,23 +1421,22 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       new LabelClass({
         minScale: 577791,
         where: `
-          (ABS(((PRS_OTH_16 - PRS_OTH_12) / TOTAL_STATE_VOTES_16) * 100) < 0.5)
+          (ABS(((${fieldInfos.other.county.next.name} - ${fieldInfos.other.county.previous.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 0.5)
         `,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.PRS_OTH_16;
-            var value12 = $feature.PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.other.county.next.name};
+            var valuePrevious = $feature.${fieldInfos.other.county.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -1832,80 +1453,38 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
   const results2016Layer = new FeatureLayer({
     minScale: scaleThreshold,
     portalItem: {
-      id: "ba48def248cb45bebb234aa346c97676"
+      id: `ba48def248cb45bebb234aa346c97676`
     },
     legendEnabled: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
         data: {
-          type: "CIMSymbolReference",
+          type: `CIMSymbolReference`,
           symbol: {
-            type: "CIMPointSymbol",
+            type: `CIMPointSymbol`,
             symbolLayers: [
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 0,
                 offsetY: 10,
-                anchorPointUnits: "Relative",
-                primitiveName: "other-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `other-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: oColorCIM,
                         }, {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: [161, 148, 0, 255],
                           width: 1
@@ -1919,69 +1498,27 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
               },
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: -10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "democrat-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `democrat-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: dColorCIM
                         }, {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: [42, 78, 150, 255],
                           width: 1
@@ -1994,69 +1531,27 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 respectFrame: true
               },
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "republican-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `republican-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: rColorCIM
                         }, {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: [153, 54, 3, 255],
                           width: 1
@@ -2073,95 +1568,95 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
           },
           primitiveOverrides: [
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Democrat votes`,
                 expression: `
-                  var percentStateVotes = ( $feature.PRS_DEM_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( $feature.${fieldInfos.democrat.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
 
                 ` + sizeExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Republican votes`,
                 expression: `
-                  var percentStateVotes = ( $feature.PRS_REP_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( $feature.${fieldInfos.republican.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
 
                 ` + sizeExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Other votes`,
                 expression: `
-                  var percentStateVotes = ( $feature.PRS_OTH_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( $feature.${fieldInfos.other.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
 
                 ` + sizeExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
 
              // offset overrides
 
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-positive-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-positive-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Democrat votes`,
                 expression: `
-                  var percentStateVotes = ( $feature.PRS_DEM_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( $feature.${fieldInfos.democrat.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
 
                   ${offsetXExpressionBase}
                   return offset * -1;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-positive-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-positive-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Republican votes`,
                 expression: `
-                  var percentStateVotes = ( $feature.PRS_REP_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( $feature.${fieldInfos.republican.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${offsetXExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-positive-votes",
-              propertyName: "OffsetY",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-positive-votes`,
+              propertyName: `OffsetY`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Other votes`,
                 expression: `
-                  var percentStateVotes = ( $feature.PRS_OTH_16 / $feature.TOTAL_STATE_VOTES_16 ) * 100;
+                  var percentStateVotes = ( $feature.${fieldInfos.other.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
 
                   ${offsetYExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             }
           ]
@@ -2175,19 +1670,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        where: `ABS(((${fieldInfos.democrat.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 10`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_DEM_16, '#,###');
+            Text($feature.${fieldInfos.democrat.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2198,19 +1693,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        where: `ABS(((${fieldInfos.democrat.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 5 AND ABS(((${fieldInfos.democrat.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 10`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_DEM_16, '#,###');
+            Text($feature.${fieldInfos.democrat.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2221,19 +1716,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 5",
+        where: `ABS(((${fieldInfos.democrat.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 1 AND ABS(((${fieldInfos.democrat.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 5`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_DEM_16, '#,###');
+            Text($feature.${fieldInfos.democrat.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2244,19 +1739,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 1",
+        where: `ABS(((${fieldInfos.democrat.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 0.5 AND ABS(((${fieldInfos.democrat.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 1`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_DEM_16, '#,###');
+            Text($feature.${fieldInfos.democrat.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2267,19 +1762,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_DEM_16) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+        where: `ABS(((${fieldInfos.democrat.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 0.5`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_DEM_16, '#,###');
+            Text($feature.${fieldInfos.democrat.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2294,19 +1789,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        where: `ABS(((${fieldInfos.republican.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 10`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_REP_16, '#,###');
+            Text($feature.${fieldInfos.republican.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2317,19 +1812,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        where: `ABS(((${fieldInfos.republican.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 5 AND ABS(((${fieldInfos.republican.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 10`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_REP_16, '#,###');
+            Text($feature.${fieldInfos.republican.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2340,19 +1835,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 5",
+        where: `ABS(((${fieldInfos.republican.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 1 AND ABS(((${fieldInfos.republican.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 5`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_REP_16, '#,###');
+            Text($feature.${fieldInfos.republican.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2363,19 +1858,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 1",
+        where: `ABS(((${fieldInfos.republican.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 0.5 AND ABS(((${fieldInfos.republican.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 1`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_REP_16, '#,###');
+            Text($feature.${fieldInfos.republican.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2386,19 +1881,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_REP_16) / TOTAL_STATE_VOTES_16) * 100) < 0.5",
+        where: `ABS(((${fieldInfos.republican.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 0.5`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_REP_16, '#,###');
+            Text($feature.${fieldInfos.republican.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2412,19 +1907,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 10",
+        where: `ABS(((${fieldInfos.other.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 10`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_OTH_16, '#,###');
+            Text($feature.${fieldInfos.other.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2435,19 +1930,19 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 577791,
-        where: "ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 5 AND ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 10",
+        where: `ABS(((${fieldInfos.other.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 5 AND ABS(((${fieldInfos.other.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 10`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_OTH_16, '#,###');
+            Text($feature.${fieldInfos.other.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2459,20 +1954,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       new LabelClass({
         minScale: 577791,
         where: `
-          (ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 1 AND ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 5)
+          (ABS(((${fieldInfos.other.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 1 AND ABS(((${fieldInfos.other.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 5)
         `,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_OTH_16, '#,###');
+            Text($feature.${fieldInfos.other.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2485,20 +1980,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       new LabelClass({
         minScale: 577791,
         where: `
-          (ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) >= 0.5 AND ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 1)
+          (ABS(((${fieldInfos.other.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) >= 0.5 AND ABS(((${fieldInfos.other.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 1)
         `,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_OTH_16, '#,###');
+            Text($feature.${fieldInfos.other.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2510,20 +2005,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       new LabelClass({
         minScale: 577791,
         where: `
-          (ABS(((PRS_OTH_16) / TOTAL_STATE_VOTES_16) * 100) < 0.5)
+          (ABS(((${fieldInfos.other.county.next.name}) / ${fieldInfos.normalizationFields.county.next}) * 100) < 0.5)
         `,
         labelExpressionInfo: {
           expression: `
-            Text($feature.PRS_OTH_16, '#,###');
+            Text($feature.${fieldInfos.other.county.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
-        labelPlacement: "center-center",
+        deconflictionStrategy: `none`,
+        labelPlacement: `center-center`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -2537,145 +2032,38 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
     popupTemplate
   });
 
-  const sizeTotalChangeExpressionBase = `
-    var sizeFactor = When(
-      value >= 500000, 30,
-      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),
-      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),
-      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),
-      value > 0, 8 + (((10-8) / (10000-0)) * value),
-      0
-    );
-
-    var scaleFactorBase = ( ${stateReferenceScale} / $view.scale );
-    var scaleFactor = When(
-      scaleFactorBase >= 1, 1,  // 1
-      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45
-      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125
-      scaleFactorBase * 1  // 0.1875
-    );
-    return sizeFactor * scaleFactor;
-  `
-
-  const offsetXTotalChangeExpressionBase = `
-    var sizeFactor = When(
-      value >= 500000, 30,
-      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),
-      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),
-      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),
-      value > 0, 8 + (((10-8) / (10000-0)) * value),
-      0
-    );
-
-    var scaleFactorBase = ( ${stateReferenceScale} / $view.scale );
-    var scaleFactor = When(
-      scaleFactorBase >= 1, 1,  // 1
-      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45
-      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125
-      scaleFactorBase * 1  // 0.1875
-    );
-    var diameter = sizeFactor * scaleFactor;
-    var offset = diameter / 2;
-  `;
-
-  const offsetYTotalChangeExpressionBase = `
-    var sizeFactor = When(
-      value >= 500000, 30,
-      value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),
-      value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),
-      value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),
-      value > 0, 8 + (((10-8) / (10000-0)) * value),
-      0
-    );
-
-    var scaleFactorBase = ( ${stateReferenceScale} / $view.scale );
-    var scaleFactor = When(
-      scaleFactorBase >= 1, 1,  // 1
-      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45
-      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125
-      scaleFactorBase * 1  // 0.1875
-    );
-    var diameter = sizeFactor * scaleFactor;
-    var offset = diameter * 0.67;
-  `;
-
   const changeStatesLayer = new FeatureLayer({
     maxScale: scaleThreshold,
     portalItem: {
-      id: "4f03bcde997e4badbef186d0c05f5a9a"
+      id: `4f03bcde997e4badbef186d0c05f5a9a`
     },
     opacity: 1,
     legendEnabled: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
         data: {
-          type: "CIMSymbolReference",
+          type: `CIMSymbolReference`,
           symbol: {
-            type: "CIMPointSymbol",
+            type: `CIMPointSymbol`,
             symbolLayers: [
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: -10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "democrat-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `democrat-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: dColorCIM
                         }
@@ -2687,65 +2075,23 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 respectFrame: true
               },
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: -10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "democrat-negative-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `democrat-negative-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMLineSymbol",
+                      type: `CIMLineSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: dColorCIM,
                           width: 2
@@ -2758,65 +2104,23 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 respectFrame: true,
 
               }, {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "republican-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `republican-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: rColorCIM
                         }
@@ -2828,65 +2132,23 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 respectFrame: true,
 
               }, {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "republican-negative-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `republican-negative-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMLineSymbol",
+                      type: `CIMLineSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: rColorCIM,
                           width: 2
@@ -2900,69 +2162,27 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
               },
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 0,
                 offsetY: 10,
-                anchorPointUnits: "Relative",
-                primitiveName: "other-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `other-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: oColorCIM,
                         }, {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: [161, 148, 0, 255],
                           width: 1
@@ -2975,65 +2195,23 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
                 respectFrame: true,
 
               }, {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 0,
                 offsetY: 10,
-                anchorPointUnits: "Relative",
-                primitiveName: "other-negative-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `other-negative-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMLineSymbol",
+                      type: `CIMLineSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: oColorCIM,
                           width: 2
@@ -3050,210 +2228,210 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
           },
           primitiveOverrides: [
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Democrat votes`,
                 expression: `
-                  var dem16 = $feature.SUM_PRS_DEM_16;
-                  var dem12 = $feature.SUM_PRS_DEM_12;
-                  var change = dem16 - dem12;
+                  var votesNext = $feature.${fieldInfos.democrat.state.next.name};
+                  var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
+                  var change = votesNext - votesPrevious;
                   var value = IIF( change > 0, change, 0);
                 ` + sizeTotalChangeExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-negative-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-negative-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Democrat votes`,
                 expression: `
-                  var dem16 = $feature.SUM_PRS_DEM_16;
-                  var dem12 = $feature.SUM_PRS_DEM_12;
-                  var change = dem16 - dem12;
+                  var votesNext = $feature.${fieldInfos.democrat.state.next.name};
+                  var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
+                  var change = votesNext - votesPrevious;
                   var value = IIF( change < 0, Abs(change), 0);
                 ` + sizeTotalChangeExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Republican votes`,
                 expression: `
-                  var rep16 = $feature.SUM_PRS_REP_16;
-                  var rep12 = $feature.SUM_PRS_REP_12;
+                  var rep16 = $feature.${fieldInfos.republican.state.next.name};
+                  var rep12 = $feature.${fieldInfos.republican.state.previous.name};
                   var change = rep16 - rep12;
                   var value = IIF( change > 0, change, 0);
                 ` + sizeTotalChangeExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-negative-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-negative-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Republican votes`,
                 expression: `
-                  var rep16 = $feature.SUM_PRS_REP_16;
-                  var rep12 = $feature.SUM_PRS_REP_12;
+                  var rep16 = $feature.${fieldInfos.republican.state.next.name};
+                  var rep12 = $feature.${fieldInfos.republican.state.previous.name};
                   var change = rep16 - rep12;
                   var value = IIF( change < 0, Abs(change), 0);
                 ` + sizeTotalChangeExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Other votes`,
                 expression: `
-                  var oth16 = $feature.SUM_PRS_OTH_16;
-                  var oth12 = $feature.SUM_PRS_OTH_12;
+                  var oth16 = $feature.${fieldInfos.other.state.next.name};
+                  var oth12 = $feature.${fieldInfos.other.state.previous.name};
                   var change = oth16 - oth12;
                   var value = IIF( change > 0, change, 0);
                 ` + sizeTotalChangeExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-negative-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-negative-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Other votes`,
                 expression: `
-                  var oth16 = $feature.SUM_PRS_OTH_16;
-                  var oth12 = $feature.SUM_PRS_OTH_12;
+                  var oth16 = $feature.${fieldInfos.other.state.next.name};
+                  var oth12 = $feature.${fieldInfos.other.state.previous.name};
                   var change = oth16 - oth12;
                   var value = IIF( change < 0, Abs(change), 0);
                 ` + sizeTotalChangeExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
 
              // offset overrides
 
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-positive-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-positive-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Democrat votes`,
                 expression: `
-                  var dem16 = $feature.SUM_PRS_DEM_16;
-                  var dem12 = $feature.SUM_PRS_DEM_12;
-                  var change = dem16 - dem12;
+                  var votesNext = $feature.${fieldInfos.democrat.state.next.name};
+                  var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
+                  var change = votesNext - votesPrevious;
                   var value = IIF( change > 0, change, 0);
                   ${offsetXTotalChangeExpressionBase}
                   return offset * -1;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-negative-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-negative-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Democrat votes`,
                 expression: `
-                  var dem16 = $feature.SUM_PRS_DEM_16;
-                  var dem12 = $feature.SUM_PRS_DEM_12;
-                  var change = dem16 - dem12;
+                  var votesNext = $feature.${fieldInfos.democrat.state.next.name};
+                  var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
+                  var change = votesNext - votesPrevious;
                   var value = IIF( change < 0, Abs(change), 0);
                   ${offsetXTotalChangeExpressionBase}
                   return offset * -1;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-positive-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-positive-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Republican votes`,
                 expression: `
-                  var rep16 = $feature.SUM_PRS_REP_16;
-                  var rep12 = $feature.SUM_PRS_REP_12;
+                  var rep16 = $feature.${fieldInfos.republican.state.next.name};
+                  var rep12 = $feature.${fieldInfos.republican.state.previous.name};
                   var change = rep16 - rep12;
                   var value = IIF( change > 0, change, 0);
                   ${offsetXTotalChangeExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-negative-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-negative-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Republican votes`,
                 expression: `
-                  var rep16 = $feature.SUM_PRS_REP_16;
-                  var rep12 = $feature.SUM_PRS_REP_12;
+                  var rep16 = $feature.${fieldInfos.republican.state.next.name};
+                  var rep12 = $feature.${fieldInfos.republican.state.previous.name};
                   var change = rep16 - rep12;
                   var value = IIF( change < 0, Abs(change), 0);
                   ${offsetXTotalChangeExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-positive-votes",
-              propertyName: "OffsetY",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-positive-votes`,
+              propertyName: `OffsetY`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Other votes`,
                 expression: `
-                  var oth16 = $feature.SUM_PRS_OTH_16;
-                  var oth12 = $feature.SUM_PRS_OTH_12;
+                  var oth16 = $feature.${fieldInfos.other.state.next.name};
+                  var oth12 = $feature.${fieldInfos.other.state.previous.name};
                   var change = oth16 - oth12;
                   var value = IIF( change > 0, change, 0);
                   ${offsetYTotalChangeExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-negative-votes",
-              propertyName: "OffsetY",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-negative-votes`,
+              propertyName: `OffsetY`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Other votes`,
                 expression: `
-                  var oth16 = $feature.SUM_PRS_OTH_16;
-                  var oth12 = $feature.SUM_PRS_OTH_12;
+                  var oth16 = $feature.${fieldInfos.other.state.next.name};
+                  var oth12 = $feature.${fieldInfos.other.state.previous.name};
                   var change = oth16 - oth12;
                   var value = IIF( change < 0, Abs(change), 0);
                   ${offsetYTotalChangeExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             }
           ]
@@ -3267,21 +2445,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) >= 500000",
+        where: `ABS(${fieldInfos.democrat.state.next.name} - ${fieldInfos.democrat.state.previous.name}) >= 500000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_DEM_16;
-            var value12 = $feature.SUM_PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3292,21 +2469,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) >= 100000 AND ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) < 500000",
+        where: `ABS(${fieldInfos.democrat.state.next.name} - ${fieldInfos.democrat.state.previous.name}) >= 100000 AND ABS(${fieldInfos.democrat.state.next.name} - ${fieldInfos.democrat.state.previous.name}) < 500000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_DEM_16;
-            var value12 = $feature.SUM_PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3317,21 +2493,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) >= 50000 AND ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) < 100000",
+        where: `ABS(${fieldInfos.democrat.state.next.name} - ${fieldInfos.democrat.state.previous.name}) >= 50000 AND ABS(${fieldInfos.democrat.state.next.name} - ${fieldInfos.democrat.state.previous.name}) < 100000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_DEM_16;
-            var value12 = $feature.SUM_PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3342,21 +2517,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) >= 10000 AND ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) < 50000",
+        where: `ABS(${fieldInfos.democrat.state.next.name} - ${fieldInfos.democrat.state.previous.name}) >= 10000 AND ABS(${fieldInfos.democrat.state.next.name} - ${fieldInfos.democrat.state.previous.name}) < 50000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_DEM_16;
-            var value12 = $feature.SUM_PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3367,21 +2541,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16 - SUM_PRS_DEM_12) < 10000",
+        where: `ABS(${fieldInfos.democrat.state.next.name} - ${fieldInfos.democrat.state.previous.name}) < 10000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_DEM_16;
-            var value12 = $feature.SUM_PRS_DEM_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.democrat.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.democrat.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3396,21 +2569,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) >= 500000",
+        where: `ABS(${fieldInfos.republican.state.next.name} - ${fieldInfos.republican.state.previous.name}) >= 500000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_REP_16;
-            var value12 = $feature.SUM_PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3421,21 +2593,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) >= 100000 AND ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) < 500000",
+        where: `ABS(${fieldInfos.republican.state.next.name} - ${fieldInfos.republican.state.previous.name}) >= 100000 AND ABS(${fieldInfos.republican.state.next.name} - ${fieldInfos.republican.state.previous.name}) < 500000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_REP_16;
-            var value12 = $feature.SUM_PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3446,21 +2617,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) >= 50000 AND ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) < 100000",
+        where: `ABS(${fieldInfos.republican.state.next.name} - ${fieldInfos.republican.state.previous.name}) >= 50000 AND ABS(${fieldInfos.republican.state.next.name} - ${fieldInfos.republican.state.previous.name}) < 100000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_REP_16;
-            var value12 = $feature.SUM_PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3471,21 +2641,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) >= 10000 AND ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) < 50000",
+        where: `ABS(${fieldInfos.republican.state.next.name} - ${fieldInfos.republican.state.previous.name}) >= 10000 AND ABS(${fieldInfos.republican.state.next.name} - ${fieldInfos.republican.state.previous.name}) < 50000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_REP_16;
-            var value12 = $feature.SUM_PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3496,21 +2665,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16 - SUM_PRS_REP_12) < 10000",
+        where: `ABS(${fieldInfos.republican.state.next.name} - ${fieldInfos.republican.state.previous.name}) < 10000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_REP_16;
-            var value12 = $feature.SUM_PRS_REP_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.republican.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.republican.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3524,21 +2692,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
 
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) >= 500000",
+        where: `ABS(${fieldInfos.other.state.next.name} - ${fieldInfos.other.state.previous.name}) >= 500000`,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_OTH_16;
-            var value12 = $feature.SUM_PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.other.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.other.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3549,21 +2716,20 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) >= 100000 AND ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) < 500000",
+        where: `ABS(${fieldInfos.other.state.next.name} - ${fieldInfos.other.state.previous.name}) >= 100000 AND ABS(${fieldInfos.other.state.next.name} - ${fieldInfos.other.state.previous.name}) < 500000`,
         labelExpressionInfo: {
           expression: `
-          var value16 = $feature.SUM_PRS_OTH_16;
-          var value12 = $feature.SUM_PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          var valueNext = $feature.${fieldInfos.other.state.next.name};
+          var valuePrevious = $feature.${fieldInfos.other.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3575,22 +2741,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       new LabelClass({
         minScale: 9244700,
         where: `
-          (ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) >= 50000 AND ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) < 100000)
+          (ABS(${fieldInfos.other.state.next.name} - ${fieldInfos.other.state.previous.name}) >= 50000 AND ABS(${fieldInfos.other.state.next.name} - ${fieldInfos.other.state.previous.name}) < 100000)
         `,
         labelExpressionInfo: {
           expression: `
-          var value16 = $feature.SUM_PRS_OTH_16;
-          var value12 = $feature.SUM_PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          var valueNext = $feature.${fieldInfos.other.state.next.name};
+          var valuePrevious = $feature.${fieldInfos.other.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3603,22 +2768,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       new LabelClass({
         minScale: 9244700,
         where: `
-          (ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) >= 10000 AND ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) < 50000)
+          (ABS(${fieldInfos.other.state.next.name} - ${fieldInfos.other.state.previous.name}) >= 10000 AND ABS(${fieldInfos.other.state.next.name} - ${fieldInfos.other.state.previous.name}) < 50000)
         `,
         labelExpressionInfo: {
           expression: `
-          var value16 = $feature.SUM_PRS_OTH_16;
-          var value12 = $feature.SUM_PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+          var valueNext = $feature.${fieldInfos.other.state.next.name};
+          var valuePrevious = $feature.${fieldInfos.other.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3630,22 +2794,21 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
       new LabelClass({
         minScale: 9244700,
         where: `
-          (ABS(SUM_PRS_OTH_16 - SUM_PRS_OTH_12) < 10000)
+          (ABS(${fieldInfos.other.state.next.name} - ${fieldInfos.other.state.previous.name}) < 10000)
         `,
         labelExpressionInfo: {
           expression: `
-            var value16 = $feature.SUM_PRS_OTH_16;
-            var value12 = $feature.SUM_PRS_OTH_12;
-            var change = value16 - value12;
-            IIF(change > 0, Text(change, '+#,###'), Text(change, '#,###'));
+            var valueNext = $feature.${fieldInfos.other.state.next.name};
+            var valuePrevious = $feature.${fieldInfos.other.state.previous.name};
+            ${diffLabelText}
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -3658,145 +2821,38 @@ import { referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM
     popupTemplate: statePopupTemplate
   });
 
-  const sizeTotalExpressionBase = `
-    var sizeFactor = When(
-      value >= 5000000, 40,
-      value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),
-      value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),
-      value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),
-      value > 0, 8 + (((10-8) / (100000-0)) * value),
-      0
-    );
-
-    var scaleFactorBase = ( ${stateReferenceScale} / $view.scale );
-    var scaleFactor = When(
-      scaleFactorBase >= 1, 1,  // 1
-      scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-      scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45
-      scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125
-      scaleFactorBase * 1  // 0.1875
-    );
-    return sizeFactor * scaleFactor;
-  `;
-
-const offsetXTotalExpressionBase = `
-  var sizeFactor = When(
-    value >= 5000000, 40,
-    value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),
-    value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),
-    value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),
-    value > 0, 8 + (((10-8) / (100000-0)) * value),
-    0
-  );
-
-  var scaleFactorBase = ( ${stateReferenceScale} / $view.scale );
-  var scaleFactor = When(
-    scaleFactorBase >= 1, 1,  // 1
-    scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-    scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45
-    scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125
-    scaleFactorBase * 1  // 0.1875
-  );
-  var diameter = sizeFactor * scaleFactor;
-  var offset = diameter / 2;
-`;
-
-const offsetYTotalExpressionBase = `
-  var sizeFactor = When(
-    value >= 5000000, 40,
-    value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),
-    value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),
-    value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),
-    value > 0, 8 + (((10-8) / (100000-0)) * value),
-    0
-  );
-
-  var scaleFactorBase = ( ${stateReferenceScale} / $view.scale );
-  var scaleFactor = When(
-    scaleFactorBase >= 1, 1,  // 1
-    scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-    scaleFactorBase >= 0.25, scaleFactorBase * 1,  // 0.45
-    scaleFactorBase >= 0.125, scaleFactorBase * 1,  // 0.3125
-    scaleFactorBase * 1  // 0.1875
-  );
-  var diameter = sizeFactor * scaleFactor;
-  var offset = diameter * 0.67;
-`;
-
   const totalStatesLayer = new FeatureLayer({
     maxScale: scaleThreshold,
     portalItem: {
-      id: "4f03bcde997e4badbef186d0c05f5a9a"
+      id: `4f03bcde997e4badbef186d0c05f5a9a`
     },
     opacity: 1,
     legendEnabled: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
         data: {
-          type: "CIMSymbolReference",
+          type: `CIMSymbolReference`,
           symbol: {
-            type: "CIMPointSymbol",
+            type: `CIMPointSymbol`,
             symbolLayers: [
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: -10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "democrat-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `democrat-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: dColorCIM
                         }
@@ -3807,65 +2863,23 @@ const offsetYTotalExpressionBase = `
                 scaleSymbolsProportionally: true,
                 respectFrame: true
               }, {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "republican-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `republican-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: rColorCIM
                         }
@@ -3878,69 +2892,27 @@ const offsetYTotalExpressionBase = `
 
               },
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 0,
                 offsetY: 10,
-                anchorPointUnits: "Relative",
-                primitiveName: "other-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `other-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
-                    geometry: {
-                      rings: [
-                        [
-                          [8.5, 0.2],
-                          [7.06, 0.33],
-                          [5.66, 0.7],
-                          [4.35, 1.31],
-                          [3.16, 2.14],
-                          [2.14, 3.16],
-                          [1.31, 4.35],
-                          [0.7, 5.66],
-                          [0.33, 7.06],
-                          [0.2, 8.5],
-                          [0.33, 9.94],
-                          [0.7, 11.34],
-                          [1.31, 12.65],
-                          [2.14, 13.84],
-                          [3.16, 14.86],
-                          [4.35, 15.69],
-                          [5.66, 16.3],
-                          [7.06, 16.67],
-                          [8.5, 16.8],
-                          [9.94, 16.67],
-                          [11.34, 16.3],
-                          [12.65, 15.69],
-                          [13.84, 14.86],
-                          [14.86, 13.84],
-                          [15.69, 12.65],
-                          [16.3, 11.34],
-                          [16.67, 9.94],
-                          [16.8, 8.5],
-                          [16.67, 7.06],
-                          [16.3, 5.66],
-                          [15.69, 4.35],
-                          [14.86, 3.16],
-                          [13.84, 2.14],
-                          [12.65, 1.31],
-                          [11.34, 0.7],
-                          [9.94, 0.33],
-                          [8.5, 0.2]
-                        ]
-                      ]
-                    },
+                    type: `CIMMarkerGraphic`,
+                    geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: oColorCIM,
                         }, {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: [161, 148, 0, 255],
                           width: 1
@@ -3957,90 +2929,90 @@ const offsetYTotalExpressionBase = `
           },
           primitiveOverrides: [
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Democrat votes`,
                 expression: `
-                  var value = $feature.SUM_PRS_DEM_16;
+                  var value = $feature.${fieldInfos.democrat.state.next.name};
                 ` + sizeTotalExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Republican votes`,
                 expression: `
-                  var value = $feature.SUM_PRS_REP_16;
+                  var value = $feature.${fieldInfos.republican.state.next.name};
                 ` + sizeTotalExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Other votes`,
                 expression: `
-                  var value = $feature.SUM_PRS_OTH_16;
+                  var value = $feature.${fieldInfos.other.state.next.name};
                 ` + sizeTotalExpressionBase,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
 
              // offset overrides
 
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-positive-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-positive-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Democrat votes`,
                 expression: `
-                  var value = $feature.SUM_PRS_DEM_16;
+                  var value = $feature.${fieldInfos.democrat.state.next.name};
                   ${offsetXTotalExpressionBase}
                   return offset * -1;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-positive-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-positive-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Republican votes`,
                 expression: `
-                  var value = $feature.SUM_PRS_REP_16;
+                  var value = $feature.${fieldInfos.republican.state.next.name};
                   ${offsetXTotalExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-positive-votes",
-              propertyName: "OffsetY",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-positive-votes`,
+              propertyName: `OffsetY`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Other votes`,
                 expression: `
-                  var value = $feature.SUM_PRS_OTH_16;
+                  var value = $feature.${fieldInfos.other.state.next.name};
                   ${offsetYTotalExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             }
           ]
@@ -4054,18 +3026,18 @@ const offsetYTotalExpressionBase = `
 
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) >= 5000000",
+        where: `ABS(${fieldInfos.democrat.state.next.name}) >= 5000000`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.SUM_PRS_DEM_16, '#,###');
+            Text($feature.${fieldInfos.democrat.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4076,18 +3048,18 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) >= 1000000 AND ABS(SUM_PRS_DEM_16) < 5000000",
+        where: `ABS(${fieldInfos.democrat.state.next.name}) >= 1000000 AND ABS(${fieldInfos.democrat.state.next.name}) < 5000000`,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_DEM_16, '#,###');
+          Text($feature.${fieldInfos.democrat.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4098,18 +3070,18 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) >= 500000 AND ABS(SUM_PRS_DEM_16) < 1000000",
+        where: `ABS(${fieldInfos.democrat.state.next.name}) >= 500000 AND ABS(${fieldInfos.democrat.state.next.name}) < 1000000`,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_DEM_16, '#,###');
+          Text($feature.${fieldInfos.democrat.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4120,18 +3092,18 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) >= 100000 AND ABS(SUM_PRS_DEM_16) < 500000",
+        where: `ABS(${fieldInfos.democrat.state.next.name}) >= 100000 AND ABS(${fieldInfos.democrat.state.next.name}) < 500000`,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_DEM_16, '#,###');
+          Text($feature.${fieldInfos.democrat.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4142,18 +3114,18 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_DEM_16) < 100000",
+        where: `ABS(${fieldInfos.democrat.state.next.name}) < 100000`,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_DEM_16, '#,###');
+          Text($feature.${fieldInfos.democrat.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4168,18 +3140,18 @@ const offsetYTotalExpressionBase = `
 
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) >= 5000000",
+        where: `ABS(${fieldInfos.republican.state.next.name}) >= 5000000`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.SUM_PRS_REP_16, '#,###');
+            Text($feature.${fieldInfos.republican.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4190,18 +3162,18 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) >= 1000000 AND ABS(SUM_PRS_REP_16) < 5000000",
+        where: `ABS(${fieldInfos.republican.state.next.name}) >= 1000000 AND ABS(${fieldInfos.republican.state.next.name}) < 5000000`,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_REP_16, '#,###');
+          Text($feature.${fieldInfos.republican.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4212,18 +3184,18 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) >= 500000 AND ABS(SUM_PRS_REP_16) < 1000000",
+        where: `ABS(${fieldInfos.republican.state.next.name}) >= 500000 AND ABS(${fieldInfos.republican.state.next.name}) < 1000000`,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_REP_16, '#,###');
+          Text($feature.${fieldInfos.republican.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4234,18 +3206,18 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) >= 100000 AND ABS(SUM_PRS_REP_16) < 500000",
+        where: `ABS(${fieldInfos.republican.state.next.name}) >= 100000 AND ABS(${fieldInfos.republican.state.next.name}) < 500000`,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_REP_16, '#,###');
+          Text($feature.${fieldInfos.republican.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4256,18 +3228,18 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_REP_16) < 100000",
+        where: `ABS(${fieldInfos.republican.state.next.name}) < 100000`,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_REP_16, '#,###');
+          Text($feature.${fieldInfos.republican.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4281,18 +3253,18 @@ const offsetYTotalExpressionBase = `
 
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_OTH_16) >= 5000000",
+        where: `ABS(${fieldInfos.other.state.next.name}) >= 5000000`,
         labelExpressionInfo: {
           expression: `
-            Text($feature.SUM_PRS_OTH_16, '#,###');
+            Text($feature.${fieldInfos.other.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4303,18 +3275,18 @@ const offsetYTotalExpressionBase = `
       }),
       new LabelClass({
         minScale: 9244700,
-        where: "ABS(SUM_PRS_OTH_16) >= 1000000 AND ABS(SUM_PRS_OTH_16) < 5000000",
+        where: `ABS(${fieldInfos.other.state.next.name}) >= 1000000 AND ABS(${fieldInfos.other.state.next.name}) < 5000000`,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_OTH_16, '#,###');
+          Text($feature.${fieldInfos.other.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4326,19 +3298,19 @@ const offsetYTotalExpressionBase = `
       new LabelClass({
         minScale: 9244700,
         where: `
-          (ABS(SUM_PRS_OTH_16) >= 500000 AND ABS(SUM_PRS_OTH_16) < 1000000)
+          (ABS(${fieldInfos.other.state.next.name}) >= 500000 AND ABS(${fieldInfos.other.state.next.name}) < 1000000)
         `,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_OTH_16, '#,###');
+          Text($feature.${fieldInfos.other.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4351,19 +3323,19 @@ const offsetYTotalExpressionBase = `
       new LabelClass({
         minScale: 9244700,
         where: `
-          (ABS(SUM_PRS_OTH_16) >= 100000 AND ABS(SUM_PRS_OTH_16) < 500000)
+          (ABS(${fieldInfos.other.state.next.name}) >= 100000 AND ABS(${fieldInfos.other.state.next.name}) < 500000)
         `,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_OTH_16, '#,###');
+          Text($feature.${fieldInfos.other.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4375,19 +3347,19 @@ const offsetYTotalExpressionBase = `
       new LabelClass({
         minScale: 9244700,
         where: `
-          (ABS(SUM_PRS_OTH_16) < 100000)
+          (ABS(${fieldInfos.other.state.next.name}) < 100000)
         `,
         labelExpressionInfo: {
           expression: `
-          Text($feature.SUM_PRS_OTH_16, '#,###');
+          Text($feature.${fieldInfos.other.state.next.name}, '#,###');
           `
         },
-        deconflictionStrategy: "none",
+        deconflictionStrategy: `none`,
         symbol: new TextSymbol({
           font: new Font({
-            weight: "bold",
-            family: "Noto Sans",
-            size: "10pt"
+            weight: `bold`,
+            family: `Noto Sans`,
+            size: `10pt`
           }),
           haloColor: new Color(haloColor),
           haloSize,
@@ -4415,9 +3387,9 @@ const offsetYTotalExpressionBase = `
   });
   view.ui.add(swipe);
 
-  const totalLegend = document.getElementById("total-legend") as HTMLDivElement;
-  const changeLegend = document.getElementById("change-legend") as HTMLDivElement;
-  const infoToggle = document.getElementById("info-toggle") as HTMLDivElement;
+  const totalLegend = document.getElementById(`total-legend`) as HTMLDivElement;
+  const changeLegend = document.getElementById(`change-legend`) as HTMLDivElement;
+  const infoToggle = document.getElementById(`info-toggle`) as HTMLDivElement;
 
   new Legend({
     view,
