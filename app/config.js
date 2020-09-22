@@ -9,6 +9,16 @@ define(["require", "exports"], function (require, exports) {
         previous: 2012,
         next: 2016
     };
+    exports.results = {
+        republican: {
+            candidate: "Trump",
+            electoralVotes: 304
+        },
+        democrat: {
+            candidate: "Clinton",
+            electoralVotes: 227
+        }
+    };
     exports.fieldInfos = {
         title: {
             state: "{STATE}",

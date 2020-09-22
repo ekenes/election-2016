@@ -8,6 +8,17 @@ export const years = {
   next: 2016
 };
 
+export const results = {
+  republican: {
+    candidate: "Trump",
+    electoralVotes: 304
+  },
+  democrat: {
+    candidate: "Clinton",
+    electoralVotes: 227
+  }
+}
+
 export const fieldInfos = {
   title: {
     state: "{STATE}",

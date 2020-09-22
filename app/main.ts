@@ -15,7 +15,7 @@ import { SimpleRenderer } from "esri/renderers";
 import { CIMSymbol, SimpleFillSymbol, TextSymbol } from "esri/symbols";
 import { UniqueValueRenderer } from "esri/rasterRenderers";
 import { TextContent } from "esri/popup/content";
-import { years, fieldInfos, referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM, oColorCIM, rColorCIM, haloColor, haloSize, scaleThreshold, stateReferenceScale } from "./config";
+import { years, fieldInfos, referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM, oColorCIM, rColorCIM, haloColor, haloSize, scaleThreshold, stateReferenceScale, results } from "./config";
 import { colorDiffPopupBase, votesNextBase, diffTextBase, diffLabelText, sizeExpressionBase, offsetYTotalExpressionBase, offsetXTotalExpressionBase, offsetXExpressionBase, sizeTotalExpressionBase, offsetYTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, sizeTotalChangeExpressionBase, offsetYExpressionBase } from "./expressionUtils";
 import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
 
@@ -52,7 +52,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
   });
 
   const statePopupTemplate = new PopupTemplate({
-    title: `{STATE}`,
+    title: `${fieldInfos.title.state}`,
     fieldInfos: [
       new FieldInfo({
         fieldName: fieldInfos.democrat.state.previous.name,
@@ -306,14 +306,14 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       defaultSymbol: null,
       uniqueValueInfos: [{
         value: `Republican`,
-        label: `R - Trump (304)`,
+        label: `R - ${results.republican.candidate} (${results.republican.electoralVotes})`,
         symbol: new SimpleFillSymbol({
           color: rColor,
           outline: null
         })
       }, {
         value: `Democrat`,
-        label: `D - Clinton (227)`,
+        label: `D - ${results.democrat.candidate} (${results.democrat.electoralVotes})`,
         symbol: new SimpleFillSymbol({
           color: dColor,
           outline: null
@@ -375,8 +375,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     popupEnabled: false
   });
 
-  const popupTemplate = new PopupTemplate({
-    title: `{Name_1}, {STATE_NAME}`,
+  const countyPopupTemplate = new PopupTemplate({
+    title: `${fieldInfos.title.county}`,
     fieldInfos: [
       new FieldInfo({
         fieldName: fieldInfos.democrat.county.previous.name,
@@ -1447,7 +1447,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       })
 
     ],
-    popupTemplate
+    popupTemplate: countyPopupTemplate
   });
 
   const countyResultsLayer = new FeatureLayer({
@@ -2029,7 +2029,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       })
 
     ],
-    popupTemplate
+    popupTemplate: countyPopupTemplate
   });
 
   const stateChangeLayer = new FeatureLayer({

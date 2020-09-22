@@ -79,7 +79,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 totalLegend.style.overflow = "auto";
             }
         }
-        var map, view, statePopupTemplate, stateElectoralResultsLayer, swingStatesLayer, popupTemplate, countyChangeLayer, countyResultsLayer, stateChangeLayer, stateResultsLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
+        var map, view, statePopupTemplate, stateElectoralResultsLayer, swingStatesLayer, countyPopupTemplate, countyChangeLayer, countyResultsLayer, stateChangeLayer, stateResultsLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -113,7 +113,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         }
                     });
                     statePopupTemplate = new PopupTemplate({
-                        title: "{STATE}",
+                        title: "" + config_1.fieldInfos.title.state,
                         fieldInfos: [
                             new FieldInfo({
                                 fieldName: config_1.fieldInfos.democrat.state.previous.name,
@@ -256,14 +256,14 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             defaultSymbol: null,
                             uniqueValueInfos: [{
                                     value: "Republican",
-                                    label: "R - Trump (304)",
+                                    label: "R - " + config_1.results.republican.candidate + " (" + config_1.results.republican.electoralVotes + ")",
                                     symbol: new symbols_1.SimpleFillSymbol({
                                         color: config_1.rColor,
                                         outline: null
                                     })
                                 }, {
                                     value: "Democrat",
-                                    label: "D - Clinton (227)",
+                                    label: "D - " + config_1.results.democrat.candidate + " (" + config_1.results.democrat.electoralVotes + ")",
                                     symbol: new symbols_1.SimpleFillSymbol({
                                         color: config_1.dColor,
                                         outline: null
@@ -301,8 +301,8 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         popupTemplate: statePopupTemplate,
                         popupEnabled: false
                     });
-                    popupTemplate = new PopupTemplate({
-                        title: "{Name_1}, {STATE_NAME}",
+                    countyPopupTemplate = new PopupTemplate({
+                        title: "" + config_1.fieldInfos.title.county,
                         fieldInfos: [
                             new FieldInfo({
                                 fieldName: config_1.fieldInfos.democrat.county.previous.name,
@@ -1081,7 +1081,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 })
                             })
                         ],
-                        popupTemplate: popupTemplate
+                        popupTemplate: countyPopupTemplate
                     });
                     countyResultsLayer = new FeatureLayer({
                         minScale: config_1.scaleThreshold,
@@ -1590,7 +1590,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 })
                             })
                         ],
-                        popupTemplate: popupTemplate
+                        popupTemplate: countyPopupTemplate
                     });
                     stateChangeLayer = new FeatureLayer({
                         maxScale: config_1.scaleThreshold,
