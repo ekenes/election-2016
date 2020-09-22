@@ -169,7 +169,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 text: "\n          The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n          candidate won {STATE} by a margin of {expression/winner-margin} points.\n          The {expression/winner-votes} votes cast for the winner comprise\n          {expression/winner-percent-state-votes} of the total votes cast in the state.\n        "
                             }),
                             new content_1.TextContent({
-                                text: "\n          <div class=\"table-container\">\n            Votes in " + config_1.years.next + " and the change from " + config_1.years.previous + "\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{" + config_1.fieldInfos.democrat.state.next.name + "}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{" + config_1.fieldInfos.republican.state.next.name + "}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{" + config_1.fieldInfos.other.state.next.name + "}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
+                                text: "\n          <div class=\"table-container\">\n            Votes in " + config_1.years.next + " and the change from " + config_1.years.previous + "\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{" + config_1.fieldInfos.democrat.state.next.name + "}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem" + config_1.years.previous + "diff" + config_1.years.next + "}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem" + config_1.years.previous + "change" + config_1.years.next + "}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{" + config_1.fieldInfos.republican.state.next.name + "}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep" + config_1.years.previous + "diff" + config_1.years.next + "}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep" + config_1.years.previous + "change" + config_1.years.next + "}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{" + config_1.fieldInfos.other.state.next.name + "}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth" + config_1.years.previous + "diff" + config_1.years.next + "}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth" + config_1.years.previous + "change" + config_1.years.next + "}</span></td></tr>\n            </table>\n          </div>\n        "
                             })
                         ],
                         expressionInfos: [
@@ -195,32 +195,32 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new ExpressionInfo({
                                 title: "Democrat change from " + config_1.years.previous,
-                                name: "dem12change16",
+                                name: "dem" + config_1.years.previous + "change" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Republican change from " + config_1.years.previous,
-                                name: "rep12change16",
+                                name: "rep" + config_1.years.previous + "change" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Other change from " + config_1.years.previous,
-                                name: "oth12change16",
+                                name: "oth" + config_1.years.previous + "change" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Democrat diff from " + config_1.years.previous,
-                                name: "dem12diff16",
+                                name: "dem" + config_1.years.previous + "diff" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Republican diff from " + config_1.years.previous,
-                                name: "rep12diff16",
+                                name: "rep" + config_1.years.previous + "diff" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Other diff from " + config_1.years.previous,
-                                name: "oth12diff16",
+                                name: "oth" + config_1.years.previous + "diff" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
@@ -280,7 +280,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         title: "Swing states",
                         opacity: 0.3,
                         renderer: new rasterRenderers_1.UniqueValueRenderer({
-                            valueExpression: "\n        var demPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n        var repPrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n        var othPrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n\n        var winner12 = Decode( Max([demPrevious, repPrevious, othPrevious]),\n          demPrevious, 'Democrat " + config_1.years.previous + "',\n          repPrevious, 'Republican " + config_1.years.previous + "',\n          othPrevious, 'Other " + config_1.years.previous + "',\n        'n/a' );\n\n        var demNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n        var repNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n        var othNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n\n        var winner16 = Decode( Max([demNext, repNext, othNext]),\n        demNext, 'Democrat " + config_1.years.next + "',\n        repNext, 'Republican " + config_1.years.next + "',\n        othNext, 'Other " + config_1.years.next + "',\n        'n/a' );\n\n        return Concatenate([winner12, winner16], \", \");\n      ",
+                            valueExpression: "\n        var demPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n        var repPrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n        var othPrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n\n        var winnerPrevious = Decode( Max([demPrevious, repPrevious, othPrevious]),\n          demPrevious, 'Democrat " + config_1.years.previous + "',\n          repPrevious, 'Republican " + config_1.years.previous + "',\n          othPrevious, 'Other " + config_1.years.previous + "',\n        'n/a' );\n\n        var demNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n        var repNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n        var othNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n\n        var winnerNext = Decode( Max([demNext, repNext, othNext]),\n        demNext, 'Democrat " + config_1.years.next + "',\n        repNext, 'Republican " + config_1.years.next + "',\n        othNext, 'Other " + config_1.years.next + "',\n        'n/a' );\n\n        return Concatenate([winnerPrevious, winnerNext], \", \");\n      ",
                             defaultSymbol: null,
                             uniqueValueInfos: [{
                                     value: "Democrat " + config_1.years.previous + ", Republican " + config_1.years.next,
@@ -358,7 +358,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                 text: "\n          The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>\n          candidate won this county by a margin of {expression/winner-margin}.\n          The {expression/winner-votes} votes cast for the winner comprise\n          {expression/winner-percent-state-votes} of the total votes cast in the state.\n        "
                             }),
                             new content_1.TextContent({
-                                text: "\n          <div class=\"table-container\">\n            Votes in " + config_1.years.next + " and the change from " + config_1.years.previous + "\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{" + config_1.fieldInfos.democrat.county.next.name + "}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12diff16}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem12change16}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{" + config_1.fieldInfos.republican.county.next.name + "}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12diff16}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep12change16}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{" + config_1.fieldInfos.other.county.next.name + "}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12diff16}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth12change16}</span></td></tr>\n            </table>\n          </div>\n        "
+                                text: "\n          <div class=\"table-container\">\n            Votes in " + config_1.years.next + " and the change from " + config_1.years.previous + "\n            <br/>\n            <br/>\n            <table class=\"esri-widget popup\">\n              <tr class=\"head\"><td>Party</td><td>Votes</td><td>+/-</td><td>% Change</td></tr>\n              <tr class=\"dem\"><td><span style='color:" + config_1.dColor + "; font-weight:bolder'>Democrat</span></td><td class=\"num\">{" + config_1.fieldInfos.democrat.county.next.name + "}</td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem" + config_1.years.previous + "diff" + config_1.years.next + "}</span></td><td class=\"num\"><span style='color: {expression/dem-change-color}'>{expression/dem" + config_1.years.previous + "change" + config_1.years.next + "}</span></td></tr>\n              <tr class=\"rep\"><td><span style='color:" + config_1.rColor + "; font-weight:bolder'>Republican</span></td><td class=\"num\">{" + config_1.fieldInfos.republican.county.next.name + "}</td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep" + config_1.years.previous + "diff" + config_1.years.next + "}</span></td><td class=\"num\"><span style='color: {expression/rep-change-color}'>{expression/rep" + config_1.years.previous + "change" + config_1.years.next + "}</span></td></tr>\n              <tr class=\"oth\"><td><span style='color:" + config_1.oTextColor + "; font-weight:bolder'>Other</span></td><td class=\"num\">{" + config_1.fieldInfos.other.county.next.name + "}</td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth" + config_1.years.previous + "diff" + config_1.years.next + "}</span></td><td class=\"num\"><span style='color: {expression/oth-change-color}'>{expression/oth" + config_1.years.previous + "change" + config_1.years.next + "}</span></td></tr>\n            </table>\n          </div>\n        "
                             })
                         ],
                         expressionInfos: [
@@ -384,32 +384,32 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             }),
                             new ExpressionInfo({
                                 title: "Democrat change from " + config_1.years.previous,
-                                name: "dem12change16",
+                                name: "dem" + config_1.years.previous + "change" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Republican change from " + config_1.years.previous,
-                                name: "rep12change16",
+                                name: "rep" + config_1.years.previous + "change" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Other change from " + config_1.years.previous,
-                                name: "oth12change16",
+                                name: "oth" + config_1.years.previous + "change" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n          " + expressionUtils_1.diffTextBase + "\n          return changeText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Democrat diff from " + config_1.years.previous,
-                                name: "dem12diff16",
+                                name: "dem" + config_1.years.previous + "diff" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n          var diff = votesNext - votesPrevious;\n          var change = ( (votesNext - votesPrevious) / votesPrevious );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Republican diff from " + config_1.years.previous,
-                                name: "rep12diff16",
+                                name: "rep" + config_1.years.previous + "diff" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n          var diff = votesNext - votesPrevious;\n          var change = ( (votesNext - votesPrevious) / votesPrevious );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
                                 title: "Other diff from " + config_1.years.previous,
-                                name: "oth12diff16",
+                                name: "oth" + config_1.years.previous + "diff" + config_1.years.next,
                                 expression: "\n          var votesNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n          var votesPrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n          var diff = votesNext - votesPrevious;\n          var change = ( (votesNext - votesPrevious) / votesPrevious );\n          var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));\n          var changeText = IIF(change > 0, Text(change, '\u2191#,###.#%'), Text(change, '\u2193#,###.#%'));\n          return diffText;\n        "
                             }),
                             new ExpressionInfo({
@@ -652,7 +652,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -663,7 +663,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Republican votes",
-                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -674,7 +674,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -685,7 +685,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Other votes",
-                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.sizeExpressionBase + "\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -719,7 +719,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -730,7 +730,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Republican votes",
-                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetXExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -741,7 +741,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetYExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change > 0, change, 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetYExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -752,7 +752,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Other votes",
-                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetYExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n                  " + expressionUtils_1.offsetYExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         }
@@ -1811,7 +1811,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change > 0, change, 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -1822,7 +1822,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Republican votes",
-                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -1833,7 +1833,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change > 0, change, 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -1844,7 +1844,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Other votes",
-                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                " + expressionUtils_1.sizeTotalChangeExpressionBase,
                                                 returnType: "Default"
                                             }
                                         },
@@ -1878,7 +1878,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Republican votes",
-                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change > 0, change, 0);\n                  " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change > 0, change, 0);\n                  " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -1889,7 +1889,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Republican votes",
-                                                expression: "\n                  var rep16 = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var rep12 = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = rep16 - rep12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -1900,7 +1900,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Increase in Other votes",
-                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change > 0, change, 0);\n                  " + expressionUtils_1.offsetYTotalChangeExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change > 0, change, 0);\n                  " + expressionUtils_1.offsetYTotalChangeExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         },
@@ -1911,7 +1911,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                                             valueExpressionInfo: {
                                                 type: "CIMExpressionInfo",
                                                 title: "Decrease in Other votes",
-                                                expression: "\n                  var oth16 = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var oth12 = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = oth16 - oth12;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + expressionUtils_1.offsetYTotalChangeExpressionBase + "\n                  return offset;\n                ",
+                                                expression: "\n                  var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n                  var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n                  var change = valueNext - valuePrevious;\n                  var value = IIF( change < 0, Abs(change), 0);\n                  " + expressionUtils_1.offsetYTotalChangeExpressionBase + "\n                  return offset;\n                ",
                                                 returnType: "Default"
                                             }
                                         }
