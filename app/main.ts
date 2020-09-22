@@ -283,7 +283,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     ]
   });
 
-  const polygonLayer = new FeatureLayer({
+  const stateElectoralResultsLayer = new FeatureLayer({
     portalItem: {
       id: `4f03bcde997e4badbef186d0c05f5a9a`
     },
@@ -324,7 +324,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     popupEnabled: false
   });
 
-  const polygonChangeLayer = new FeatureLayer({
+  const swingStatesLayer = new FeatureLayer({
     portalItem: {
       id: `4f03bcde997e4badbef186d0c05f5a9a`
     },
@@ -628,7 +628,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     ]
   });
 
-  const changeLayer = new FeatureLayer({
+  const countyChangeLayer = new FeatureLayer({
     minScale: scaleThreshold,
     portalItem: {
       id: `ba48def248cb45bebb234aa346c97676`
@@ -1450,7 +1450,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     popupTemplate
   });
 
-  const results2016Layer = new FeatureLayer({
+  const countyResultsLayer = new FeatureLayer({
     minScale: scaleThreshold,
     portalItem: {
       id: `ba48def248cb45bebb234aa346c97676`
@@ -2032,7 +2032,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     popupTemplate
   });
 
-  const changeStatesLayer = new FeatureLayer({
+  const stateChangeLayer = new FeatureLayer({
     maxScale: scaleThreshold,
     portalItem: {
       id: `4f03bcde997e4badbef186d0c05f5a9a`
@@ -2821,7 +2821,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     popupTemplate: statePopupTemplate
   });
 
-  const totalStatesLayer = new FeatureLayer({
+  const stateResultsLayer = new FeatureLayer({
     maxScale: scaleThreshold,
     portalItem: {
       id: `4f03bcde997e4badbef186d0c05f5a9a`
@@ -3372,17 +3372,17 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     popupTemplate: statePopupTemplate
   });
 
-  view.map.add(polygonLayer);
-  view.map.add(polygonChangeLayer);
-  view.map.add(changeStatesLayer);
-  view.map.add(totalStatesLayer);
-  view.map.add(changeLayer);
-  view.map.add(results2016Layer);
+  view.map.add(stateElectoralResultsLayer);
+  view.map.add(swingStatesLayer);
+  view.map.add(stateChangeLayer);
+  view.map.add(stateResultsLayer);
+  view.map.add(countyChangeLayer);
+  view.map.add(countyResultsLayer);
 
   const swipe = new Swipe({
     view,
-    leadingLayers: [ changeLayer, changeStatesLayer, polygonChangeLayer ],
-    trailingLayers: [ results2016Layer, totalStatesLayer, polygonLayer ],
+    leadingLayers: [ countyChangeLayer, stateChangeLayer, swingStatesLayer ],
+    trailingLayers: [ countyResultsLayer, stateResultsLayer, stateElectoralResultsLayer ],
     position: 90
   });
   view.ui.add(swipe);
@@ -3395,7 +3395,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     view,
     container: `change-legend-container`,
     layerInfos: [{
-      layer: polygonChangeLayer
+      layer: swingStatesLayer
     }] as any
   });
   view.ui.add(`change-legend`, `bottom-left`);
@@ -3404,7 +3404,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     view,
     container: `total-legend-container`,
     layerInfos: [{
-      layer: polygonLayer
+      layer: stateElectoralResultsLayer
     }] as any
   });
 

@@ -79,7 +79,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 totalLegend.style.overflow = "auto";
             }
         }
-        var map, view, statePopupTemplate, polygonLayer, polygonChangeLayer, popupTemplate, changeLayer, results2016Layer, changeStatesLayer, totalStatesLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
+        var map, view, statePopupTemplate, stateElectoralResultsLayer, swingStatesLayer, popupTemplate, countyChangeLayer, countyResultsLayer, stateChangeLayer, stateResultsLayer, swipe, totalLegend, changeLegend, infoToggle, visibilityEnabled, toggleInfoVisibility;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -245,7 +245,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             })
                         ]
                     });
-                    polygonLayer = new FeatureLayer({
+                    stateElectoralResultsLayer = new FeatureLayer({
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
                         },
@@ -273,7 +273,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         popupTemplate: statePopupTemplate,
                         popupEnabled: false
                     });
-                    polygonChangeLayer = new FeatureLayer({
+                    swingStatesLayer = new FeatureLayer({
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
                         },
@@ -434,7 +434,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                             })
                         ]
                     });
-                    changeLayer = new FeatureLayer({
+                    countyChangeLayer = new FeatureLayer({
                         minScale: config_1.scaleThreshold,
                         portalItem: {
                             id: "ba48def248cb45bebb234aa346c97676"
@@ -1083,7 +1083,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         ],
                         popupTemplate: popupTemplate
                     });
-                    results2016Layer = new FeatureLayer({
+                    countyResultsLayer = new FeatureLayer({
                         minScale: config_1.scaleThreshold,
                         portalItem: {
                             id: "ba48def248cb45bebb234aa346c97676"
@@ -1592,7 +1592,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         ],
                         popupTemplate: popupTemplate
                     });
-                    changeStatesLayer = new FeatureLayer({
+                    stateChangeLayer = new FeatureLayer({
                         maxScale: config_1.scaleThreshold,
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
@@ -2227,7 +2227,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         ],
                         popupTemplate: statePopupTemplate
                     });
-                    totalStatesLayer = new FeatureLayer({
+                    stateResultsLayer = new FeatureLayer({
                         maxScale: config_1.scaleThreshold,
                         portalItem: {
                             id: "4f03bcde997e4badbef186d0c05f5a9a"
@@ -2711,16 +2711,16 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         ],
                         popupTemplate: statePopupTemplate
                     });
-                    view.map.add(polygonLayer);
-                    view.map.add(polygonChangeLayer);
-                    view.map.add(changeStatesLayer);
-                    view.map.add(totalStatesLayer);
-                    view.map.add(changeLayer);
-                    view.map.add(results2016Layer);
+                    view.map.add(stateElectoralResultsLayer);
+                    view.map.add(swingStatesLayer);
+                    view.map.add(stateChangeLayer);
+                    view.map.add(stateResultsLayer);
+                    view.map.add(countyChangeLayer);
+                    view.map.add(countyResultsLayer);
                     swipe = new Swipe({
                         view: view,
-                        leadingLayers: [changeLayer, changeStatesLayer, polygonChangeLayer],
-                        trailingLayers: [results2016Layer, totalStatesLayer, polygonLayer],
+                        leadingLayers: [countyChangeLayer, stateChangeLayer, swingStatesLayer],
+                        trailingLayers: [countyResultsLayer, stateResultsLayer, stateElectoralResultsLayer],
                         position: 90
                     });
                     view.ui.add(swipe);
@@ -2731,7 +2731,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         view: view,
                         container: "change-legend-container",
                         layerInfos: [{
-                                layer: polygonChangeLayer
+                                layer: swingStatesLayer
                             }]
                     });
                     view.ui.add("change-legend", "bottom-left");
@@ -2739,7 +2739,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         view: view,
                         container: "total-legend-container",
                         layerInfos: [{
-                                layer: polygonLayer
+                                layer: stateElectoralResultsLayer
                             }]
                     });
                     view.ui.add(changeLegend, "bottom-left");
