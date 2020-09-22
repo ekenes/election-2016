@@ -86,7 +86,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     map = new EsriMap({
                         basemap: {
                             portalItem: {
-                                id: "fbfb62f3599f41e5a77845f863e2872f"
+                                id: config_1.basemapPortalItem
                             }
                         }
                     });
@@ -114,7 +114,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     });
                     stateElectoralResultsLayer = new FeatureLayer({
                         portalItem: {
-                            id: "4f03bcde997e4badbef186d0c05f5a9a"
+                            id: config_1.statesLayerPortalItem
                         },
                         title: "Results by state",
                         opacity: 0.3,
@@ -124,7 +124,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     });
                     swingStatesLayer = new FeatureLayer({
                         portalItem: {
-                            id: "4f03bcde997e4badbef186d0c05f5a9a"
+                            id: config_1.statesLayerPortalItem
                         },
                         title: "Swing states",
                         opacity: 0.3,
@@ -135,7 +135,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     countyChangeLayer = new FeatureLayer({
                         minScale: config_1.scaleThreshold,
                         portalItem: {
-                            id: "ba48def248cb45bebb234aa346c97676"
+                            id: config_1.countiesLayerPortalItem
                         },
                         legendEnabled: false,
                         renderer: rendererUtils_1.countyChangeRenderer,
@@ -146,7 +146,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     countyResultsLayer = new FeatureLayer({
                         minScale: config_1.scaleThreshold,
                         portalItem: {
-                            id: "ba48def248cb45bebb234aa346c97676"
+                            id: config_1.countiesLayerPortalItem
                         },
                         legendEnabled: false,
                         renderer: rendererUtils_1.countyResultsRenderer,
@@ -157,7 +157,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     stateChangeLayer = new FeatureLayer({
                         maxScale: config_1.scaleThreshold,
                         portalItem: {
-                            id: "4f03bcde997e4badbef186d0c05f5a9a"
+                            id: config_1.statesLayerPortalItem
                         },
                         opacity: 1,
                         legendEnabled: false,
@@ -169,7 +169,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     stateResultsLayer = new FeatureLayer({
                         maxScale: config_1.scaleThreshold,
                         portalItem: {
-                            id: "4f03bcde997e4badbef186d0c05f5a9a"
+                            id: config_1.statesLayerPortalItem
                         },
                         opacity: 1,
                         legendEnabled: false,

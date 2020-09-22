@@ -4,7 +4,7 @@ import FeatureLayer = require("esri/layers/FeatureLayer");
 import Swipe = require("esri/widgets/Swipe");
 import Legend = require("esri/widgets/Legend");
 
-import { referenceScale, maxScale, scaleThreshold } from "./config";
+import { referenceScale, maxScale, scaleThreshold, basemapPortalItem, statesLayerPortalItem, countiesLayerPortalItem } from "./config";
 import { statePopupTemplate, countyPopupTemplate } from "./popupUtils";
 import { countyChangeLabelingInfo, countyResultsLabelingInfo, stateChangeLabelingInfo, stateResultsLabelingInfo } from "./labelingUtils";
 import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, stateElectoralResultsRenderer, stateResultsRenderer, swingStateRenderer } from "./rendererUtils";
@@ -13,7 +13,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
   const map = new EsriMap({
     basemap: {
       portalItem: {
-        id: `fbfb62f3599f41e5a77845f863e2872f`
+        id: basemapPortalItem
       }
     }
   });
@@ -43,7 +43,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
 
   const stateElectoralResultsLayer = new FeatureLayer({
     portalItem: {
-      id: `4f03bcde997e4badbef186d0c05f5a9a`
+      id: statesLayerPortalItem
     },
     title: `Results by state`,
     opacity: 0.3,
@@ -54,7 +54,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
 
   const swingStatesLayer = new FeatureLayer({
     portalItem: {
-      id: `4f03bcde997e4badbef186d0c05f5a9a`
+      id: statesLayerPortalItem
     },
     title: `Swing states`,
     opacity: 0.3,
@@ -67,7 +67,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
   const countyChangeLayer = new FeatureLayer({
     minScale: scaleThreshold,
     portalItem: {
-      id: `ba48def248cb45bebb234aa346c97676`
+      id: countiesLayerPortalItem
     },
     legendEnabled: false,
     renderer: countyChangeRenderer,
@@ -79,7 +79,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
   const countyResultsLayer = new FeatureLayer({
     minScale: scaleThreshold,
     portalItem: {
-      id: `ba48def248cb45bebb234aa346c97676`
+      id: countiesLayerPortalItem
     },
     legendEnabled: false,
     renderer: countyResultsRenderer,
@@ -91,7 +91,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
   const stateChangeLayer = new FeatureLayer({
     maxScale: scaleThreshold,
     portalItem: {
-      id: `4f03bcde997e4badbef186d0c05f5a9a`
+      id: statesLayerPortalItem
     },
     opacity: 1,
     legendEnabled: false,
@@ -104,7 +104,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
   const stateResultsLayer = new FeatureLayer({
     maxScale: scaleThreshold,
     portalItem: {
-      id: `4f03bcde997e4badbef186d0c05f5a9a`
+      id: statesLayerPortalItem
     },
     opacity: 1,
     legendEnabled: false,

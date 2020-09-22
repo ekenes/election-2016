@@ -1,3 +1,7 @@
+export const basemapPortalItem = "fbfb62f3599f41e5a77845f863e2872f";
+export const statesLayerPortalItem = "4f03bcde997e4badbef186d0c05f5a9a";
+export const countiesLayerPortalItem = "ba48def248cb45bebb234aa346c97676";
+
 export const maxScale = 4622324/16;
 export const referenceScale = 2311162;
 export const scaleThreshold = 9244600;  // 9244649;

@@ -1,6 +1,9 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.basemapPortalItem = "fbfb62f3599f41e5a77845f863e2872f";
+    exports.statesLayerPortalItem = "4f03bcde997e4badbef186d0c05f5a9a";
+    exports.countiesLayerPortalItem = "ba48def248cb45bebb234aa346c97676";
     exports.maxScale = 4622324 / 16;
     exports.referenceScale = 2311162;
     exports.scaleThreshold = 9244600; // 9244649;
