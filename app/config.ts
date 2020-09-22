@@ -20,6 +20,10 @@ export const results = {
   democrat: {
     candidate: "Clinton",
     electoralVotes: 227
+  },
+  other: {
+    candidate: "An other",
+    electoralVotes: 0
   }
 }
 

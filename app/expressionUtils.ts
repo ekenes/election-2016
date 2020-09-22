@@ -1,6 +1,13 @@
 import { countySizeStops, fieldInfos, referenceScale, stateChangeSizeStops, stateReferenceScale, stateResultsSizeStops } from "./config";
 
-export const votesNextBase = `
+export const votesStateNextBase = `
+  var dem = $feature.${fieldInfos.democrat.state.next.name};
+  var rep = $feature.${fieldInfos.republican.state.next.name};
+  var oth = $feature.${fieldInfos.other.state.next.name};
+  var all = [dem, rep, oth];
+`;
+
+export const votesCountyNextBase = `
   var dem = $feature.${fieldInfos.democrat.county.next.name};
   var rep = $feature.${fieldInfos.republican.county.next.name};
   var oth = $feature.${fieldInfos.other.county.next.name};

@@ -1,2 +1,7 @@
-# election-2016
-2016 U.S. election change in votes from 2012. 
+# Change in U.S. presidential voting behavior from 2012-2016
+
+This map visualizes the change in U.S. presidential voting behavior from 2012 to 2016.
+
+
+
+## Configuration

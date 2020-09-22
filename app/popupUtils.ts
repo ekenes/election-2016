@@ -4,8 +4,8 @@ import FieldInfo = require("esri/popup/FieldInfo");
 import FieldInfoFormat = require("esri/popup/support/FieldInfoFormat");
 
 import { TextContent } from "esri/popup/content";
-import { years, fieldInfos, dColor, rColor, oTextColor, oColor } from "./config";
-import { colorDiffPopupBase, votesNextBase, diffTextBase } from "./expressionUtils";
+import { years, fieldInfos, dColor, rColor, oTextColor, oColor, results } from "./config";
+import { colorDiffPopupBase, votesCountyNextBase, votesStateNextBase, diffTextBase } from "./expressionUtils";
 
 ////////////////////////////////////////////////////
 //
@@ -68,8 +68,8 @@ export const statePopupTemplate = new PopupTemplate({
   content: [
     new TextContent({
       text: `
-        The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>
-        candidate won {STATE} by a margin of {expression/winner-margin} points.
+        <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>
+        won {STATE} by a margin of {expression/winner-margin} points.
         The {expression/winner-votes} votes cast for the winner comprise
         {expression/winner-percent-state-votes} of the total votes cast in the state.
       `
@@ -95,7 +95,7 @@ export const statePopupTemplate = new PopupTemplate({
       title: `winner % of state votes`,
       name: `winner-percent-state-votes`,
       expression: `
-        ${votesNextBase}
+        ${votesStateNextBase}
 
         var winnerTotal = Max(all);
         return Text(winnerTotal/Sum(all), "#%");
@@ -105,7 +105,7 @@ export const statePopupTemplate = new PopupTemplate({
       title: `winner votes`,
       name: `winner-votes`,
       expression: `
-        ${votesNextBase}
+        ${votesStateNextBase}
 
         return Text(Max(all), "#,###");
       `
@@ -114,7 +114,7 @@ export const statePopupTemplate = new PopupTemplate({
       title: `winner-color`,
       name: `winner-color`,
       expression: `
-        ${votesNextBase}
+        ${votesStateNextBase}
 
         Decode( Max(all),
           dem, "${dColor}",
@@ -128,12 +128,12 @@ export const statePopupTemplate = new PopupTemplate({
       title: `winner`,
       name: `winner`,
       expression: `
-        ${votesNextBase}
+        ${votesStateNextBase}
 
         Decode( Max(all),
-          dem, "Democrat",
-          rep, "Republican",
-          oth, "other",
+          dem, "${results.democrat.candidate}",
+          rep, "${results.republican.candidate}",
+          oth, "${results.other.candidate}",
         "tie"
         );
       `
@@ -309,8 +309,8 @@ export const countyPopupTemplate = new PopupTemplate({
   content: [
     new TextContent({
       text: `
-        The <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>
-        candidate won this county by a margin of {expression/winner-margin}.
+        <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>
+        won this county by a margin of {expression/winner-margin}.
         The {expression/winner-votes} votes cast for the winner comprise
         {expression/winner-percent-state-votes} of the total votes cast in the state.
       `
@@ -349,10 +349,7 @@ export const countyPopupTemplate = new PopupTemplate({
       title: `winner votes`,
       name: `winner-votes`,
       expression: `
-        var dem = $feature.${fieldInfos.democrat.county.next.name};
-        var rep = $feature.${fieldInfos.republican.county.next.name};
-        var oth = $feature.${fieldInfos.other.county.next.name};
-        var all = [dem, rep, oth];
+        ${votesCountyNextBase}
 
         return Text(Max(all), "#,###");
       `
@@ -361,10 +358,7 @@ export const countyPopupTemplate = new PopupTemplate({
       title: `winner-color`,
       name: `winner-color`,
       expression: `
-        var dem = $feature.${fieldInfos.democrat.county.next.name};
-        var rep = $feature.${fieldInfos.republican.county.next.name};
-        var oth = $feature.${fieldInfos.other.county.next.name};
-        var all = [dem, rep, oth];
+        ${votesCountyNextBase}
 
         Decode( Max(all),
           dem, "${dColor}",
@@ -378,15 +372,12 @@ export const countyPopupTemplate = new PopupTemplate({
       title: `winner`,
       name: `winner`,
       expression: `
-        var dem = $feature.${fieldInfos.democrat.county.next.name};
-        var rep = $feature.${fieldInfos.republican.county.next.name};
-        var oth = $feature.${fieldInfos.other.county.next.name};
-        var all = [dem, rep, oth];
+        ${votesCountyNextBase}
 
         Decode( Max(all),
-          dem, "Democrat",
-          rep, "Republican",
-          oth, "other",
+          dem, "${results.democrat.candidate}",
+          rep, "${results.republican.candidate}",
+          oth, "${results.other.candidate}",
         "tie"
         );
       `
@@ -427,10 +418,7 @@ export const countyPopupTemplate = new PopupTemplate({
       expression: `
         var votesNext = $feature.${fieldInfos.democrat.county.next.name};
         var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
-        var diff = votesNext - votesPrevious;
-        var change = ( (votesNext - votesPrevious) / votesPrevious );
-        var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-        var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(change, '↓#,###.#%'));
+        ${diffTextBase}
         return diffText;
       `
     }),
@@ -440,10 +428,7 @@ export const countyPopupTemplate = new PopupTemplate({
       expression: `
         var votesNext = $feature.${fieldInfos.republican.county.next.name};
         var votesPrevious = $feature.${fieldInfos.republican.county.previous.name};
-        var diff = votesNext - votesPrevious;
-        var change = ( (votesNext - votesPrevious) / votesPrevious );
-        var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-        var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(change, '↓#,###.#%'));
+        ${diffTextBase}
         return diffText;
       `
     }),
@@ -453,10 +438,7 @@ export const countyPopupTemplate = new PopupTemplate({
       expression: `
         var votesNext = $feature.${fieldInfos.other.county.next.name};
         var votesPrevious = $feature.${fieldInfos.other.county.previous.name};
-        var diff = votesNext - votesPrevious;
-        var change = ( (votesNext - votesPrevious) / votesPrevious );
-        var diffText = IIF(diff > 0, Text(diff, '+#,###'), Text(diff, '#,###'));
-        var changeText = IIF(change > 0, Text(change, '↑#,###.#%'), Text(change, '↓#,###.#%'));
+        ${diffTextBase}
         return diffText;
       `
     }),

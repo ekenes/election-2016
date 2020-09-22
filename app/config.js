@@ -20,6 +20,10 @@ define(["require", "exports"], function (require, exports) {
         democrat: {
             candidate: "Clinton",
             electoralVotes: 227
+        },
+        other: {
+            candidate: "An other",
+            electoralVotes: 0
         }
     };
     exports.fieldInfos = {
