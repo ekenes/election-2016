@@ -106,6 +106,8 @@ export const fieldInfos = {
   }
 };
 
+// Renderer config
+
 export const rColorCIM = [220, 75, 0, 255]; // [237, 81, 81, 255];
 export const dColorCIM = [60, 108, 204, 255]; // [20, 158, 206, 255];
 export const oColorCIM = [224, 206, 0, 255]; // [167, 198, 54, 255];   145, 217, 0
@@ -117,3 +119,39 @@ export const oColor = "rgba(224, 206, 0, 1)";// "rgba(224, 206, 0, 1)"// "#a7c63
 export const haloColor = "#f7f7f7";
 export const oTextColor = "rgba(181, 166, 0, 1)";// = "#4b4b4b";
 export const haloSize = 1;
+
+//////////////
+// size stops
+//////////////
+
+// state results layer
+
+export const stateResultsSizeStops = [
+  { value: 0, size: 8 },
+  { value: 100000, size: 10 },
+  { value: 500000, size: 15 },
+  { value: 1000000, size: 20 },
+  { value: 5000000, size: 40 }
+];
+
+// state change layer
+
+export const stateChangeSizeStops = [
+  { value: 0, size: 8 },
+  { value: 10000, size: 10 },
+  { value: 50000, size: 15 },
+  { value: 100000, size: 20 },
+  { value: 500000, size: 30 }
+];
+
+// county layers
+
+// size is votes as a % of total state votes
+
+export const countySizeStops = [
+  { value: 0, size: 6 },
+  { value: 0.5, size: 10 },
+  { value: 1, size: 20 },
+  { value: 5, size: 25 },
+  { value: 30, size: 40 }
+];

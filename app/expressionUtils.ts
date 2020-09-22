@@ -1,4 +1,4 @@
-import { fieldInfos, referenceScale, stateReferenceScale } from "./config";
+import { countySizeStops, fieldInfos, referenceScale, stateChangeSizeStops, stateReferenceScale, stateResultsSizeStops } from "./config";
 
 export const votesNextBase = `
   var dem = $feature.${fieldInfos.democrat.county.next.name};
@@ -40,11 +40,11 @@ const scaleFactorTotal = `
 
 const sizeFactorChangeTotal = `
   var sizeFactor = When(
-    value >= 500000, 30,
-    value >= 100000, 20 + (((30-20) / (500000-100000)) * (value - 100000)),
-    value >= 50000, 15 + (((20-15) / (100000-50000)) * (value - 50000)),
-    value > 10000, 10 + (((15-10) / (50000-10000)) * (value - 10000)),
-    value > 0, 8 + (((10-8) / (10000-0)) * value),
+    value >= ${stateChangeSizeStops[4].value}, ${stateChangeSizeStops[4].size},
+    value >= ${stateChangeSizeStops[3].value}, ${stateChangeSizeStops[3].size} + (${interpolateBetweenStops(stateChangeSizeStops[3], stateChangeSizeStops[4])} * (value - ${stateChangeSizeStops[3].value})),
+    value >= ${stateChangeSizeStops[2].value}, ${stateChangeSizeStops[2].size} + (${interpolateBetweenStops(stateChangeSizeStops[2], stateChangeSizeStops[3])} * (value - ${stateChangeSizeStops[2].value})),
+    value >= ${stateChangeSizeStops[1].value}, ${stateChangeSizeStops[1].size} + (${interpolateBetweenStops(stateChangeSizeStops[1], stateChangeSizeStops[2])} * (value - ${stateChangeSizeStops[1].value})),
+    value > ${stateChangeSizeStops[0].value}, ${stateChangeSizeStops[0].size} + (${interpolateBetweenStops(stateChangeSizeStops[0], stateChangeSizeStops[1])} * value),
     0
   );
 `;
@@ -76,11 +76,11 @@ export const offsetYTotalChangeExpressionBase = `
 
 const sizeFactorTotalResults = `
   var sizeFactor = When(
-    value >= 5000000, 40,
-    value >= 1000000, 20 + (((40-20) / (5000000-1000000)) * (value - 1000000)),
-    value >= 500000, 15 + (((20-15) / (1000000-500000)) * (value - 500000)),
-    value > 100000, 10 + (((15-10) / (500000-100000)) * (value - 100000)),
-    value > 0, 8 + (((10-8) / (100000-0)) * value),
+    value >= ${stateResultsSizeStops[4].value}, ${stateResultsSizeStops[4].size},
+    value >= ${stateResultsSizeStops[3].value}, ${stateResultsSizeStops[3].size} + (${interpolateBetweenStops(stateResultsSizeStops[3], stateResultsSizeStops[4])} * (value - ${stateResultsSizeStops[3].value})),
+    value >= ${stateResultsSizeStops[2].value}, ${stateResultsSizeStops[2].size} + (${interpolateBetweenStops(stateResultsSizeStops[2], stateResultsSizeStops[3])} * (value - ${stateResultsSizeStops[2].value})),
+    value >= ${stateResultsSizeStops[1].value}, ${stateResultsSizeStops[1].size} + (${interpolateBetweenStops(stateResultsSizeStops[1], stateResultsSizeStops[2])} * (value - ${stateResultsSizeStops[1].value})),
+    value > ${stateResultsSizeStops[0].value}, ${stateResultsSizeStops[0].size} + (${interpolateBetweenStops(stateResultsSizeStops[0], stateResultsSizeStops[1])} * value),
     0
   );
 `;
@@ -112,11 +112,11 @@ export const offsetYTotalExpressionBase = `
 
 const sizeFactorCounties = `
   var sizeFactor = When(
-    percentStateVotes >= 30, 40,
-    percentStateVotes >= 5, 25 + ((15/25) * (percentStateVotes - 5)),
-    percentStateVotes >= 1, 20 + ((5/4) * (percentStateVotes - 1)),
-    percentStateVotes > 0.5, 10 + ((10/0.5) * (percentStateVotes - 0.5)),
-    percentStateVotes > 0, 6 + ((4/0.5) * percentStateVotes),
+    percentStateVotes >= ${countySizeStops[4].value}, ${countySizeStops[4].size},
+    percentStateVotes >= ${countySizeStops[3].value}, ${countySizeStops[3].size} + (${interpolateBetweenStops(countySizeStops[3], countySizeStops[4])} * (percentStateVotes - ${countySizeStops[3].value})),
+    percentStateVotes >= ${countySizeStops[2].value}, ${countySizeStops[2].size} + (${interpolateBetweenStops(countySizeStops[2], countySizeStops[3])} * (percentStateVotes - ${countySizeStops[2].value})),
+    percentStateVotes >= ${countySizeStops[1].value}, ${countySizeStops[1].size} + (${interpolateBetweenStops(countySizeStops[1], countySizeStops[2])} * (percentStateVotes - ${countySizeStops[1].value})),
+    percentStateVotes > ${countySizeStops[0].value}, ${countySizeStops[0].size} + (${interpolateBetweenStops(countySizeStops[0], countySizeStops[1])} * percentStateVotes),
     0
   );
 `;
@@ -155,3 +155,18 @@ export const offsetYExpressionBase = `
   var diameter = sizeFactor * scaleFactor;
   var offset = diameter * 0.67;
 `;
+
+interface SizeStop {
+  value: number,
+  size: number
+}
+
+function interpolateBetweenStops(
+  firstStop: SizeStop,
+  nextStop: SizeStop
+) {
+  const sizeRange = nextStop.size - firstStop.size;
+  const dataRange = nextStop.value - firstStop.value;
+
+  return sizeRange / dataRange;
+}
