@@ -22,7 +22,7 @@ export const results = {
     electoralVotes: 227
   },
   other: {
-    candidate: "An other",
+    candidate: "Another candidate",
     electoralVotes: 0
   }
 }
