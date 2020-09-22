@@ -1,7 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.cimCircleGeometry = {
+    var cimCircleGeometry = {
         rings: [
             [
                 [8.5, 0.2],
@@ -45,7 +45,7 @@ define(["require", "exports"], function (require, exports) {
         ]
     };
     function createCircleSymbolLayer(params) {
-        var primitiveName = params.primitiveName, color = params.color, donutEnabled = params.donutEnabled, offsetX = params.offsetX, offsetY = params.offsetY;
+        var primitiveName = params.primitiveName, color = params.color, donutEnabled = params.donutEnabled, offsetX = params.offsetX, offsetY = params.offsetY, outline = params.outline;
         var symbol = donutEnabled ? {
             type: "CIMLineSymbol",
             symbolLayers: [
@@ -66,6 +66,14 @@ define(["require", "exports"], function (require, exports) {
                 }
             ]
         };
+        if (outline && outline.color) {
+            symbol.symbolLayers.push({
+                type: "CIMSolidStroke",
+                enable: true,
+                color: outline.color,
+                width: 1
+            });
+        }
         return {
             type: "CIMVectorMarker",
             enable: true,
@@ -78,7 +86,7 @@ define(["require", "exports"], function (require, exports) {
             markerGraphics: [
                 {
                     type: "CIMMarkerGraphic",
-                    geometry: exports.cimCircleGeometry,
+                    geometry: cimCircleGeometry,
                     symbol: symbol
                 }
             ],

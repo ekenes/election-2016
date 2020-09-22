@@ -3,7 +3,7 @@ import { CIMSymbol, SimpleFillSymbol } from "esri/symbols";
 import { UniqueValueRenderer } from "esri/rasterRenderers";
 import { years, fieldInfos, dColor, rColor, dColorCIM, oColorCIM, rColorCIM, results } from "./config";
 import { sizeExpressionBase, offsetYTotalExpressionBase, offsetXTotalExpressionBase, offsetXExpressionBase, sizeTotalExpressionBase, offsetYTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, sizeTotalChangeExpressionBase, offsetYExpressionBase } from "./expressionUtils";
-import { cimCircleGeometry } from "./symbolUtils";
+import { createCircleSymbolLayer } from "./symbolUtils";
 
 
 ////////////////////////////////////////////////////
@@ -105,96 +105,30 @@ export const stateResultsRenderer = new SimpleRenderer({
       symbol: {
         type: `CIMPointSymbol`,
         symbolLayers: [
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
+          createCircleSymbolLayer({
+            primitiveName: `democrat-positive-votes`,
             offsetX: -10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
-            primitiveName: `democrat-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: dColorCIM
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true
-          }, {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
+            color: dColorCIM,
+            donutEnabled: false
+          }),
+          createCircleSymbolLayer({
+            primitiveName: `republican-positive-votes`,
             offsetX: 10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
-            primitiveName: `republican-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: rColorCIM
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          },
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
+            color: rColorCIM,
+            donutEnabled: false
+          }),
+          createCircleSymbolLayer({
+            primitiveName: `other-positive-votes`,
             offsetX: 0,
             offsetY: 10,
-            anchorPointUnits: `Relative`,
-            primitiveName: `other-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: oColorCIM,
-                    }, {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: [161, 148, 0, 255],
-                      width: 1
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }
+            color: oColorCIM,
+            donutEnabled: false,
+            outline: {
+              color: [161, 148, 0, 255]
+            }
+          })
         ]
       },
       primitiveOverrides: [
@@ -207,7 +141,8 @@ export const stateResultsRenderer = new SimpleRenderer({
             title: `Democrat votes`,
             expression: `
               var value = $feature.${fieldInfos.democrat.state.next.name};
-            ` + sizeTotalExpressionBase,
+              ${sizeTotalExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -220,7 +155,8 @@ export const stateResultsRenderer = new SimpleRenderer({
             title: `Republican votes`,
             expression: `
               var value = $feature.${fieldInfos.republican.state.next.name};
-            ` + sizeTotalExpressionBase,
+              ${sizeTotalExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -233,7 +169,8 @@ export const stateResultsRenderer = new SimpleRenderer({
             title: `Other votes`,
             expression: `
               var value = $feature.${fieldInfos.other.state.next.name};
-            ` + sizeTotalExpressionBase,
+              ${sizeTotalExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -303,184 +240,51 @@ export const stateChangeRenderer = new SimpleRenderer({
       symbol: {
         type: `CIMPointSymbol`,
         symbolLayers: [
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
-            offsetX: -10,
-            offsetY: 0,
-            anchorPointUnits: `Relative`,
+          createCircleSymbolLayer({
             primitiveName: `democrat-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: dColorCIM
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true
-          },
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
             offsetX: -10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
+            color: dColorCIM,
+            donutEnabled: false
+          }),
+          createCircleSymbolLayer({
             primitiveName: `democrat-negative-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMLineSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: dColorCIM,
-                      width: 2
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }, {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
-            offsetX: 10,
+            offsetX: -10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
+            color: dColorCIM,
+            donutEnabled: true
+          }),
+          createCircleSymbolLayer({
             primitiveName: `republican-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: rColorCIM
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }, {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
             offsetX: 10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
+            color: rColorCIM,
+            donutEnabled: false
+          }),
+          createCircleSymbolLayer({
             primitiveName: `republican-negative-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMLineSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: rColorCIM,
-                      width: 2
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          },
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
-            offsetX: 0,
-            offsetY: 10,
-            anchorPointUnits: `Relative`,
+            offsetX: 10,
+            offsetY: 0,
+            color: rColorCIM,
+            donutEnabled: true
+          }),
+          createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: oColorCIM,
-                    }, {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: [161, 148, 0, 255],
-                      width: 1
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }, {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
             offsetX: 0,
             offsetY: 10,
-            anchorPointUnits: `Relative`,
+            color: oColorCIM,
+            donutEnabled: false,
+            outline: {
+              color: [161, 148, 0, 255]
+            }
+          }),
+          createCircleSymbolLayer({
             primitiveName: `other-negative-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMLineSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: oColorCIM,
-                      width: 2
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }
+            offsetX: 0,
+            offsetY: 10,
+            color: oColorCIM,
+            donutEnabled: true
+          })
         ]
       },
       primitiveOverrides: [
@@ -709,107 +513,30 @@ export const countyResultsRenderer = new SimpleRenderer({
       symbol: {
         type: `CIMPointSymbol`,
         symbolLayers: [
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
-            offsetX: 0,
-            offsetY: 10,
-            anchorPointUnits: `Relative`,
-            primitiveName: `other-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: oColorCIM,
-                    }, {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: [161, 148, 0, 255],
-                      width: 1
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          },
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
+          createCircleSymbolLayer({
+            primitiveName: `democrat-positive-votes`,
             offsetX: -10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
-            primitiveName: `democrat-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: dColorCIM
-                    }, {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: [42, 78, 150, 255],
-                      width: 1
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true
-          },
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
+            color: dColorCIM,
+            donutEnabled: false
+          }),
+          createCircleSymbolLayer({
+            primitiveName: `republican-positive-votes`,
             offsetX: 10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
-            primitiveName: `republican-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: rColorCIM
-                    }, {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: [153, 54, 3, 255],
-                      width: 1
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }
+            color: rColorCIM,
+            donutEnabled: false
+          }),
+          createCircleSymbolLayer({
+            primitiveName: `other-positive-votes`,
+            offsetX: 0,
+            offsetY: 10,
+            color: oColorCIM,
+            donutEnabled: false,
+            outline: {
+              color: [161, 148, 0, 255]
+            }
+          })
         ]
       },
       primitiveOverrides: [
@@ -923,184 +650,51 @@ export const countyChangeRenderer = new SimpleRenderer({
       symbol: {
         type: `CIMPointSymbol`,
         symbolLayers: [
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
-            offsetX: -10,
-            offsetY: 0,
-            anchorPointUnits: `Relative`,
+          createCircleSymbolLayer({
             primitiveName: `democrat-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: dColorCIM
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true
-          },
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
             offsetX: -10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
+            color: dColorCIM,
+            donutEnabled: false
+          }),
+          createCircleSymbolLayer({
             primitiveName: `democrat-negative-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMLineSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: dColorCIM,
-                      width: 2
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }, {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
-            offsetX: 10,
+            offsetX: -10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
+            color: dColorCIM,
+            donutEnabled: true
+          }),
+          createCircleSymbolLayer({
             primitiveName: `republican-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: rColorCIM
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }, {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
             offsetX: 10,
             offsetY: 0,
-            anchorPointUnits: `Relative`,
+            color: rColorCIM,
+            donutEnabled: false
+          }),
+          createCircleSymbolLayer({
             primitiveName: `republican-negative-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMLineSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: rColorCIM,
-                      width: 2
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          },
-          {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
-            offsetX: 0,
-            offsetY: 10,
-            anchorPointUnits: `Relative`,
+            offsetX: 10,
+            offsetY: 0,
+            color: rColorCIM,
+            donutEnabled: true
+          }),
+          createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMPolygonSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidFill`,
-                      enable: true,
-                      color: oColorCIM,
-                    }, {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: [161, 148, 0, 255],
-                      width: 1
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }, {
-            type: `CIMVectorMarker`,
-            enable: true,
-            anchorPoint: { x: 0, y: 0 },
             offsetX: 0,
             offsetY: 10,
-            anchorPointUnits: `Relative`,
+            color: oColorCIM,
+            donutEnabled: false,
+            outline: {
+              color: [161, 148, 0, 255]
+            }
+          }),
+          createCircleSymbolLayer({
             primitiveName: `other-negative-votes`,
-            frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
-            markerGraphics: [
-              {
-                type: `CIMMarkerGraphic`,
-                geometry: cimCircleGeometry,
-                symbol: {
-                  type: `CIMLineSymbol`,
-                  symbolLayers: [
-                    {
-                      type: `CIMSolidStroke`,
-                      enable: true,
-                      color: oColorCIM,
-                      width: 2
-                    }
-                  ]
-                }
-              }
-            ],
-            scaleSymbolsProportionally: true,
-            respectFrame: true,
-
-          }
+            offsetX: 0,
+            offsetY: 10,
+            color: oColorCIM,
+            donutEnabled: true
+          })
         ]
       },
       primitiveOverrides: [

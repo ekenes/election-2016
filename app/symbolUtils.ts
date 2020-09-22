@@ -1,4 +1,4 @@
-export const cimCircleGeometry = {
+const cimCircleGeometry = {
   rings: [
     [
       [8.5, 0.2],
@@ -47,11 +47,14 @@ interface CreateSymbolLayerParams {
   color: number[],
   donutEnabled: boolean,
   offsetX: number,
-  offsetY: number
+  offsetY: number,
+  outline?: {
+    color: number[]
+  }
 }
 
 export function createCircleSymbolLayer (params: CreateSymbolLayerParams){
-  const { primitiveName, color, donutEnabled, offsetX, offsetY } = params;
+  const { primitiveName, color, donutEnabled, offsetX, offsetY, outline } = params;
 
   const symbol = donutEnabled ? {
     type: "CIMLineSymbol",
@@ -74,6 +77,15 @@ export function createCircleSymbolLayer (params: CreateSymbolLayerParams){
     ]
   };
 
+  if(outline && outline.color){
+    symbol.symbolLayers.push({
+      type: `CIMSolidStroke`,
+      enable: true,
+      color: outline.color,
+      width: 1
+    });
+  }
+
   return {
     type: "CIMVectorMarker",
     enable: true,
@@ -92,5 +104,5 @@ export function createCircleSymbolLayer (params: CreateSymbolLayerParams){
     ],
     scaleSymbolsProportionally: true,
     respectFrame: true
-  }
+  } as any;
 }
