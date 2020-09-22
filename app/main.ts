@@ -15,7 +15,7 @@ import { SimpleRenderer } from "esri/renderers";
 import { CIMSymbol, SimpleFillSymbol, TextSymbol } from "esri/symbols";
 import { UniqueValueRenderer } from "esri/rasterRenderers";
 import { TextContent } from "esri/popup/content";
-import { fieldInfos, referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM, oColorCIM, rColorCIM, haloColor, haloSize, scaleThreshold, stateReferenceScale } from "./config";
+import { years, fieldInfos, referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM, oColorCIM, rColorCIM, haloColor, haloSize, scaleThreshold, stateReferenceScale } from "./config";
 import { colorDiffPopupBase, votesNextBase, diffTextBase, diffLabelText, sizeExpressionBase, offsetYTotalExpressionBase, offsetXTotalExpressionBase, offsetXExpressionBase, sizeTotalExpressionBase, offsetYTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, sizeTotalChangeExpressionBase, offsetYExpressionBase } from "./expressionUtils";
 import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
 
@@ -23,13 +23,13 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
   const map = new EsriMap({
     basemap: {
       portalItem: {
-        id: "fbfb62f3599f41e5a77845f863e2872f"
+        id: `fbfb62f3599f41e5a77845f863e2872f`
       }
     }
   });
 
   const view = new MapView({
-    container: "viewDiv",
+    container: `viewDiv`,
     map: map,
     center: [-95, 40],
     scale: referenceScale * 8,
@@ -52,7 +52,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
   });
 
   const statePopupTemplate = new PopupTemplate({
-    title: "{STATE}",
+    title: `{STATE}`,
     fieldInfos: [
       new FieldInfo({
         fieldName: fieldInfos.democrat.state.previous.name,
@@ -115,7 +115,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       new TextContent({
         text: `
           <div class="table-container">
-            Votes in 2016 and the change from 2012
+            Votes in ${years.next} and the change from ${years.previous}
             <br/>
             <br/>
             <table class="esri-widget popup">
@@ -130,8 +130,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     ],
     expressionInfos: [
       new ExpressionInfo({
-        title: "winner % of state votes",
-        name: "winner-percent-state-votes",
+        title: `winner % of state votes`,
+        name: `winner-percent-state-votes`,
         expression: `
           ${votesNextBase}
 
@@ -140,8 +140,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "winner votes",
-        name: "winner-votes",
+        title: `winner votes`,
+        name: `winner-votes`,
         expression: `
           ${votesNextBase}
 
@@ -149,8 +149,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "winner-color",
-        name: "winner-color",
+        title: `winner-color`,
+        name: `winner-color`,
         expression: `
           ${votesNextBase}
 
@@ -163,8 +163,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "winner",
-        name: "winner",
+        title: `winner`,
+        name: `winner`,
         expression: `
           ${votesNextBase}
 
@@ -177,8 +177,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Democrat change from 2012",
-        name: "dem12change16",
+        title: `Democrat change from ${years.previous}`,
+        name: `dem12change16`,
         expression: `
           var votesNext = $feature.${fieldInfos.democrat.state.next.name};
           var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
@@ -187,8 +187,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Republican change from 2012",
-        name: "rep12change16",
+        title: `Republican change from ${years.previous}`,
+        name: `rep12change16`,
         expression: `
           var votesNext = $feature.${fieldInfos.republican.state.next.name};
           var votesPrevious = $feature.${fieldInfos.republican.state.previous.name};
@@ -197,8 +197,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Other change from 2012",
-        name: "oth12change16",
+        title: `Other change from ${years.previous}`,
+        name: `oth12change16`,
         expression: `
           var votesNext = $feature.${fieldInfos.other.state.next.name};
           var votesPrevious = $feature.${fieldInfos.other.state.previous.name};
@@ -207,8 +207,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Democrat diff from 2012",
-        name: "dem12diff16",
+        title: `Democrat diff from ${years.previous}`,
+        name: `dem12diff16`,
         expression: `
           var votesNext = $feature.${fieldInfos.democrat.state.next.name};
           var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
@@ -217,8 +217,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Republican diff from 2012",
-        name: "rep12diff16",
+        title: `Republican diff from ${years.previous}`,
+        name: `rep12diff16`,
         expression: `
           var votesNext = $feature.${fieldInfos.republican.state.next.name};
           var votesPrevious = $feature.${fieldInfos.republican.state.previous.name};
@@ -227,8 +227,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Other diff from 2012",
-        name: "oth12diff16",
+        title: `Other diff from ${years.previous}`,
+        name: `oth12diff16`,
         expression: `
           var votesNext = $feature.${fieldInfos.other.state.next.name};
           var votesPrevious = $feature.${fieldInfos.other.state.previous.name};
@@ -237,8 +237,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "change-color",
-        name: "dem-change-color",
+        title: `change-color`,
+        name: `dem-change-color`,
         expression: `
           var votesNext = $feature.${fieldInfos.democrat.state.next.name};
           var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
@@ -246,8 +246,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "change-color",
-        name: "rep-change-color",
+        title: `change-color`,
+        name: `rep-change-color`,
         expression: `
           var votesNext = $feature.${fieldInfos.republican.state.next.name};
           var votesPrevious = $feature.${fieldInfos.republican.state.previous.name};
@@ -255,8 +255,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "change-color",
-        name: "oth-change-color",
+        title: `change-color`,
+        name: `oth-change-color`,
         expression: `
           var votesNext = $feature.${fieldInfos.other.state.next.name};
           var votesPrevious = $feature.${fieldInfos.other.state.previous.name};
@@ -264,8 +264,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "winner-margin",
-        name: "winner-margin",
+        title: `winner-margin`,
+        name: `winner-margin`,
         expression: `
           var fields = [
             $feature.${fieldInfos.democrat.state.next.name},
@@ -285,35 +285,35 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
 
   const polygonLayer = new FeatureLayer({
     portalItem: {
-      id: "4f03bcde997e4badbef186d0c05f5a9a"
+      id: `4f03bcde997e4badbef186d0c05f5a9a`
     },
-    title: "Results by state",
+    title: `Results by state`,
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
         var dem = $feature.${fieldInfos.democrat.state.next.name};
-        var rep16 = $feature.${fieldInfos.republican.state.next.name};
-        var oth16 = $feature.${fieldInfos.other.state.next.name};
+        var rep = $feature.${fieldInfos.republican.state.next.name};
+        var oth = $feature.${fieldInfos.other.state.next.name};
 
-        var winner16 = Decode( Max([dem, rep16, oth16]),
+        var winner = Decode( Max([dem, rep, oth]),
           dem, 'Democrat',
-          rep16, 'Republican',
-          oth16, 'Other',
+          rep, 'Republican',
+          oth, 'Other',
         'n/a' );
 
-        return winner16
+        return winner;
       `,
       defaultSymbol: null,
       uniqueValueInfos: [{
-        value: "Republican",
-        label: "R - Trump (304)",
+        value: `Republican`,
+        label: `R - Trump (304)`,
         symbol: new SimpleFillSymbol({
           color: rColor,
           outline: null
         })
       }, {
-        value: "Democrat",
-        label: "D - Clinton (227)",
+        value: `Democrat`,
+        label: `D - Clinton (227)`,
         symbol: new SimpleFillSymbol({
           color: dColor,
           outline: null
@@ -326,9 +326,9 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
 
   const polygonChangeLayer = new FeatureLayer({
     portalItem: {
-      id: "4f03bcde997e4badbef186d0c05f5a9a"
+      id: `4f03bcde997e4badbef186d0c05f5a9a`
     },
-    title: "Swing states",
+    title: `Swing states`,
     opacity: 0.3,
     renderer: new UniqueValueRenderer({
       valueExpression: `
@@ -337,9 +337,9 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         var othPrevious = $feature.${fieldInfos.other.state.previous.name};
 
         var winner12 = Decode( Max([demPrevious, repPrevious, othPrevious]),
-          demPrevious, 'Democrat 2012',
-          repPrevious, 'Republican 2012',
-          othPrevious, 'Other 2012',
+          demPrevious, 'Democrat ${years.previous}',
+          repPrevious, 'Republican ${years.previous}',
+          othPrevious, 'Other ${years.previous}',
         'n/a' );
 
         var demNext = $feature.${fieldInfos.democrat.state.next.name};
@@ -347,24 +347,24 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         var othNext = $feature.${fieldInfos.other.state.next.name};
 
         var winner16 = Decode( Max([demNext, repNext, othNext]),
-        demNext, 'Democrat 2016',
-        repNext, 'Republican 2016',
-        othNext, 'Other 2016',
+        demNext, 'Democrat ${years.next}',
+        repNext, 'Republican ${years.next}',
+        othNext, 'Other ${years.next}',
         'n/a' );
 
         return Concatenate([winner12, winner16], ", ");
       `,
       defaultSymbol: null,
       uniqueValueInfos: [{
-        value: "Democrat 2012, Republican 2016",
-        label: "Flipped Republican in 2016",
+        value: `Democrat ${years.previous}, Republican ${years.next}`,
+        label: `Flipped Republican in ${years.next}`,
         symbol: new SimpleFillSymbol({
           color: rColor,
           outline: null
         })
       }, {
-        value: "Republican 2012, Democrat 2016",
-        label: "Flipped Democrat in 2016",
+        value: `Republican ${years.previous}, Democrat ${years.next}`,
+        label: `Flipped Democrat in ${years.next}`,
         symbol: new SimpleFillSymbol({
           color: dColor,
           outline: null
@@ -376,11 +376,11 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
   });
 
   const popupTemplate = new PopupTemplate({
-    title: "{Name_1}, {STATE_NAME}",
+    title: `{Name_1}, {STATE_NAME}`,
     fieldInfos: [
       new FieldInfo({
         fieldName: fieldInfos.democrat.county.previous.name,
-        label: "2012 Democrat votes",
+        label: `${years.previous} Democrat votes`,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
@@ -388,7 +388,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       }),
       new FieldInfo({
         fieldName: fieldInfos.republican.county.previous.name,
-        label: "2012 Republican votes",
+        label: `${years.previous} Republican votes`,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
@@ -396,7 +396,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       }),
       new FieldInfo({
         fieldName: fieldInfos.other.county.previous.name,
-        label: "2012 Other votes",
+        label: `${years.previous} Other votes`,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
@@ -404,7 +404,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       }),
       new FieldInfo({
         fieldName: fieldInfos.democrat.county.next.name,
-        label: "2016 Democrat votes",
+        label: `${years.next} Democrat votes`,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
@@ -412,7 +412,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       }),
       new FieldInfo({
         fieldName: fieldInfos.republican.county.next.name,
-        label: "2016 Republican votes",
+        label: `${years.next} Republican votes`,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
@@ -420,7 +420,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       }),
       new FieldInfo({
         fieldName: fieldInfos.other.county.next.name,
-        label: "2016 Other votes",
+        label: `${years.next} Other votes`,
         format: new FieldInfoFormat({
           places: 0,
           digitSeparator: true
@@ -439,7 +439,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
       new TextContent({
         text: `
           <div class="table-container">
-            Votes in 2016 and the change from 2012
+            Votes in ${years.next} and the change from ${years.previous}
             <br/>
             <br/>
             <table class="esri-widget popup">
@@ -454,8 +454,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     ],
     expressionInfos: [
       new ExpressionInfo({
-        title: "winner % of state votes",
-        name: "winner-percent-state-votes",
+        title: `winner % of state votes`,
+        name: `winner-percent-state-votes`,
         expression: `
           var dem = $feature.${fieldInfos.democrat.county.next.name};
           var rep = $feature.${fieldInfos.republican.county.next.name};
@@ -467,8 +467,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "winner votes",
-        name: "winner-votes",
+        title: `winner votes`,
+        name: `winner-votes`,
         expression: `
           var dem = $feature.${fieldInfos.democrat.county.next.name};
           var rep = $feature.${fieldInfos.republican.county.next.name};
@@ -479,8 +479,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "winner-color",
-        name: "winner-color",
+        title: `winner-color`,
+        name: `winner-color`,
         expression: `
           var dem = $feature.${fieldInfos.democrat.county.next.name};
           var rep = $feature.${fieldInfos.republican.county.next.name};
@@ -496,8 +496,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "winner",
-        name: "winner",
+        title: `winner`,
+        name: `winner`,
         expression: `
           var dem = $feature.${fieldInfos.democrat.county.next.name};
           var rep = $feature.${fieldInfos.republican.county.next.name};
@@ -513,8 +513,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Democrat change from 2012",
-        name: "dem12change16",
+        title: `Democrat change from ${years.previous}`,
+        name: `dem12change16`,
         expression: `
           var votesNext = $feature.${fieldInfos.democrat.county.next.name};
           var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
@@ -523,8 +523,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Republican change from 2012",
-        name: "rep12change16",
+        title: `Republican change from ${years.previous}`,
+        name: `rep12change16`,
         expression: `
           var votesNext = $feature.${fieldInfos.republican.county.next.name};
           var votesPrevious = $feature.${fieldInfos.republican.county.previous.name};
@@ -533,8 +533,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Other change from 2012",
-        name: "oth12change16",
+        title: `Other change from ${years.previous}`,
+        name: `oth12change16`,
         expression: `
           var votesNext = $feature.${fieldInfos.other.county.next.name};
           var votesPrevious = $feature.${fieldInfos.other.county.previous.name};
@@ -543,8 +543,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Democrat diff from 2012",
-        name: "dem12diff16",
+        title: `Democrat diff from ${years.previous}`,
+        name: `dem12diff16`,
         expression: `
           var votesNext = $feature.${fieldInfos.democrat.county.next.name};
           var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
@@ -556,8 +556,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Republican diff from 2012",
-        name: "rep12diff16",
+        title: `Republican diff from ${years.previous}`,
+        name: `rep12diff16`,
         expression: `
           var votesNext = $feature.${fieldInfos.republican.county.next.name};
           var votesPrevious = $feature.${fieldInfos.republican.county.previous.name};
@@ -569,8 +569,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "Other diff from 2012",
-        name: "oth12diff16",
+        title: `Other diff from ${years.previous}`,
+        name: `oth12diff16`,
         expression: `
           var votesNext = $feature.${fieldInfos.other.county.next.name};
           var votesPrevious = $feature.${fieldInfos.other.county.previous.name};
@@ -582,8 +582,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "change-color",
-        name: "dem-change-color",
+        title: `change-color`,
+        name: `dem-change-color`,
         expression: `
           var votesNext = $feature.${fieldInfos.democrat.county.next.name};
           var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
@@ -591,8 +591,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "change-color",
-        name: "rep-change-color",
+        title: `change-color`,
+        name: `rep-change-color`,
         expression: `
           var votesNext = $feature.${fieldInfos.republican.county.next.name};
           var votesPrevious = $feature.${fieldInfos.republican.county.previous.name};
@@ -600,8 +600,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "change-color",
-        name: "oth-change-color",
+        title: `change-color`,
+        name: `oth-change-color`,
         expression: `
           var votesNext = $feature.${fieldInfos.other.county.next.name};
           var votesPrevious = $feature.${fieldInfos.other.county.previous.name};
@@ -609,8 +609,8 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
         `
       }),
       new ExpressionInfo({
-        title: "winner-margin",
-        name: "winner-margin",
+        title: `winner-margin`,
+        name: `winner-margin`,
         expression: `
           var fields = [
             $feature.${fieldInfos.democrat.county.next.name},
@@ -631,34 +631,34 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
   const changeLayer = new FeatureLayer({
     minScale: scaleThreshold,
     portalItem: {
-      id: "ba48def248cb45bebb234aa346c97676"
+      id: `ba48def248cb45bebb234aa346c97676`
     },
     legendEnabled: false,
     renderer: new SimpleRenderer({
       symbol: new CIMSymbol({
         data: {
-          type: "CIMSymbolReference",
+          type: `CIMSymbolReference`,
           symbol: {
-            type: "CIMPointSymbol",
+            type: `CIMPointSymbol`,
             symbolLayers: [
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: -10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "democrat-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `democrat-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
+                    type: `CIMMarkerGraphic`,
                     geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: dColorCIM
                         }
@@ -670,23 +670,23 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                 respectFrame: true
               },
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: -10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "democrat-negative-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `democrat-negative-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
+                    type: `CIMMarkerGraphic`,
                     geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMLineSymbol",
+                      type: `CIMLineSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: dColorCIM,
                           width: 2
@@ -699,23 +699,23 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                 respectFrame: true,
 
               }, {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "republican-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `republican-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
+                    type: `CIMMarkerGraphic`,
                     geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: rColorCIM
                         }
@@ -727,23 +727,23 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                 respectFrame: true,
 
               }, {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 10,
                 offsetY: 0,
-                anchorPointUnits: "Relative",
-                primitiveName: "republican-negative-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `republican-negative-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
+                    type: `CIMMarkerGraphic`,
                     geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMLineSymbol",
+                      type: `CIMLineSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: rColorCIM,
                           width: 2
@@ -757,27 +757,27 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
 
               },
               {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 0,
                 offsetY: 10,
-                anchorPointUnits: "Relative",
-                primitiveName: "other-positive-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `other-positive-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
+                    type: `CIMMarkerGraphic`,
                     geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMPolygonSymbol",
+                      type: `CIMPolygonSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidFill",
+                          type: `CIMSolidFill`,
                           enable: true,
                           color: oColorCIM,
                         }, {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: [161, 148, 0, 255],
                           width: 1
@@ -790,23 +790,23 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                 respectFrame: true,
 
               }, {
-                type: "CIMVectorMarker",
+                type: `CIMVectorMarker`,
                 enable: true,
                 anchorPoint: { x: 0, y: 0 },
                 offsetX: 0,
                 offsetY: 10,
-                anchorPointUnits: "Relative",
-                primitiveName: "other-negative-votes",
+                anchorPointUnits: `Relative`,
+                primitiveName: `other-negative-votes`,
                 frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },
                 markerGraphics: [
                   {
-                    type: "CIMMarkerGraphic",
+                    type: `CIMMarkerGraphic`,
                     geometry: cimCircleGeometry,
                     symbol: {
-                      type: "CIMLineSymbol",
+                      type: `CIMLineSymbol`,
                       symbolLayers: [
                         {
-                          type: "CIMSolidStroke",
+                          type: `CIMSolidStroke`,
                           enable: true,
                           color: oColorCIM,
                           width: 2
@@ -823,12 +823,12 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
           },
           primitiveOverrides: [
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Democrat votes`,
                 expression: `
                   var votesNext = $feature.${fieldInfos.democrat.county.next.name};
                   var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
@@ -837,16 +837,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${sizeExpressionBase}
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-negative-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-negative-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Democrat votes`,
                 expression: `
                   var votesNext = $feature.${fieldInfos.democrat.county.next.name};
                   var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
@@ -855,16 +855,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${sizeExpressionBase}
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Republican votes`,
                 expression: `
                   var rep16 = $feature.${fieldInfos.republican.county.next.name};
                   var rep12 = $feature.${fieldInfos.republican.county.previous.name};
@@ -873,16 +873,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${sizeExpressionBase}
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-negative-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-negative-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Republican votes`,
                 expression: `
                   var rep16 = $feature.${fieldInfos.republican.county.next.name};
                   var rep12 = $feature.${fieldInfos.republican.county.previous.name};
@@ -891,16 +891,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${sizeExpressionBase}
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-positive-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-positive-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Other votes`,
                 expression: `
                   var oth16 = $feature.${fieldInfos.other.county.next.name};
                   var oth12 = $feature.${fieldInfos.other.county.previous.name};
@@ -909,16 +909,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${sizeExpressionBase}
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-negative-votes",
-              propertyName: "Size",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-negative-votes`,
+              propertyName: `Size`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Other votes`,
                 expression: `
                   var oth16 = $feature.${fieldInfos.other.county.next.name};
                   var oth12 = $feature.${fieldInfos.other.county.previous.name};
@@ -927,19 +927,19 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
                   ${sizeExpressionBase}
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
 
              // offset overrides
 
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-positive-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-positive-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Democrat votes`,
                 expression: `
                   var votesNext = $feature.${fieldInfos.democrat.county.next.name};
                   var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
@@ -949,16 +949,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   ${offsetXExpressionBase}
                   return offset * -1;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "democrat-negative-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `democrat-negative-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Democrat votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Democrat votes`,
                 expression: `
                   var votesNext = $feature.${fieldInfos.democrat.county.next.name};
                   var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
@@ -968,16 +968,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   ${offsetXExpressionBase}
                   return offset * -1;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-positive-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-positive-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Republican votes`,
                 expression: `
                   var rep16 = $feature.${fieldInfos.republican.county.next.name};
                   var rep12 = $feature.${fieldInfos.republican.county.previous.name};
@@ -987,16 +987,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   ${offsetXExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "republican-negative-votes",
-              propertyName: "OffsetX",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `republican-negative-votes`,
+              propertyName: `OffsetX`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Republican votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Republican votes`,
                 expression: `
                   var rep16 = $feature.${fieldInfos.republican.county.next.name};
                   var rep12 = $feature.${fieldInfos.republican.county.previous.name};
@@ -1006,16 +1006,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   ${offsetXExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-positive-votes",
-              propertyName: "OffsetY",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-positive-votes`,
+              propertyName: `OffsetY`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Increase in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Increase in Other votes`,
                 expression: `
                   var oth16 = $feature.${fieldInfos.other.county.next.name};
                   var oth12 = $feature.${fieldInfos.other.county.previous.name};
@@ -1025,16 +1025,16 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   ${offsetYExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             },
             {
-              type: "CIMPrimitiveOverride",
-              primitiveName: "other-negative-votes",
-              propertyName: "OffsetY",
+              type: `CIMPrimitiveOverride`,
+              primitiveName: `other-negative-votes`,
+              propertyName: `OffsetY`,
               valueExpressionInfo: {
-                type: "CIMExpressionInfo",
-                title: "Decrease in Other votes",
+                type: `CIMExpressionInfo`,
+                title: `Decrease in Other votes`,
                 expression: `
                   var oth16 = $feature.${fieldInfos.other.county.next.name};
                   var oth12 = $feature.${fieldInfos.other.county.previous.name};
@@ -1044,7 +1044,7 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
                   ${offsetYExpressionBase}
                   return offset;
                 `,
-                returnType: "Default"
+                returnType: `Default`
               }
             }
           ]
@@ -3393,36 +3393,36 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
 
   new Legend({
     view,
-    container: "change-legend-container",
+    container: `change-legend-container`,
     layerInfos: [{
       layer: polygonChangeLayer
     }] as any
   });
-  view.ui.add("change-legend", "bottom-left");
+  view.ui.add(`change-legend`, `bottom-left`);
 
   new Legend({
     view,
-    container: "total-legend-container",
+    container: `total-legend-container`,
     layerInfos: [{
       layer: polygonLayer
     }] as any
   });
 
-  view.ui.add(changeLegend, "bottom-left");
-  view.ui.add(totalLegend, "bottom-right");
-  view.ui.add(infoToggle, "top-left");
+  view.ui.add(changeLegend, `bottom-left`);
+  view.ui.add(totalLegend, `bottom-right`);
+  view.ui.add(infoToggle, `top-left`);
 
   let visibilityEnabled = true;
   const toggleInfoVisibility = function () {
-    changeLegend.style.display = changeLegend.style.display === "none" ? "block" : "none";
-    totalLegend.style.display = totalLegend.style.display === "none" ? "block" : "none";
+    changeLegend.style.display = changeLegend.style.display === `none` ? `block` : `none`;
+    totalLegend.style.display = totalLegend.style.display === `none` ? `block` : `none`;
     visibilityEnabled = !visibilityEnabled;
     updateLegendOpacity();
   }
 
-  infoToggle.addEventListener("click", toggleInfoVisibility);
+  infoToggle.addEventListener(`click`, toggleInfoVisibility);
 
-  swipe.watch( "position", updateLegendOpacity);
+  swipe.watch( `position`, updateLegendOpacity);
 
   function updateLegendOpacity() {
     if (!visibilityEnabled){
@@ -3431,22 +3431,22 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
 
     const threshold = 50;
     if (swipe.position <= 85){
-      totalLegend.style.display = "block";
+      totalLegend.style.display = `block`;
       const opacity = (35 - (swipe.position - threshold)) * 3.5;
       totalLegend.style.opacity = ( opacity * 0.01 ).toString();
     } else {
-      totalLegend.style.display = "none";
+      totalLegend.style.display = `none`;
     }
 
     if (swipe.position <= 50){
-      changeLegend.style.display = "block";
+      changeLegend.style.display = `block`;
       const opacity = (35 - (threshold - swipe.position)) * 3.5;
       changeLegend.style.opacity = ( opacity * 0.01 ).toString();
     }
 
     if (swipe.position <= 15){
-      changeLegend.style.opacity = "0";
-      changeLegend.style.display = "none";
+      changeLegend.style.opacity = `0`;
+      changeLegend.style.display = `none`;
     }
   }
 
@@ -3457,24 +3457,24 @@ import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
     totalLegend.style.height = null;
     totalLegend.style.overflow = null;
 
-    if(view.heightBreakpoint === "small"){
-      changeLegend.style.height = "450px";
-      changeLegend.style.overflow = "auto";
+    if(view.heightBreakpoint === `small`){
+      changeLegend.style.height = `450px`;
+      changeLegend.style.overflow = `auto`;
 
-      totalLegend.style.height = "450px";
-      totalLegend.style.overflow = "auto";
+      totalLegend.style.height = `450px`;
+      totalLegend.style.overflow = `auto`;
 
     }
-    if (view.heightBreakpoint === "xsmall"){
-      changeLegend.style.height = "300px";
-      changeLegend.style.overflow = "auto";
+    if (view.heightBreakpoint === `xsmall`){
+      changeLegend.style.height = `300px`;
+      changeLegend.style.overflow = `auto`;
 
-      totalLegend.style.height = "300px";
-      totalLegend.style.overflow = "auto";
+      totalLegend.style.height = `300px`;
+      totalLegend.style.overflow = `auto`;
     }
   }
 
-  view.watch("heightBreakpoint", updateLegendHeight);
+  view.watch(`heightBreakpoint`, updateLegendHeight);
   await view.when(updateLegendHeight);
 
 })();
