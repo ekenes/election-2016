@@ -1,23 +1,11 @@
-import EsriMap = require("esri/Map");
-import MapView = require("esri/views/MapView");
-import FeatureLayer = require("esri/layers/FeatureLayer");
 import PopupTemplate = require("esri/PopupTemplate");
 import ExpressionInfo = require("esri/popup/ExpressionInfo");
 import FieldInfo = require("esri/popup/FieldInfo");
 import FieldInfoFormat = require("esri/popup/support/FieldInfoFormat");
-import Swipe = require("esri/widgets/Swipe");
-import Legend = require("esri/widgets/Legend");
-import LabelClass = require("esri/layers/support/LabelClass");
-import Color = require("esri/Color");
-import Font = require("esri/symbols/Font");
 
-import { SimpleRenderer } from "esri/renderers";
-import { CIMSymbol, SimpleFillSymbol, TextSymbol } from "esri/symbols";
-import { UniqueValueRenderer } from "esri/rasterRenderers";
 import { TextContent } from "esri/popup/content";
-import { years, fieldInfos, referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM, oColorCIM, rColorCIM, haloColor, haloSize, scaleThreshold, stateReferenceScale, results } from "./config";
-import { colorDiffPopupBase, votesNextBase, diffTextBase, diffLabelText, sizeExpressionBase, offsetYTotalExpressionBase, offsetXTotalExpressionBase, offsetXExpressionBase, sizeTotalExpressionBase, offsetYTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, sizeTotalChangeExpressionBase, offsetYExpressionBase } from "./expressionUtils";
-import { createCircleSymbolLayer, cimCircleGeometry } from "./symbolUtils";
+import { years, fieldInfos, dColor, rColor, oTextColor, oColor } from "./config";
+import { colorDiffPopupBase, votesNextBase, diffTextBase } from "./expressionUtils";
 
 ////////////////////////////////////////////////////
 //

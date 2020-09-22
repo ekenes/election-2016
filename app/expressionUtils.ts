@@ -1,4 +1,4 @@
-import { fieldInfos, referenceScale, maxScale, dColor, rColor, oTextColor, oColor, dColorCIM, oColorCIM, rColorCIM, haloColor, haloSize, scaleThreshold, stateReferenceScale } from "./config";
+import { fieldInfos, referenceScale, stateReferenceScale } from "./config";
 
 export const votesNextBase = `
   var dem = $feature.${fieldInfos.democrat.county.next.name};
