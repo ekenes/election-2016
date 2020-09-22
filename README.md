@@ -8,7 +8,7 @@ And how they changed from the 2012 election.
 
 ![change-map](https://ekenes.github.io/election-2016/assets/change-map.png)
 
-Each symbol consists of three circles offset from one another, each colored based on the party they represent.
+Each symbol consists of three circles offset from one another, each colored based on the party it represents.
 
 ![symbol-overview](https://ekenes.github.io/election-2016/assets/party-colors.png)
 
