@@ -63,22 +63,19 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                     symbolLayers: [
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "democrat-positive-votes",
-                            offsetX: -10,
-                            offsetY: 0,
+                            anchorPoint: { x: 0.48, y: 0 },
                             color: config_1.dColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "republican-positive-votes",
-                            offsetX: 10,
-                            offsetY: 0,
+                            anchorPoint: { x: -0.48, y: 0 },
                             color: config_1.rColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-positive-votes",
-                            offsetX: 0,
-                            offsetY: 10,
+                            anchorPoint: { x: 0, y: -0.7 },
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
@@ -120,40 +117,6 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                             expression: "\n              var value = $feature." + config_1.fieldInfos.other.state.next.name + ";\n              " + expressionUtils_1.sizeTotalExpressionBase + "\n            ",
                             returnType: "Default"
                         }
-                    },
-                    // offset overrides
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "democrat-positive-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Democrat votes",
-                            expression: "\n              var value = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n              " + expressionUtils_1.offsetXTotalExpressionBase + "\n              return offset * -1;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "republican-positive-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Republican votes",
-                            expression: "\n              var value = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n              " + expressionUtils_1.offsetXTotalExpressionBase + "\n              return offset;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "other-positive-votes",
-                        propertyName: "OffsetY",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Other votes",
-                            expression: "\n              var value = $feature." + config_1.fieldInfos.other.state.next.name + ";\n              " + expressionUtils_1.offsetYTotalExpressionBase + "\n              return offset;\n            ",
-                            returnType: "Default"
-                        }
                     }
                 ]
             }
@@ -173,36 +136,31 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                     symbolLayers: [
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "democrat-positive-votes",
-                            offsetX: -10,
-                            offsetY: 0,
+                            anchorPoint: { x: 0.5, y: 0 },
                             color: config_1.dColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "democrat-negative-votes",
-                            offsetX: -10,
-                            offsetY: 0,
+                            anchorPoint: { x: 0.5, y: 0 },
                             color: config_1.dColorCIM,
                             donutEnabled: true
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "republican-positive-votes",
-                            offsetX: 10,
-                            offsetY: 0,
+                            anchorPoint: { x: -0.5, y: 0 },
                             color: config_1.rColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "republican-negative-votes",
-                            offsetX: 10,
-                            offsetY: 0,
+                            anchorPoint: { x: -0.5, y: 0 },
                             color: config_1.rColorCIM,
                             donutEnabled: true
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-positive-votes",
-                            offsetX: 0,
-                            offsetY: 10,
+                            anchorPoint: { x: 0, y: -0.7 },
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
@@ -211,8 +169,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-negative-votes",
-                            offsetX: 0,
-                            offsetY: 10,
+                            anchorPoint: { x: 0, y: -0.7 },
                             color: config_1.oColorCIM,
                             donutEnabled: true
                         })
@@ -226,7 +183,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         valueExpressionInfo: {
                             type: "CIMExpressionInfo",
                             title: "Increase in Democrat votes",
-                            expression: "\n              var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n              var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n              var change = votesNext - votesPrevious;\n              var value = IIF( change > 0, change, 0);\n            " + expressionUtils_1.sizeTotalChangeExpressionBase,
+                            expression: "\n              var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n              var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n              var change = votesNext - votesPrevious;\n              var value = IIF( change > 0, change, 0);\n              " + expressionUtils_1.sizeTotalChangeExpressionBase + "\n            ",
                             returnType: "Default"
                         }
                     },
@@ -237,7 +194,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         valueExpressionInfo: {
                             type: "CIMExpressionInfo",
                             title: "Decrease in Democrat votes",
-                            expression: "\n              var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n              var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n              var change = votesNext - votesPrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n            " + expressionUtils_1.sizeTotalChangeExpressionBase,
+                            expression: "\n              var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n              var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n              var change = votesNext - votesPrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              " + expressionUtils_1.sizeTotalChangeExpressionBase + "\n            ",
                             returnType: "Default"
                         }
                     },
@@ -248,7 +205,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         valueExpressionInfo: {
                             type: "CIMExpressionInfo",
                             title: "Increase in Republican votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change > 0, change, 0);\n            " + expressionUtils_1.sizeTotalChangeExpressionBase,
+                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change > 0, change, 0);\n              " + expressionUtils_1.sizeTotalChangeExpressionBase + "\n            ",
                             returnType: "Default"
                         }
                     },
@@ -259,7 +216,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         valueExpressionInfo: {
                             type: "CIMExpressionInfo",
                             title: "Decrease in Republican votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n            " + expressionUtils_1.sizeTotalChangeExpressionBase,
+                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              " + expressionUtils_1.sizeTotalChangeExpressionBase + "\n            ",
                             returnType: "Default"
                         }
                     },
@@ -270,7 +227,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         valueExpressionInfo: {
                             type: "CIMExpressionInfo",
                             title: "Increase in Other votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change > 0, change, 0);\n            " + expressionUtils_1.sizeTotalChangeExpressionBase,
+                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change > 0, change, 0);\n              " + expressionUtils_1.sizeTotalChangeExpressionBase + "\n            ",
                             returnType: "Default"
                         }
                     },
@@ -281,74 +238,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         valueExpressionInfo: {
                             type: "CIMExpressionInfo",
                             title: "Decrease in Other votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n            " + expressionUtils_1.sizeTotalChangeExpressionBase,
-                            returnType: "Default"
-                        }
-                    },
-                    // offset overrides
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "democrat-positive-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Democrat votes",
-                            expression: "\n              var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n              var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n              var change = votesNext - votesPrevious;\n              var value = IIF( change > 0, change, 0);\n              " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n              return offset * -1;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "democrat-negative-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Decrease in Democrat votes",
-                            expression: "\n              var votesNext = $feature." + config_1.fieldInfos.democrat.state.next.name + ";\n              var votesPrevious = $feature." + config_1.fieldInfos.democrat.state.previous.name + ";\n              var change = votesNext - votesPrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n              return offset * -1;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "republican-positive-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Republican votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change > 0, change, 0);\n              " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n              return offset;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "republican-negative-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Decrease in Republican votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.republican.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.republican.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              " + expressionUtils_1.offsetXTotalChangeExpressionBase + "\n              return offset;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "other-positive-votes",
-                        propertyName: "OffsetY",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Other votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change > 0, change, 0);\n              " + expressionUtils_1.offsetYTotalChangeExpressionBase + "\n              return offset;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "other-negative-votes",
-                        propertyName: "OffsetY",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Decrease in Other votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              " + expressionUtils_1.offsetYTotalChangeExpressionBase + "\n              return offset;\n            ",
+                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.other.state.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.other.state.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              " + expressionUtils_1.sizeTotalChangeExpressionBase + "\n            ",
                             returnType: "Default"
                         }
                     }
@@ -370,22 +260,19 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                     symbolLayers: [
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "democrat-positive-votes",
-                            offsetX: -10,
-                            offsetY: 0,
+                            anchorPoint: { x: 0.5, y: 0 },
                             color: config_1.dColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "republican-positive-votes",
-                            offsetX: 10,
-                            offsetY: 0,
+                            anchorPoint: { x: -0.5, y: 0 },
                             color: config_1.rColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-positive-votes",
-                            offsetX: 0,
-                            offsetY: 10,
+                            anchorPoint: { x: 0, y: -0.7 },
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
@@ -402,7 +289,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         valueExpressionInfo: {
                             type: "CIMExpressionInfo",
                             title: "Increase in Democrat votes",
-                            expression: "\n              var percentStateVotes = ( $feature." + config_1.fieldInfos.democrat.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n            " + expressionUtils_1.sizeExpressionBase,
+                            expression: "\n              var percentStateVotes = ( $feature." + config_1.fieldInfos.democrat.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.sizeExpressionBase + "\n            ",
                             returnType: "Default"
                         }
                     },
@@ -413,7 +300,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         valueExpressionInfo: {
                             type: "CIMExpressionInfo",
                             title: "Increase in Republican votes",
-                            expression: "\n              var percentStateVotes = ( $feature." + config_1.fieldInfos.republican.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n            " + expressionUtils_1.sizeExpressionBase,
+                            expression: "\n              var percentStateVotes = ( $feature." + config_1.fieldInfos.republican.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.sizeExpressionBase + "\n            ",
                             returnType: "Default"
                         }
                     },
@@ -424,41 +311,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         valueExpressionInfo: {
                             type: "CIMExpressionInfo",
                             title: "Increase in Other votes",
-                            expression: "\n              var percentStateVotes = ( $feature." + config_1.fieldInfos.other.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n            " + expressionUtils_1.sizeExpressionBase,
-                            returnType: "Default"
-                        }
-                    },
-                    // offset overrides
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "democrat-positive-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Democrat votes",
-                            expression: "\n              var percentStateVotes = ( $feature." + config_1.fieldInfos.democrat.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n              " + expressionUtils_1.offsetXExpressionBase + "\n              return offset * -1;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "republican-positive-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Republican votes",
-                            expression: "\n              var percentStateVotes = ( $feature." + config_1.fieldInfos.republican.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.offsetXExpressionBase + "\n              return offset;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "other-positive-votes",
-                        propertyName: "OffsetY",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Other votes",
-                            expression: "\n              var percentStateVotes = ( $feature." + config_1.fieldInfos.other.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n\n              " + expressionUtils_1.offsetYExpressionBase + "\n              return offset;\n            ",
+                            expression: "\n              var percentStateVotes = ( $feature." + config_1.fieldInfos.other.county.next.name + " / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.sizeExpressionBase + "\n            ",
                             returnType: "Default"
                         }
                     }
@@ -480,36 +333,31 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                     symbolLayers: [
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "democrat-positive-votes",
-                            offsetX: -10,
-                            offsetY: 0,
+                            anchorPoint: { x: 0.5, y: 0 },
                             color: config_1.dColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "democrat-negative-votes",
-                            offsetX: -10,
-                            offsetY: 0,
+                            anchorPoint: { x: 0.5, y: 0 },
                             color: config_1.dColorCIM,
                             donutEnabled: true
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "republican-positive-votes",
-                            offsetX: 10,
-                            offsetY: 0,
+                            anchorPoint: { x: -0.5, y: 0 },
                             color: config_1.rColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "republican-negative-votes",
-                            offsetX: 10,
-                            offsetY: 0,
+                            anchorPoint: { x: -0.5, y: 0 },
                             color: config_1.rColorCIM,
                             donutEnabled: true
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-positive-votes",
-                            offsetX: 0,
-                            offsetY: 10,
+                            anchorPoint: { x: 0, y: -0.7 },
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
@@ -518,8 +366,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-negative-votes",
-                            offsetX: 0,
-                            offsetY: 10,
+                            anchorPoint: { x: 0, y: -0.7 },
                             color: config_1.oColorCIM,
                             donutEnabled: true
                         })
@@ -589,73 +436,6 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                             type: "CIMExpressionInfo",
                             title: "Decrease in Other votes",
                             expression: "\n              var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.sizeExpressionBase + "\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    // offset overrides
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "democrat-positive-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Democrat votes",
-                            expression: "\n              var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n              var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n              var change = votesNext - votesPrevious;\n              var value = IIF( change > 0, change, 0);\n              var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.offsetXExpressionBase + "\n              return offset * -1;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "democrat-negative-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Decrease in Democrat votes",
-                            expression: "\n              var votesNext = $feature." + config_1.fieldInfos.democrat.county.next.name + ";\n              var votesPrevious = $feature." + config_1.fieldInfos.democrat.county.previous.name + ";\n              var change = votesNext - votesPrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.offsetXExpressionBase + "\n              return offset * -1;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "republican-positive-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Republican votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change > 0, change, 0);\n              var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.offsetXExpressionBase + "\n              return offset;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "republican-negative-votes",
-                        propertyName: "OffsetX",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Decrease in Republican votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.republican.county.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.republican.county.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.offsetXExpressionBase + "\n              return offset;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "other-positive-votes",
-                        propertyName: "OffsetY",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Increase in Other votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change > 0, change, 0);\n              var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.offsetYExpressionBase + "\n              return offset;\n            ",
-                            returnType: "Default"
-                        }
-                    },
-                    {
-                        type: "CIMPrimitiveOverride",
-                        primitiveName: "other-negative-votes",
-                        propertyName: "OffsetY",
-                        valueExpressionInfo: {
-                            type: "CIMExpressionInfo",
-                            title: "Decrease in Other votes",
-                            expression: "\n              var valueNext = $feature." + config_1.fieldInfos.other.county.next.name + ";\n              var valuePrevious = $feature." + config_1.fieldInfos.other.county.previous.name + ";\n              var change = valueNext - valuePrevious;\n              var value = IIF( change < 0, Abs(change), 0);\n              var percentStateVotes = ( value / $feature." + config_1.fieldInfos.normalizationFields.county.next + " ) * 100;\n              " + expressionUtils_1.offsetYExpressionBase + "\n              return offset;\n            ",
                             returnType: "Default"
                         }
                     }

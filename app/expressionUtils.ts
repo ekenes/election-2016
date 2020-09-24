@@ -63,22 +63,6 @@ export const sizeTotalChangeExpressionBase = `
   return sizeFactor * scaleFactor;
 `;
 
-export const offsetXTotalChangeExpressionBase = `
-  ${sizeFactorChangeTotal}
-
-  ${scaleFactorTotal}
-  var diameter = sizeFactor * scaleFactor;
-  var offset = diameter / 2;
-`;
-
-export const offsetYTotalChangeExpressionBase = `
-  ${sizeFactorChangeTotal}
-
-  ${scaleFactorTotal}
-  var diameter = sizeFactor * scaleFactor;
-  var offset = diameter * 0.67;
-`;
-
 // State results layer renderer expressions
 
 const sizeFactorTotalResults = `
@@ -97,22 +81,6 @@ export const sizeTotalExpressionBase = `
 
   ${scaleFactorTotal}
   return sizeFactor * scaleFactor;
-`;
-
-export const offsetXTotalExpressionBase = `
-  ${sizeFactorTotalResults}
-
-  ${scaleFactorTotal}
-  var diameter = sizeFactor * scaleFactor;
-  var offset = diameter / 2;
-`;
-
-export const offsetYTotalExpressionBase = `
-  ${sizeFactorTotalResults}
-
-  ${scaleFactorTotal}
-  var diameter = sizeFactor * scaleFactor;
-  var offset = diameter * 0.67;
 `;
 
 // counties layer expressions
@@ -145,22 +113,6 @@ export const sizeExpressionBase = `
 
   ${scaleFactorCounties}
   return sizeFactor * scaleFactor;
-`;
-
-export const offsetXExpressionBase = `
-  ${sizeFactorCounties}
-
-  ${scaleFactorCounties}
-  var diameter = sizeFactor * scaleFactor;
-  var offset = diameter / 2;
-`;
-
-export const offsetYExpressionBase = `
-  ${sizeFactorCounties}
-
-  ${scaleFactorCounties}
-  var diameter = sizeFactor * scaleFactor;
-  var offset = diameter * 0.67;
 `;
 
 interface SizeStop {

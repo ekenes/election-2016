@@ -46,15 +46,14 @@ interface CreateSymbolLayerParams {
   primitiveName: string,
   color: number[],
   donutEnabled: boolean,
-  offsetX: number,
-  offsetY: number,
+  anchorPoint: { x: number, y: number },
   outline?: {
     color: number[]
   }
 }
 
 export function createCircleSymbolLayer (params: CreateSymbolLayerParams){
-  const { primitiveName, color, donutEnabled, offsetX, offsetY, outline } = params;
+  const { primitiveName, color, donutEnabled, anchorPoint, outline } = params;
 
   const symbol = donutEnabled ? {
     type: "CIMLineSymbol",
@@ -89,9 +88,7 @@ export function createCircleSymbolLayer (params: CreateSymbolLayerParams){
   return {
     type: "CIMVectorMarker",
     enable: true,
-    anchorPoint: { x: 0, y: 0 },
-    offsetX,
-    offsetY,
+    anchorPoint,
     anchorPointUnits: "Relative",
     primitiveName,
     frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },

@@ -45,7 +45,7 @@ define(["require", "exports"], function (require, exports) {
         ]
     };
     function createCircleSymbolLayer(params) {
-        var primitiveName = params.primitiveName, color = params.color, donutEnabled = params.donutEnabled, offsetX = params.offsetX, offsetY = params.offsetY, outline = params.outline;
+        var primitiveName = params.primitiveName, color = params.color, donutEnabled = params.donutEnabled, anchorPoint = params.anchorPoint, outline = params.outline;
         var symbol = donutEnabled ? {
             type: "CIMLineSymbol",
             symbolLayers: [
@@ -77,9 +77,7 @@ define(["require", "exports"], function (require, exports) {
         return {
             type: "CIMVectorMarker",
             enable: true,
-            anchorPoint: { x: 0, y: 0 },
-            offsetX: offsetX,
-            offsetY: offsetY,
+            anchorPoint: anchorPoint,
             anchorPointUnits: "Relative",
             primitiveName: primitiveName,
             frame: { xmin: 0.0, ymin: 0.0, xmax: 17.0, ymax: 17.0 },

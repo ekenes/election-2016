@@ -141,7 +141,7 @@ define(["require", "exports"], function (require, exports) {
     // county layers
     // size is votes as a % of total state votes
     exports.countySizeStops = [
-        { value: 0, size: 6 },
+        { value: 0, size: 4 },
         { value: 0.5, size: 10 },
         { value: 1, size: 20 },
         { value: 5, size: 25 },

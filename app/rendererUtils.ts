@@ -2,7 +2,7 @@ import { SimpleRenderer } from "esri/renderers";
 import { CIMSymbol, SimpleFillSymbol } from "esri/symbols";
 import { UniqueValueRenderer } from "esri/rasterRenderers";
 import { years, fieldInfos, dColor, rColor, dColorCIM, oColorCIM, rColorCIM, results } from "./config";
-import { sizeExpressionBase, offsetYTotalExpressionBase, offsetXTotalExpressionBase, offsetXExpressionBase, sizeTotalExpressionBase, offsetYTotalChangeExpressionBase, offsetXTotalChangeExpressionBase, sizeTotalChangeExpressionBase, offsetYExpressionBase } from "./expressionUtils";
+import { sizeExpressionBase, sizeTotalExpressionBase, sizeTotalChangeExpressionBase } from "./expressionUtils";
 import { createCircleSymbolLayer } from "./symbolUtils";
 
 
@@ -107,22 +107,19 @@ export const stateResultsRenderer = new SimpleRenderer({
         symbolLayers: [
           createCircleSymbolLayer({
             primitiveName: `democrat-positive-votes`,
-            offsetX: -10,
-            offsetY: 0,
+            anchorPoint: { x: 0.48, y: 0 },
             color: dColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `republican-positive-votes`,
-            offsetX: 10,
-            offsetY: 0,
+            anchorPoint: { x: -0.48, y: 0 },
             color: rColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            offsetX: 0,
-            offsetY: 10,
+            anchorPoint: { x: 0, y: -0.7 },
             color: oColorCIM,
             donutEnabled: false,
             outline: {
@@ -173,54 +170,6 @@ export const stateResultsRenderer = new SimpleRenderer({
             `,
             returnType: `Default`
           }
-        },
-
-         // offset overrides
-
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `democrat-positive-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Democrat votes`,
-            expression: `
-              var value = $feature.${fieldInfos.democrat.state.next.name};
-              ${offsetXTotalExpressionBase}
-              return offset * -1;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `republican-positive-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Republican votes`,
-            expression: `
-              var value = $feature.${fieldInfos.republican.state.next.name};
-              ${offsetXTotalExpressionBase}
-              return offset;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `other-positive-votes`,
-          propertyName: `OffsetY`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Other votes`,
-            expression: `
-              var value = $feature.${fieldInfos.other.state.next.name};
-              ${offsetYTotalExpressionBase}
-              return offset;
-            `,
-            returnType: `Default`
-          }
         }
       ]
     }
@@ -242,36 +191,31 @@ export const stateChangeRenderer = new SimpleRenderer({
         symbolLayers: [
           createCircleSymbolLayer({
             primitiveName: `democrat-positive-votes`,
-            offsetX: -10,
-            offsetY: 0,
+            anchorPoint: { x: 0.5, y: 0 },
             color: dColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `democrat-negative-votes`,
-            offsetX: -10,
-            offsetY: 0,
+            anchorPoint: { x: 0.5, y: 0 },
             color: dColorCIM,
             donutEnabled: true
           }),
           createCircleSymbolLayer({
             primitiveName: `republican-positive-votes`,
-            offsetX: 10,
-            offsetY: 0,
+            anchorPoint: { x: -0.5, y: 0 },
             color: rColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `republican-negative-votes`,
-            offsetX: 10,
-            offsetY: 0,
+            anchorPoint: { x: -0.5, y: 0 },
             color: rColorCIM,
             donutEnabled: true
           }),
           createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            offsetX: 0,
-            offsetY: 10,
+            anchorPoint: { x: 0, y: -0.7 },
             color: oColorCIM,
             donutEnabled: false,
             outline: {
@@ -280,8 +224,7 @@ export const stateChangeRenderer = new SimpleRenderer({
           }),
           createCircleSymbolLayer({
             primitiveName: `other-negative-votes`,
-            offsetX: 0,
-            offsetY: 10,
+            anchorPoint: { x: 0, y: -0.7 },
             color: oColorCIM,
             donutEnabled: true
           })
@@ -300,7 +243,8 @@ export const stateChangeRenderer = new SimpleRenderer({
               var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
               var change = votesNext - votesPrevious;
               var value = IIF( change > 0, change, 0);
-            ` + sizeTotalChangeExpressionBase,
+              ${sizeTotalChangeExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -316,7 +260,8 @@ export const stateChangeRenderer = new SimpleRenderer({
               var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
               var change = votesNext - votesPrevious;
               var value = IIF( change < 0, Abs(change), 0);
-            ` + sizeTotalChangeExpressionBase,
+              ${sizeTotalChangeExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -332,7 +277,8 @@ export const stateChangeRenderer = new SimpleRenderer({
               var valuePrevious = $feature.${fieldInfos.republican.state.previous.name};
               var change = valueNext - valuePrevious;
               var value = IIF( change > 0, change, 0);
-            ` + sizeTotalChangeExpressionBase,
+              ${sizeTotalChangeExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -348,7 +294,8 @@ export const stateChangeRenderer = new SimpleRenderer({
               var valuePrevious = $feature.${fieldInfos.republican.state.previous.name};
               var change = valueNext - valuePrevious;
               var value = IIF( change < 0, Abs(change), 0);
-            ` + sizeTotalChangeExpressionBase,
+              ${sizeTotalChangeExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -364,7 +311,8 @@ export const stateChangeRenderer = new SimpleRenderer({
               var valuePrevious = $feature.${fieldInfos.other.state.previous.name};
               var change = valueNext - valuePrevious;
               var value = IIF( change > 0, change, 0);
-            ` + sizeTotalChangeExpressionBase,
+              ${sizeTotalChangeExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -380,117 +328,7 @@ export const stateChangeRenderer = new SimpleRenderer({
               var valuePrevious = $feature.${fieldInfos.other.state.previous.name};
               var change = valueNext - valuePrevious;
               var value = IIF( change < 0, Abs(change), 0);
-            ` + sizeTotalChangeExpressionBase,
-            returnType: `Default`
-          }
-        },
-
-         // offset overrides
-
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `democrat-positive-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Democrat votes`,
-            expression: `
-              var votesNext = $feature.${fieldInfos.democrat.state.next.name};
-              var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
-              var change = votesNext - votesPrevious;
-              var value = IIF( change > 0, change, 0);
-              ${offsetXTotalChangeExpressionBase}
-              return offset * -1;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `democrat-negative-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Decrease in Democrat votes`,
-            expression: `
-              var votesNext = $feature.${fieldInfos.democrat.state.next.name};
-              var votesPrevious = $feature.${fieldInfos.democrat.state.previous.name};
-              var change = votesNext - votesPrevious;
-              var value = IIF( change < 0, Abs(change), 0);
-              ${offsetXTotalChangeExpressionBase}
-              return offset * -1;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `republican-positive-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Republican votes`,
-            expression: `
-              var valueNext = $feature.${fieldInfos.republican.state.next.name};
-              var valuePrevious = $feature.${fieldInfos.republican.state.previous.name};
-              var change = valueNext - valuePrevious;
-              var value = IIF( change > 0, change, 0);
-              ${offsetXTotalChangeExpressionBase}
-              return offset;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `republican-negative-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Decrease in Republican votes`,
-            expression: `
-              var valueNext = $feature.${fieldInfos.republican.state.next.name};
-              var valuePrevious = $feature.${fieldInfos.republican.state.previous.name};
-              var change = valueNext - valuePrevious;
-              var value = IIF( change < 0, Abs(change), 0);
-              ${offsetXTotalChangeExpressionBase}
-              return offset;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `other-positive-votes`,
-          propertyName: `OffsetY`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Other votes`,
-            expression: `
-              var valueNext = $feature.${fieldInfos.other.state.next.name};
-              var valuePrevious = $feature.${fieldInfos.other.state.previous.name};
-              var change = valueNext - valuePrevious;
-              var value = IIF( change > 0, change, 0);
-              ${offsetYTotalChangeExpressionBase}
-              return offset;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `other-negative-votes`,
-          propertyName: `OffsetY`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Decrease in Other votes`,
-            expression: `
-              var valueNext = $feature.${fieldInfos.other.state.next.name};
-              var valuePrevious = $feature.${fieldInfos.other.state.previous.name};
-              var change = valueNext - valuePrevious;
-              var value = IIF( change < 0, Abs(change), 0);
-              ${offsetYTotalChangeExpressionBase}
-              return offset;
+              ${sizeTotalChangeExpressionBase}
             `,
             returnType: `Default`
           }
@@ -515,22 +353,19 @@ export const countyResultsRenderer = new SimpleRenderer({
         symbolLayers: [
           createCircleSymbolLayer({
             primitiveName: `democrat-positive-votes`,
-            offsetX: -10,
-            offsetY: 0,
+            anchorPoint: { x: 0.5, y: 0 },
             color: dColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `republican-positive-votes`,
-            offsetX: 10,
-            offsetY: 0,
+            anchorPoint: { x: -0.5, y: 0 },
             color: rColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            offsetX: 0,
-            offsetY: 10,
+            anchorPoint: { x: 0, y: -0.7 },
             color: oColorCIM,
             donutEnabled: false,
             outline: {
@@ -549,8 +384,8 @@ export const countyResultsRenderer = new SimpleRenderer({
             title: `Increase in Democrat votes`,
             expression: `
               var percentStateVotes = ( $feature.${fieldInfos.democrat.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-
-            ` + sizeExpressionBase,
+              ${sizeExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -563,8 +398,8 @@ export const countyResultsRenderer = new SimpleRenderer({
             title: `Increase in Republican votes`,
             expression: `
               var percentStateVotes = ( $feature.${fieldInfos.republican.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-
-            ` + sizeExpressionBase,
+              ${sizeExpressionBase}
+            `,
             returnType: `Default`
           }
         },
@@ -577,57 +412,7 @@ export const countyResultsRenderer = new SimpleRenderer({
             title: `Increase in Other votes`,
             expression: `
               var percentStateVotes = ( $feature.${fieldInfos.other.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-
-            ` + sizeExpressionBase,
-            returnType: `Default`
-          }
-        },
-
-         // offset overrides
-
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `democrat-positive-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Democrat votes`,
-            expression: `
-              var percentStateVotes = ( $feature.${fieldInfos.democrat.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-
-              ${offsetXExpressionBase}
-              return offset * -1;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `republican-positive-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Republican votes`,
-            expression: `
-              var percentStateVotes = ( $feature.${fieldInfos.republican.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-              ${offsetXExpressionBase}
-              return offset;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `other-positive-votes`,
-          propertyName: `OffsetY`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Other votes`,
-            expression: `
-              var percentStateVotes = ( $feature.${fieldInfos.other.county.next.name} / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-
-              ${offsetYExpressionBase}
-              return offset;
+              ${sizeExpressionBase}
             `,
             returnType: `Default`
           }
@@ -652,36 +437,31 @@ export const countyChangeRenderer = new SimpleRenderer({
         symbolLayers: [
           createCircleSymbolLayer({
             primitiveName: `democrat-positive-votes`,
-            offsetX: -10,
-            offsetY: 0,
+            anchorPoint: { x: 0.5, y: 0 },
             color: dColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `democrat-negative-votes`,
-            offsetX: -10,
-            offsetY: 0,
+            anchorPoint: { x: 0.5, y: 0 },
             color: dColorCIM,
             donutEnabled: true
           }),
           createCircleSymbolLayer({
             primitiveName: `republican-positive-votes`,
-            offsetX: 10,
-            offsetY: 0,
+            anchorPoint: { x: -0.5, y: 0 },
             color: rColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `republican-negative-votes`,
-            offsetX: 10,
-            offsetY: 0,
+            anchorPoint: { x: -0.5, y: 0 },
             color: rColorCIM,
             donutEnabled: true
           }),
           createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            offsetX: 0,
-            offsetY: 10,
+            anchorPoint: { x: 0, y: -0.7 },
             color: oColorCIM,
             donutEnabled: false,
             outline: {
@@ -690,8 +470,7 @@ export const countyChangeRenderer = new SimpleRenderer({
           }),
           createCircleSymbolLayer({
             primitiveName: `other-negative-votes`,
-            offsetX: 0,
-            offsetY: 10,
+            anchorPoint: { x: 0, y: -0.7 },
             color: oColorCIM,
             donutEnabled: true
           })
@@ -802,123 +581,6 @@ export const countyChangeRenderer = new SimpleRenderer({
               var value = IIF( change < 0, Abs(change), 0);
               var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
               ${sizeExpressionBase}
-            `,
-            returnType: `Default`
-          }
-        },
-
-         // offset overrides
-
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `democrat-positive-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Democrat votes`,
-            expression: `
-              var votesNext = $feature.${fieldInfos.democrat.county.next.name};
-              var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
-              var change = votesNext - votesPrevious;
-              var value = IIF( change > 0, change, 0);
-              var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-              ${offsetXExpressionBase}
-              return offset * -1;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `democrat-negative-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Decrease in Democrat votes`,
-            expression: `
-              var votesNext = $feature.${fieldInfos.democrat.county.next.name};
-              var votesPrevious = $feature.${fieldInfos.democrat.county.previous.name};
-              var change = votesNext - votesPrevious;
-              var value = IIF( change < 0, Abs(change), 0);
-              var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-              ${offsetXExpressionBase}
-              return offset * -1;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `republican-positive-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Republican votes`,
-            expression: `
-              var valueNext = $feature.${fieldInfos.republican.county.next.name};
-              var valuePrevious = $feature.${fieldInfos.republican.county.previous.name};
-              var change = valueNext - valuePrevious;
-              var value = IIF( change > 0, change, 0);
-              var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-              ${offsetXExpressionBase}
-              return offset;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `republican-negative-votes`,
-          propertyName: `OffsetX`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Decrease in Republican votes`,
-            expression: `
-              var valueNext = $feature.${fieldInfos.republican.county.next.name};
-              var valuePrevious = $feature.${fieldInfos.republican.county.previous.name};
-              var change = valueNext - valuePrevious;
-              var value = IIF( change < 0, Abs(change), 0);
-              var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-              ${offsetXExpressionBase}
-              return offset;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `other-positive-votes`,
-          propertyName: `OffsetY`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Increase in Other votes`,
-            expression: `
-              var valueNext = $feature.${fieldInfos.other.county.next.name};
-              var valuePrevious = $feature.${fieldInfos.other.county.previous.name};
-              var change = valueNext - valuePrevious;
-              var value = IIF( change > 0, change, 0);
-              var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-              ${offsetYExpressionBase}
-              return offset;
-            `,
-            returnType: `Default`
-          }
-        },
-        {
-          type: `CIMPrimitiveOverride`,
-          primitiveName: `other-negative-votes`,
-          propertyName: `OffsetY`,
-          valueExpressionInfo: {
-            type: `CIMExpressionInfo`,
-            title: `Decrease in Other votes`,
-            expression: `
-              var valueNext = $feature.${fieldInfos.other.county.next.name};
-              var valuePrevious = $feature.${fieldInfos.other.county.previous.name};
-              var change = valueNext - valuePrevious;
-              var value = IIF( change < 0, Abs(change), 0);
-              var percentStateVotes = ( value / $feature.${fieldInfos.normalizationFields.county.next} ) * 100;
-              ${offsetYExpressionBase}
-              return offset;
             `,
             returnType: `Default`
           }
