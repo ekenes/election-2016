@@ -97,12 +97,14 @@ const sizeFactorCounties = `
 `;
 
 const scaleFactorCounties = `
-  var scaleFactorBase = ( ${referenceScale} / $view.scale );
-
+  var scaleFactorBase = Round( ${referenceScale} / $view.scale, 1 );
   var scaleFactor = When(
-    scaleFactorBase >= 1, 1,  // 1
-    scaleFactorBase >= 0.5, scaleFactorBase * 1,  // 0.6
-    scaleFactorBase >= 0.25, scaleFactorBase * 1.8,  // 0.45
+    scaleFactorBase >= 8, scaleFactorBase / 6,
+    scaleFactorBase >= 4, scaleFactorBase / 3,  // 1
+    scaleFactorBase >= 2, scaleFactorBase / 1.7,
+    scaleFactorBase >= 1, scaleFactorBase,  // 1
+    scaleFactorBase >= 0.5, scaleFactorBase * 1.2,  // 0.6
+    scaleFactorBase >= 0.25, scaleFactorBase * 1.2,  // 0.45
     scaleFactorBase >= 0.125, scaleFactorBase * 2.5,  // 0.3125
     scaleFactorBase * 3  // 0.1875
   );

@@ -63,19 +63,19 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                     symbolLayers: [
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "democrat-positive-votes",
-                            anchorPoint: { x: 0.48, y: 0 },
+                            anchorPoint: { x: 0.5, y: 0 },
                             color: config_1.dColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "republican-positive-votes",
-                            anchorPoint: { x: -0.48, y: 0 },
+                            anchorPoint: { x: -0.5, y: 0 },
                             color: config_1.rColorCIM,
                             donutEnabled: false
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-positive-votes",
-                            anchorPoint: { x: 0, y: -0.7 },
+                            anchorPoint: { x: 0, y: -0.75 },
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
@@ -160,7 +160,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-positive-votes",
-                            anchorPoint: { x: 0, y: -0.7 },
+                            anchorPoint: { x: 0, y: -0.75 },
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
@@ -169,7 +169,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-negative-votes",
-                            anchorPoint: { x: 0, y: -0.7 },
+                            anchorPoint: { x: 0, y: -0.75 },
                             color: config_1.oColorCIM,
                             donutEnabled: true
                         })
@@ -272,7 +272,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-positive-votes",
-                            anchorPoint: { x: 0, y: -0.7 },
+                            anchorPoint: { x: 0, y: -0.75 },
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
@@ -357,7 +357,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-positive-votes",
-                            anchorPoint: { x: 0, y: -0.7 },
+                            anchorPoint: { x: 0, y: -0.75 },
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
@@ -366,7 +366,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
                             primitiveName: "other-negative-votes",
-                            anchorPoint: { x: 0, y: -0.7 },
+                            anchorPoint: { x: 0, y: -0.75 },
                             color: config_1.oColorCIM,
                             donutEnabled: true
                         })

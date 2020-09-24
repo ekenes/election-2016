@@ -107,19 +107,19 @@ export const stateResultsRenderer = new SimpleRenderer({
         symbolLayers: [
           createCircleSymbolLayer({
             primitiveName: `democrat-positive-votes`,
-            anchorPoint: { x: 0.48, y: 0 },
+            anchorPoint: { x: 0.5, y: 0 },
             color: dColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `republican-positive-votes`,
-            anchorPoint: { x: -0.48, y: 0 },
+            anchorPoint: { x: -0.5, y: 0 },
             color: rColorCIM,
             donutEnabled: false
           }),
           createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            anchorPoint: { x: 0, y: -0.7 },
+            anchorPoint: { x: 0, y: -0.75 },
             color: oColorCIM,
             donutEnabled: false,
             outline: {
@@ -215,7 +215,7 @@ export const stateChangeRenderer = new SimpleRenderer({
           }),
           createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            anchorPoint: { x: 0, y: -0.7 },
+            anchorPoint: { x: 0, y: -0.75 },
             color: oColorCIM,
             donutEnabled: false,
             outline: {
@@ -224,7 +224,7 @@ export const stateChangeRenderer = new SimpleRenderer({
           }),
           createCircleSymbolLayer({
             primitiveName: `other-negative-votes`,
-            anchorPoint: { x: 0, y: -0.7 },
+            anchorPoint: { x: 0, y: -0.75 },
             color: oColorCIM,
             donutEnabled: true
           })
@@ -365,7 +365,7 @@ export const countyResultsRenderer = new SimpleRenderer({
           }),
           createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            anchorPoint: { x: 0, y: -0.7 },
+            anchorPoint: { x: 0, y: -0.75 },
             color: oColorCIM,
             donutEnabled: false,
             outline: {
@@ -461,7 +461,7 @@ export const countyChangeRenderer = new SimpleRenderer({
           }),
           createCircleSymbolLayer({
             primitiveName: `other-positive-votes`,
-            anchorPoint: { x: 0, y: -0.7 },
+            anchorPoint: { x: 0, y: -0.75 },
             color: oColorCIM,
             donutEnabled: false,
             outline: {
@@ -470,7 +470,7 @@ export const countyChangeRenderer = new SimpleRenderer({
           }),
           createCircleSymbolLayer({
             primitiveName: `other-negative-votes`,
-            anchorPoint: { x: 0, y: -0.7 },
+            anchorPoint: { x: 0, y: -0.75 },
             color: oColorCIM,
             donutEnabled: true
           })
