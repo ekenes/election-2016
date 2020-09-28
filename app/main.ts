@@ -3,11 +3,15 @@ import MapView = require("esri/views/MapView");
 import FeatureLayer = require("esri/layers/FeatureLayer");
 import Swipe = require("esri/widgets/Swipe");
 import Legend = require("esri/widgets/Legend");
+import FeatureEffect = require("esri/views/layers/support/FeatureEffect");
+import FeatureFilter = require("esri/views/layers/support/FeatureFilter");
+import geometryEngine = require("esri/geometry/geometryEngine");
 
 import { referenceScale, maxScale, scaleThreshold, basemapPortalItem, statesLayerPortalItem, countiesLayerPortalItem, years } from "./config";
 import { statePopupTemplate, countyPopupTemplate } from "./popupUtils";
 import { countyChangeLabelingInfo, countyResultsLabelingInfo, stateChangeLabelingInfo, stateResultsLabelingInfo } from "./labelingUtils";
 import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, stateElectoralResultsRenderer, stateResultsRenderer, swingStateRenderer } from "./rendererUtils";
+import { Polygon } from "esri/geometry";
 
 ( async () => {
   const map = new EsriMap({
@@ -227,5 +231,33 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
 
   view.watch(`heightBreakpoint`, updateLegendHeight);
   await view.when(updateLegendHeight).then(updateLegendOpacity);
+
+  const swingLayerView = await view.whenLayerView(swingStatesLayer) as __esri.FeatureLayerView;
+  const stateChangeLayerView = await view.whenLayerView(stateChangeLayer) as __esri.FeatureLayerView;
+  const countyChangeLayerView = await view.whenLayerView(countyChangeLayer) as __esri.FeatureLayerView;
+  const countyResultsLayerView = await view.whenLayerView(countyResultsLayer) as __esri.FeatureLayerView;
+  const stateResultsLayerView = await view.whenLayerView(stateResultsLayer) as __esri.FeatureLayerView;
+
+
+  view.on("click", async (event) => {
+    const {
+      features: [{ geometry }]
+    } = await swingLayerView.queryFeatures({
+      geometry: view.toMap(event),
+      returnGeometry: true
+    });
+
+    const effect = new FeatureEffect({
+      filter: new FeatureFilter({
+        geometry: geometryEngine.buffer(geometry, -2, "kilometers") as Polygon
+      }),
+      excludedEffect: `opacity(0.2)`
+    });
+
+    stateChangeLayerView.effect = effect;
+    countyChangeLayerView.effect = effect;
+    countyResultsLayerView.effect = effect;
+    stateResultsLayerView.effect = effect;
+  });
 
 })();
