@@ -46,7 +46,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
       id: statesLayerPortalItem
     },
     title: `Results by state`,
-    opacity: 0.3,
+    opacity: 0.2,
     renderer: stateElectoralResultsRenderer,
     popupTemplate: statePopupTemplate,
     popupEnabled: false
@@ -57,7 +57,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
       id: statesLayerPortalItem
     },
     title: `Swing states`,
-    opacity: 0.3,
+    opacity: 0.2,
     renderer: swingStateRenderer,
     popupTemplate: statePopupTemplate,
     popupEnabled: false
