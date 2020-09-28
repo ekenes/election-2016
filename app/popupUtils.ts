@@ -69,8 +69,8 @@ export const statePopupTemplate = new PopupTemplate({
     new TextContent({
       text: `
         <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>
-        won {STATE} by a margin of {expression/winner-margin} points.
-        The {expression/winner-votes} votes cast for the winner comprise
+        won ${fieldInfos.title.state} by a margin of <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner-margin-votes}</span> votes (<span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner-margin}</span> points).
+        The {expression/winner-votes} votes cast for {expression/winner} comprise
         {expression/winner-percent-state-votes} of the total votes cast in the state.
       `
     }),
@@ -241,6 +241,22 @@ export const statePopupTemplate = new PopupTemplate({
         var total = Sum(fields);
         return Text( (winner - secondPlace) / total, "#.#%");
       `
+    }),
+    new ExpressionInfo({
+      title: `winner-margin-votes`,
+      name: `winner-margin-votes`,
+      expression: `
+        var fields = [
+          $feature.${fieldInfos.democrat.state.next.name},
+          $feature.${fieldInfos.republican.state.next.name},
+          $feature.${fieldInfos.other.state.next.name}
+        ];
+
+        var top2 = Top(Reverse(Sort(fields)), 2);
+        var winner = First(top2);
+        var secondPlace = top2[1];
+        return Text( (winner - secondPlace), "#,###");
+      `
     })
   ]
 });
@@ -310,8 +326,9 @@ export const countyPopupTemplate = new PopupTemplate({
     new TextContent({
       text: `
         <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner}</span>
-        won this county by a margin of {expression/winner-margin}.
-        The {expression/winner-votes} votes cast for the winner comprise
+        won ${fieldInfos.title.county} by a margin of
+        <span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner-margin-votes}</span> votes (<span style='color: {expression/winner-color}; font-weight:bolder'>{expression/winner-margin}</span> points).
+        The {expression/winner-votes} votes cast for {expression/winner} comprise
         {expression/winner-percent-state-votes} of the total votes cast in the state.
       `
     }),
@@ -484,6 +501,22 @@ export const countyPopupTemplate = new PopupTemplate({
         var secondPlace = top2[1];
         var total = Sum(fields);
         return Text( (winner - secondPlace) / total, "#.#%");
+      `
+    }),
+    new ExpressionInfo({
+      title: `winner-margin-votes`,
+      name: `winner-margin-votes`,
+      expression: `
+        var fields = [
+          $feature.${fieldInfos.democrat.county.next.name},
+          $feature.${fieldInfos.republican.county.next.name},
+          $feature.${fieldInfos.other.county.next.name}
+        ];
+
+        var top2 = Top(Reverse(Sort(fields)), 2);
+        var winner = First(top2);
+        var secondPlace = top2[1];
+        return Text( (winner - secondPlace), "#,###");
       `
     })
   ]
