@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Swipe", "esri/widgets/Legend", "./config", "./popupUtils", "./labelingUtils", "./rendererUtils"], function (require, exports, EsriMap, MapView, FeatureLayer, Swipe, Legend, config_1, popupUtils_1, labelingUtils_1, rendererUtils_1) {
+define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Swipe", "esri/widgets/Legend", "esri/layers/GraphicsLayer", "esri/Graphic", "esri/geometry/geometryEngine", "esri/layers/GroupLayer", "./config", "./popupUtils", "./labelingUtils", "./rendererUtils", "esri/geometry", "esri/symbols"], function (require, exports, EsriMap, MapView, FeatureLayer, Swipe, Legend, GraphicsLayer, Graphic, geometryEngine, GroupLayer, config_1, popupUtils_1, labelingUtils_1, rendererUtils_1, geometry_1, symbols_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -79,7 +79,7 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 totalLegend.style.overflow = "auto";
             }
         }
-        var map, view, stateElectoralResultsLayer, swingStatesLayer, countyChangeLayer, countyResultsLayer, stateChangeLayer, stateResultsLayer, swipe, totalLegend, changeLegend, infoToggle, endYearChangeSpan, startYearChangeSpan, endYearTotalSpan, visibilityEnabled, toggleInfoVisibility;
+        var map, view, stateElectoralResultsLayer, swingStatesLayer, countyChangeLayer, countyResultsLayer, stateChangeLayer, stateResultsLayer, gl, swipe, totalLegend, changeLegend, infoToggle, endYearChangeSpan, startYearChangeSpan, endYearTotalSpan, visibilityEnabled, toggleInfoVisibility, buffersGraphicsLayer, world, statesLayerView, bufferDistances, symbol;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -178,19 +178,26 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         labelingInfo: labelingUtils_1.stateResultsLabelingInfo,
                         popupTemplate: popupUtils_1.statePopupTemplate
                     });
-                    view.map.add(stateElectoralResultsLayer);
-                    view.map.add(swingStatesLayer);
-                    view.map.add(stateChangeLayer);
+                    // view.map.add(stateElectoralResultsLayer);
+                    // view.map.add(swingStatesLayer);
+                    // view.map.add(stateChangeLayer);
                     view.map.add(stateResultsLayer);
-                    view.map.add(countyChangeLayer);
+                    // view.map.add(countyChangeLayer);
                     view.map.add(countyResultsLayer);
+                    gl = new GroupLayer({
+                        layers: [
+                            swingStatesLayer,
+                            countyChangeLayer
+                        ],
+                        blendMode: "destination-over"
+                    });
+                    view.map.add(gl);
                     swipe = new Swipe({
                         view: view,
                         leadingLayers: [countyChangeLayer, stateChangeLayer, swingStatesLayer],
                         trailingLayers: [countyResultsLayer, stateResultsLayer, stateElectoralResultsLayer],
                         position: 75
                     });
-                    view.ui.add(swipe);
                     totalLegend = document.getElementById("total-legend");
                     changeLegend = document.getElementById("change-legend");
                     infoToggle = document.getElementById("info-toggle");
@@ -228,9 +235,66 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     infoToggle.addEventListener("click", toggleInfoVisibility);
                     swipe.watch("position", updateLegendOpacity);
                     view.watch("heightBreakpoint", updateLegendHeight);
+                    buffersGraphicsLayer = new GraphicsLayer({
+                        blendMode: "destination-out"
+                    });
                     return [4 /*yield*/, view.when(updateLegendHeight).then(updateLegendOpacity)];
                 case 1:
                     _a.sent();
+                    world = new Graphic({
+                        geometry: new geometry_1.Extent({
+                            xmin: -180,
+                            xmax: 180,
+                            ymin: -90,
+                            ymax: 90
+                        }),
+                        symbol: new symbols_1.SimpleFillSymbol({
+                            color: "rgba(0, 0, 0, 1)",
+                            outline: null
+                        })
+                    });
+                    buffersGraphicsLayer.graphics.add(world);
+                    view.map.basemap.baseLayers.add(buffersGraphicsLayer);
+                    return [4 /*yield*/, view.whenLayerView(swingStatesLayer)];
+                case 2:
+                    statesLayerView = _a.sent();
+                    bufferDistances = [0, 10, 20, 40, 60];
+                    symbol = new symbols_1.SimpleFillSymbol({
+                        color: "rgba(255, 255, 255, 0.1)",
+                        outline: null
+                    });
+                    // listen to the view's click event
+                    view.on("click", function (event) { return __awaiter(void 0, void 0, void 0, function () {
+                        var feature, bufferGraphics;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, statesLayerView.queryFeatures({
+                                        geometry: view.toMap(event),
+                                        returnGeometry: true,
+                                        maxAllowableOffset: 10000,
+                                        outFields: ["*"]
+                                    })];
+                                case 1:
+                                    feature = (_a.sent()).features[0];
+                                    buffersGraphicsLayer.graphics.removeAll();
+                                    // if user clicked on a country and buffers are returned
+                                    // add the buffer polygons to the graphicslayer
+                                    if (feature) {
+                                        bufferGraphics = bufferDistances.map(function (distance) { return new Graphic({
+                                            geometry: geometryEngine.buffer(feature.geometry, distance, "kilometers"),
+                                            symbol: symbol
+                                        }); });
+                                        buffersGraphicsLayer.graphics.addMany(bufferGraphics);
+                                        // zoom to the highlighted country
+                                        view.goTo({
+                                            target: view.toMap(event),
+                                            extent: feature.geometry.extent.clone().expand(1.8)
+                                        }, { duration: 1000 });
+                                    }
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
                     return [2 /*return*/];
             }
         });

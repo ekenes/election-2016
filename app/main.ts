@@ -3,11 +3,17 @@ import MapView = require("esri/views/MapView");
 import FeatureLayer = require("esri/layers/FeatureLayer");
 import Swipe = require("esri/widgets/Swipe");
 import Legend = require("esri/widgets/Legend");
+import GraphicsLayer = require("esri/layers/GraphicsLayer");
+import Graphic = require("esri/Graphic");
+import geometryEngine = require("esri/geometry/geometryEngine");
+import GroupLayer = require("esri/layers/GroupLayer");
 
 import { referenceScale, maxScale, scaleThreshold, basemapPortalItem, statesLayerPortalItem, countiesLayerPortalItem, years } from "./config";
 import { statePopupTemplate, countyPopupTemplate } from "./popupUtils";
 import { countyChangeLabelingInfo, countyResultsLabelingInfo, stateChangeLabelingInfo, stateResultsLabelingInfo } from "./labelingUtils";
 import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, stateElectoralResultsRenderer, stateResultsRenderer, swingStateRenderer } from "./rendererUtils";
+import { Extent } from "esri/geometry";
+import { SimpleFillSymbol } from "esri/symbols";
 
 ( async () => {
   const map = new EsriMap({
@@ -114,12 +120,21 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
     popupTemplate: statePopupTemplate
   });
 
-  view.map.add(stateElectoralResultsLayer);
-  view.map.add(swingStatesLayer);
-  view.map.add(stateChangeLayer);
+  // view.map.add(stateElectoralResultsLayer);
+  // view.map.add(swingStatesLayer);
+  // view.map.add(stateChangeLayer);
   view.map.add(stateResultsLayer);
-  view.map.add(countyChangeLayer);
+  // view.map.add(countyChangeLayer);
   view.map.add(countyResultsLayer);
+
+  const gl = new GroupLayer({
+    layers: [
+      swingStatesLayer,
+      countyChangeLayer
+    ],
+    blendMode: "destination-over"
+  });
+  view.map.add(gl);
 
   const swipe = new Swipe({
     view,
@@ -127,7 +142,7 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
     trailingLayers: [ countyResultsLayer, stateResultsLayer, stateElectoralResultsLayer ],
     position: 75
   });
-  view.ui.add(swipe);
+  // view.ui.add(swipe);
 
   const totalLegend = document.getElementById(`total-legend`) as HTMLDivElement;
   const changeLegend = document.getElementById(`change-legend`) as HTMLDivElement;
@@ -225,6 +240,76 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
   }
 
   view.watch(`heightBreakpoint`, updateLegendHeight);
+
+  const buffersGraphicsLayer = new GraphicsLayer({
+    blendMode: "destination-out"
+  });
+
   await view.when(updateLegendHeight).then(updateLegendOpacity);
+
+  const world = new Graphic({
+    geometry: new Extent({
+      xmin: -180,
+      xmax: 180,
+      ymin: -90,
+      ymax: 90
+    }),
+    symbol: new SimpleFillSymbol({
+      color: "rgba(0, 0, 0, 1)",
+      outline: null
+    })
+  });
+
+  buffersGraphicsLayer.graphics.add(world);
+  view.map.basemap.baseLayers.add(buffersGraphicsLayer);
+
+  const statesLayerView = await view.whenLayerView(swingStatesLayer) as __esri.FeatureLayerView;
+
+  const bufferDistances = [0, 10, 20, 40, 60];
+  const symbol = new SimpleFillSymbol({
+    color: "rgba(255, 255, 255, 0.1)",
+    outline: null
+  });
+
+  // listen to the view's click event
+  view.on("click", async (event) => {
+    // query the countries featurelayer for a country that intersects the point
+    // user clicked on
+    const {
+      features: [feature]
+    } = await statesLayerView.queryFeatures({
+      geometry: view.toMap(event),
+      returnGeometry: true,
+      maxAllowableOffset: 10000,
+      outFields: ["*"]
+    });
+
+    buffersGraphicsLayer.graphics.removeAll();
+
+    // if user clicked on a country and buffers are returned
+    // add the buffer polygons to the graphicslayer
+    if (feature) {
+      const bufferGraphics = bufferDistances.map((distance) => new Graphic({
+        geometry: geometryEngine.buffer(
+          feature.geometry,
+          distance,
+          "kilometers"
+        ) as __esri.Polygon,
+        symbol
+      }));
+
+      buffersGraphicsLayer.graphics.addMany(bufferGraphics);
+
+
+      // zoom to the highlighted country
+      view.goTo(
+        {
+          target: view.toMap(event),
+          extent: feature.geometry.extent.clone().expand(1.8)
+        },
+        { duration: 1000 }
+      );
+    }
+  });
 
 })();
