@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "esri/Color"], function (require, exports, Color) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.basemapPortalItem = "fbfb62f3599f41e5a77845f863e2872f";
@@ -109,16 +109,16 @@ define(["require", "exports"], function (require, exports) {
         }
     };
     // Renderer config
-    exports.rColorCIM = [220, 75, 0, 255]; // [237, 81, 81, 255];
-    exports.dColorCIM = [60, 108, 204, 255]; // [20, 158, 206, 255];
-    exports.oColorCIM = [224, 206, 0, 255]; // [167, 198, 54, 255];   145, 217, 0
-    exports.borderColorCIM100 = [133, 32, 1, 255];
-    exports.rColor = "rgba(220, 75, 0, 1)"; // "#ed5151";  dc4b00
-    exports.dColor = "rgba(60, 108, 204,1)"; // "#149ece";  3c6ccc
-    exports.oColor = "rgba(224, 206, 0, 1)"; // "rgba(224, 206, 0, 1)"// "#a7c636";  #91d900  #a87132
-    exports.haloColor = "#f7f7f7";
-    exports.oTextColor = "rgba(181, 166, 0, 1)"; // = "#4b4b4b";
+    exports.rColor = new Color("rgba(220, 75, 0, 1)");
+    exports.dColor = new Color("rgba(60, 108, 204,1)");
+    exports.oColor = new Color("rgba(237, 218, 0, 1)");
+    exports.haloColor = new Color("#f7f7f7");
+    exports.oTextColor = new Color("rgba(181, 166, 0, 1)");
     exports.haloSize = 1;
+    exports.rColorCIM = exports.rColor.toJSON();
+    exports.dColorCIM = exports.dColor.toJSON();
+    exports.oColorCIM = exports.oColor.toJSON();
+    exports.borderColorCIM100 = [133, 32, 1, 255];
     //////////////
     // size stops
     //////////////

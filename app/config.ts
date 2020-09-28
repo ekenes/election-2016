@@ -1,3 +1,5 @@
+import Color = require("esri/Color");
+
 export const basemapPortalItem = "fbfb62f3599f41e5a77845f863e2872f";
 export const statesLayerPortalItem = "4f03bcde997e4badbef186d0c05f5a9a";
 export const countiesLayerPortalItem = "ba48def248cb45bebb234aa346c97676";
@@ -112,17 +114,17 @@ export const fieldInfos = {
 
 // Renderer config
 
-export const rColorCIM = [220, 75, 0, 255]; // [237, 81, 81, 255];
-export const dColorCIM = [60, 108, 204, 255]; // [20, 158, 206, 255];
-export const oColorCIM = [224, 206, 0, 255]; // [167, 198, 54, 255];   145, 217, 0
-export const borderColorCIM100 = [133, 32, 1, 255];
-
-export const rColor = "rgba(220, 75, 0, 1)"// "#ed5151";  dc4b00
-export const dColor = "rgba(60, 108, 204,1)"// "#149ece";  3c6ccc
-export const oColor = "rgba(224, 206, 0, 1)";// "rgba(224, 206, 0, 1)"// "#a7c636";  #91d900  #a87132
-export const haloColor = "#f7f7f7";
-export const oTextColor = "rgba(181, 166, 0, 1)";// = "#4b4b4b";
+export const rColor = new Color("rgba(220, 75, 0, 1)");
+export const dColor = new Color("rgba(60, 108, 204,1)");
+export const oColor = new Color("rgba(237, 218, 0, 1)");
+export const haloColor = new Color("#f7f7f7");
+export const oTextColor = new Color("rgba(181, 166, 0, 1)");
 export const haloSize = 1;
+
+export const rColorCIM = rColor.toJSON();
+export const dColorCIM = dColor.toJSON();
+export const oColorCIM = oColor.toJSON();
+export const borderColorCIM100 = [133, 32, 1, 255];
 
 //////////////
 // size stops
