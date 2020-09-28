@@ -117,14 +117,13 @@ export const fieldInfos = {
 export const rColor = new Color("rgba(220, 75, 0, 1)");
 export const dColor = new Color("rgba(60, 108, 204,1)");
 export const oColor = new Color("rgba(237, 218, 0, 1)");
-export const haloColor = new Color("#f7f7f7");
 export const oTextColor = new Color("rgba(181, 166, 0, 1)");
+export const haloColor = new Color("#f7f7f7");
 export const haloSize = 1;
 
 export const rColorCIM = rColor.toJSON();
 export const dColorCIM = dColor.toJSON();
 export const oColorCIM = oColor.toJSON();
-export const borderColorCIM100 = [133, 32, 1, 255];
 
 //////////////
 // size stops
@@ -155,7 +154,7 @@ export const stateChangeSizeStops = [
 // size is votes as a % of total state votes
 
 export const countySizeStops = [
-  { value: 0, size: 4 },
+  { value: 0, size: 6 },
   { value: 0.5, size: 10 },
   { value: 1, size: 20 },
   { value: 5, size: 25 },

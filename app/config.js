@@ -112,13 +112,12 @@ define(["require", "exports", "esri/Color"], function (require, exports, Color) 
     exports.rColor = new Color("rgba(220, 75, 0, 1)");
     exports.dColor = new Color("rgba(60, 108, 204,1)");
     exports.oColor = new Color("rgba(237, 218, 0, 1)");
-    exports.haloColor = new Color("#f7f7f7");
     exports.oTextColor = new Color("rgba(181, 166, 0, 1)");
+    exports.haloColor = new Color("#f7f7f7");
     exports.haloSize = 1;
     exports.rColorCIM = exports.rColor.toJSON();
     exports.dColorCIM = exports.dColor.toJSON();
     exports.oColorCIM = exports.oColor.toJSON();
-    exports.borderColorCIM100 = [133, 32, 1, 255];
     //////////////
     // size stops
     //////////////
@@ -141,7 +140,7 @@ define(["require", "exports", "esri/Color"], function (require, exports, Color) 
     // county layers
     // size is votes as a % of total state votes
     exports.countySizeStops = [
-        { value: 0, size: 4 },
+        { value: 0, size: 6 },
         { value: 0.5, size: 10 },
         { value: 1, size: 20 },
         { value: 5, size: 25 },
