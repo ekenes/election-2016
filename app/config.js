@@ -118,6 +118,7 @@ define(["require", "exports", "esri/Color"], function (require, exports, Color) 
     exports.rColorCIM = exports.rColor.toJSON();
     exports.dColorCIM = exports.dColor.toJSON();
     exports.oColorCIM = exports.oColor.toJSON();
+    exports.oTextColorCIM = exports.oTextColor.toJSON();
     //////////////
     // size stops
     //////////////

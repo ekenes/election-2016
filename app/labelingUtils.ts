@@ -966,7 +966,7 @@ export const countyResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 20,
+      xoffset: 25,
       yoffset: -10
     })
   }),
@@ -989,7 +989,7 @@ export const countyResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 10,
+      xoffset: 20,
       yoffset: -10
     })
   }),
@@ -1015,7 +1015,7 @@ export const countyResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 20,
+      xoffset: 30,
       yoffset: 40
     })
   }),
@@ -1038,7 +1038,7 @@ export const countyResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 20,
+      xoffset: 30,
       yoffset: 40
     })
   }),
@@ -1063,8 +1063,8 @@ export const countyResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 20,
-      yoffset: 30
+      xoffset: 30,
+      yoffset: 35
     })
   }),
 
@@ -1090,7 +1090,7 @@ export const countyResultsLabelingInfo = [
       haloSize,
       color: new Color(oTextColor),
       xoffset: 20,
-      yoffset: 20
+      yoffset: 30
     })
   }),
   new LabelClass({
@@ -1114,8 +1114,8 @@ export const countyResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 10,
-      yoffset: 10
+      xoffset: 15,
+      yoffset: 18
     })
   })
 
@@ -1306,7 +1306,7 @@ export const countyChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 35,
+      xoffset: 45,
       yoffset: -20
     })
   }),
@@ -1331,7 +1331,7 @@ export const countyChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 20,
+      xoffset: 30,
       yoffset: -20
     })
   }),
@@ -1381,7 +1381,7 @@ export const countyChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 10,
+      xoffset: 20,
       yoffset: -10
     })
   }),
@@ -1409,7 +1409,7 @@ export const countyChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 20,
+      xoffset: 30,
       yoffset: 40
     })
   }),
@@ -1434,7 +1434,7 @@ export const countyChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 20,
+      xoffset: 30,
       yoffset: 40
     })
   }),
@@ -1461,8 +1461,8 @@ export const countyChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 20,
-      yoffset: 30
+      xoffset: 30,
+      yoffset: 35
     })
   }),
 
@@ -1490,7 +1490,7 @@ export const countyChangeLabelingInfo = [
       haloSize,
       color: new Color(oTextColor),
       xoffset: 20,
-      yoffset: 20
+      yoffset: 30
     })
   }),
   new LabelClass({
@@ -1516,8 +1516,8 @@ export const countyChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 10,
-      yoffset: 10
+      xoffset: 15,
+      yoffset: 18
     })
   })
 

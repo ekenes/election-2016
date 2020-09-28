@@ -124,6 +124,7 @@ export const haloSize = 1;
 export const rColorCIM = rColor.toJSON();
 export const dColorCIM = dColor.toJSON();
 export const oColorCIM = oColor.toJSON();
+export const oTextColorCIM = oTextColor.toJSON();
 
 //////////////
 // size stops

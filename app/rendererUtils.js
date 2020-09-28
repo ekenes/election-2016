@@ -79,7 +79,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
-                                color: [161, 148, 0, 255]
+                                color: config_1.oTextColorCIM
                             }
                         })
                     ]
@@ -164,7 +164,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
-                                color: [161, 148, 0, 255]
+                                color: config_1.oTextColorCIM
                             }
                         }),
                         symbolUtils_1.createCircleSymbolLayer({
@@ -276,7 +276,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
-                                color: [161, 148, 0, 255]
+                                color: config_1.oTextColorCIM
                             }
                         })
                     ]
@@ -361,7 +361,7 @@ define(["require", "exports", "esri/renderers", "esri/symbols", "esri/rasterRend
                             color: config_1.oColorCIM,
                             donutEnabled: false,
                             outline: {
-                                color: [161, 148, 0, 255]
+                                color: config_1.oTextColorCIM
                             }
                         }),
                         symbolUtils_1.createCircleSymbolLayer({

@@ -1,7 +1,7 @@
 import { SimpleRenderer } from "esri/renderers";
 import { CIMSymbol, SimpleFillSymbol } from "esri/symbols";
 import { UniqueValueRenderer } from "esri/rasterRenderers";
-import { years, fieldInfos, dColor, rColor, dColorCIM, oColorCIM, rColorCIM, results } from "./config";
+import { years, fieldInfos, dColor, rColor, dColorCIM, oColorCIM, rColorCIM, results, oTextColorCIM } from "./config";
 import { sizeExpressionBase, sizeTotalExpressionBase, sizeTotalChangeExpressionBase } from "./expressionUtils";
 import { createCircleSymbolLayer } from "./symbolUtils";
 
@@ -123,7 +123,7 @@ export const stateResultsRenderer = new SimpleRenderer({
             color: oColorCIM,
             donutEnabled: false,
             outline: {
-              color: [161, 148, 0, 255]
+              color: oTextColorCIM
             }
           })
         ]
@@ -219,7 +219,7 @@ export const stateChangeRenderer = new SimpleRenderer({
             color: oColorCIM,
             donutEnabled: false,
             outline: {
-              color: [161, 148, 0, 255]
+              color: oTextColorCIM
             }
           }),
           createCircleSymbolLayer({
@@ -369,7 +369,7 @@ export const countyResultsRenderer = new SimpleRenderer({
             color: oColorCIM,
             donutEnabled: false,
             outline: {
-              color: [161, 148, 0, 255]
+              color: oTextColorCIM
             }
           })
         ]
@@ -465,7 +465,7 @@ export const countyChangeRenderer = new SimpleRenderer({
             color: oColorCIM,
             donutEnabled: false,
             outline: {
-              color: [161, 148, 0, 255]
+              color: oTextColorCIM
             }
           }),
           createCircleSymbolLayer({
