@@ -97,7 +97,8 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         scale: config_1.referenceScale * 8,
                         constraints: {
                             minScale: 0,
-                            maxScale: config_1.maxScale
+                            maxScale: config_1.maxScale,
+                            snapToZoom: false
                         },
                         highlightOptions: {
                             fillOpacity: 0

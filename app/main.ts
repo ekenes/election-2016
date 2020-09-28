@@ -25,7 +25,8 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
     scale: referenceScale * 8,
     constraints: {
       minScale: 0,
-      maxScale
+      maxScale,
+      snapToZoom: false
     },
     highlightOptions: {
       fillOpacity: 0
