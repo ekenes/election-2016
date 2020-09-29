@@ -165,8 +165,8 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloColor: new Color(config_1.haloColor),
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.rColor),
-                xoffset: 20,
-                yoffset: -20
+                xoffset: 30,
+                yoffset: -17
             })
         }),
         new LabelClass({
@@ -185,8 +185,8 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloColor: new Color(config_1.haloColor),
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.rColor),
-                xoffset: 20,
-                yoffset: -10
+                xoffset: 25,
+                yoffset: -12
             })
         }),
         new LabelClass({
@@ -205,7 +205,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloColor: new Color(config_1.haloColor),
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.rColor),
-                xoffset: 10,
+                xoffset: 20,
                 yoffset: -10
             })
         }),
@@ -227,7 +227,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.oTextColor),
                 xoffset: 20,
-                yoffset: 35
+                yoffset: 30
             })
         }),
         new LabelClass({
@@ -267,7 +267,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.oTextColor),
                 xoffset: 20,
-                yoffset: 25
+                yoffset: 20
             })
         }),
         new LabelClass({
@@ -475,7 +475,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloColor: new Color(config_1.haloColor),
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.rColor),
-                xoffset: 20,
+                xoffset: 30,
                 yoffset: -20
             })
         }),
@@ -495,7 +495,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloColor: new Color(config_1.haloColor),
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.rColor),
-                xoffset: 20,
+                xoffset: 25,
                 yoffset: -10
             })
         }),
@@ -515,7 +515,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloColor: new Color(config_1.haloColor),
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.rColor),
-                xoffset: 10,
+                xoffset: 20,
                 yoffset: -10
             })
         }),
@@ -556,7 +556,7 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloColor: new Color(config_1.haloColor),
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.oTextColor),
-                xoffset: 20,
+                xoffset: 30,
                 yoffset: 30
             })
         }),
@@ -616,8 +616,8 @@ define(["require", "exports", "esri/layers/support/LabelClass", "esri/Color", "e
                 haloColor: new Color(config_1.haloColor),
                 haloSize: config_1.haloSize,
                 color: new Color(config_1.oTextColor),
-                xoffset: 10,
-                yoffset: 10
+                xoffset: 1,
+                yoffset: 15
             })
         })
     ];

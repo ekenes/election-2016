@@ -208,8 +208,8 @@ export const stateChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 20,
-      yoffset: -20
+      xoffset: 30,
+      yoffset: -17
     })
   }),
   new LabelClass({
@@ -232,8 +232,8 @@ export const stateChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 20,
-      yoffset: -10
+      xoffset: 25,
+      yoffset: -12
     })
   }),
   new LabelClass({
@@ -256,7 +256,7 @@ export const stateChangeLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 10,
+      xoffset: 20,
       yoffset: -10
     })
   }),
@@ -284,7 +284,7 @@ export const stateChangeLabelingInfo = [
       haloSize,
       color: new Color(oTextColor),
       xoffset: 20,
-      yoffset: 35
+      yoffset: 30
     })
   }),
   new LabelClass({
@@ -334,7 +334,7 @@ export const stateChangeLabelingInfo = [
       haloSize,
       color: new Color(oTextColor),
       xoffset: 20,
-      yoffset: 25
+      yoffset: 20
     })
   }),
 
@@ -578,7 +578,7 @@ export const stateResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 20,
+      xoffset: 30,
       yoffset: -20
     })
   }),
@@ -600,7 +600,7 @@ export const stateResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 20,
+      xoffset: 25,
       yoffset: -10
     })
   }),
@@ -622,7 +622,7 @@ export const stateResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(rColor),
-      xoffset: 10,
+      xoffset: 20,
       yoffset: -10
     })
   }),
@@ -669,7 +669,7 @@ export const stateResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 20,
+      xoffset: 30,
       yoffset: 30
     })
   }),
@@ -742,8 +742,8 @@ export const stateResultsLabelingInfo = [
       haloColor: new Color(haloColor),
       haloSize,
       color: new Color(oTextColor),
-      xoffset: 10,
-      yoffset: 10
+      xoffset: 1,
+      yoffset: 15
     })
   })
 ];
