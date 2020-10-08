@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Swipe", "esri/widgets/Legend", "./config", "./popupUtils", "./labelingUtils", "./rendererUtils"], function (require, exports, EsriMap, MapView, FeatureLayer, Swipe, Legend, config_1, popupUtils_1, labelingUtils_1, rendererUtils_1) {
+define(["require", "exports", "esri/WebMap", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Swipe", "esri/widgets/Legend", "esri/portal/PortalItem", "./config", "./popupUtils", "./labelingUtils", "./rendererUtils"], function (require, exports, EsriMap, MapView, FeatureLayer, Swipe, Legend, PortalItem, config_1, popupUtils_1, labelingUtils_1, rendererUtils_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     (function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -79,7 +79,12 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                 totalLegend.style.overflow = "auto";
             }
         }
-        var map, view, stateElectoralResultsLayer, swingStatesLayer, countyChangeLayer, countyResultsLayer, stateChangeLayer, stateResultsLayer, swipe, totalLegend, changeLegend, infoToggle, endYearChangeSpan, startYearChangeSpan, endYearTotalSpan, visibilityEnabled, toggleInfoVisibility;
+        function statusMessage(head, info) {
+            document.getElementById("head").innerHTML = head;
+            document.getElementById("info").innerHTML = info;
+            overlay.style.visibility = "visible";
+        }
+        var map, view, stateElectoralResultsLayer, swingStatesLayer, countyChangeLayer, countyResultsLayer, stateChangeLayer, stateResultsLayer, swipe, totalLegend, changeLegend, infoToggle, endYearChangeSpan, startYearChangeSpan, endYearTotalSpan, visibilityEnabled, toggleInfoVisibility, overlay, ok, saveBtn;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -179,12 +184,11 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                         labelingInfo: labelingUtils_1.stateResultsLabelingInfo,
                         popupTemplate: popupUtils_1.statePopupTemplate
                     });
-                    view.map.add(stateElectoralResultsLayer);
+                    // view.map.add(stateElectoralResultsLayer);
                     view.map.add(swingStatesLayer);
                     view.map.add(stateChangeLayer);
-                    view.map.add(stateResultsLayer);
+                    // view.map.add(stateResultsLayer);
                     view.map.add(countyChangeLayer);
-                    view.map.add(countyResultsLayer);
                     swipe = new Swipe({
                         view: view,
                         leadingLayers: [countyChangeLayer, stateChangeLayer, swingStatesLayer],
@@ -232,6 +236,41 @@ define(["require", "exports", "esri/Map", "esri/views/MapView", "esri/layers/Fea
                     return [4 /*yield*/, view.when(updateLegendHeight).then(updateLegendOpacity)];
                 case 1:
                     _a.sent();
+                    overlay = document.getElementById("overlayDiv");
+                    ok = overlay.getElementsByTagName("input")[0];
+                    view.ui.add("save-map", "top-left");
+                    saveBtn = document.getElementById("save-map");
+                    saveBtn.addEventListener("click", function () { return __awaiter(void 0, void 0, void 0, function () {
+                        var item, itemPageUrl, link, error_1;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, map.updateFrom(view)];
+                                case 1:
+                                    _a.sent();
+                                    _a.label = 2;
+                                case 2:
+                                    _a.trys.push([2, 4, , 5]);
+                                    return [4 /*yield*/, map.saveAs(new PortalItem({
+                                            title: "Electoral swing 2016",
+                                            tags: ["test", "size"],
+                                            description: "Webmap testing various size styles and themes."
+                                        }), {
+                                            ignoreUnsupported: false
+                                        })];
+                                case 3:
+                                    item = _a.sent();
+                                    itemPageUrl = item.portal.url + "/home/item.html?id=" + item.id;
+                                    link = "<a target=\"_blank\" href=\"" + itemPageUrl + "\">" + item.title + "</a>";
+                                    statusMessage("Save WebMap", "<br> Successfully saved as <i>" + link + "</i>");
+                                    return [3 /*break*/, 5];
+                                case 4:
+                                    error_1 = _a.sent();
+                                    statusMessage("Save WebMap", "<br> Error " + error_1);
+                                    return [3 /*break*/, 5];
+                                case 5: return [2 /*return*/];
+                            }
+                        });
+                    }); });
                     return [2 /*return*/];
             }
         });

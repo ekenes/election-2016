@@ -112,3 +112,8 @@ table.popup tr.oth {
 table {
   margin: 0 auto;
 }
+
+#save-map{
+  height: 32px;
+  width: 32px;
+}

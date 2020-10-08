@@ -1,8 +1,9 @@
-import EsriMap = require("esri/Map");
+import EsriMap = require("esri/WebMap");
 import MapView = require("esri/views/MapView");
 import FeatureLayer = require("esri/layers/FeatureLayer");
 import Swipe = require("esri/widgets/Swipe");
 import Legend = require("esri/widgets/Legend");
+import PortalItem = require("esri/portal/PortalItem");
 
 import { referenceScale, maxScale, scaleThreshold, basemapPortalItem, statesLayerPortalItem, countiesLayerPortalItem, years } from "./config";
 import { statePopupTemplate, countyPopupTemplate } from "./popupUtils";
@@ -115,12 +116,12 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
     popupTemplate: statePopupTemplate
   });
 
-  view.map.add(stateElectoralResultsLayer);
+  // view.map.add(stateElectoralResultsLayer);
   view.map.add(swingStatesLayer);
   view.map.add(stateChangeLayer);
-  view.map.add(stateResultsLayer);
+  // view.map.add(stateResultsLayer);
   view.map.add(countyChangeLayer);
-  view.map.add(countyResultsLayer);
+  // view.map.add(countyResultsLayer);
 
   const swipe = new Swipe({
     view,
@@ -227,5 +228,44 @@ import { countyChangeRenderer, countyResultsRenderer, stateChangeRenderer, state
 
   view.watch(`heightBreakpoint`, updateLegendHeight);
   await view.when(updateLegendHeight).then(updateLegendOpacity);
+
+  const overlay = document.getElementById("overlayDiv");
+  const ok = overlay.getElementsByTagName("input")[0];
+
+  function statusMessage(head: string, info:string) {
+    document.getElementById("head").innerHTML = head;
+    document.getElementById("info").innerHTML = info;
+    overlay.style.visibility = "visible";
+  }
+
+  view.ui.add("save-map", "top-left");
+  const saveBtn = document.getElementById("save-map");
+
+  saveBtn.addEventListener("click", async () => {
+
+    await map.updateFrom(view);
+
+    try{
+      const item = await map.saveAs(new PortalItem({
+        title: `Electoral swing 2016`,
+        tags: [ "test", "size" ],
+        description: `Webmap testing various size styles and themes.`
+      }), {
+        ignoreUnsupported: false
+      });
+
+      const itemPageUrl = `${item.portal.url}/home/item.html?id=${item.id}`;
+      const link = `<a target="_blank" href="${itemPageUrl}">${item.title}</a>`;
+
+      statusMessage(
+        "Save WebMap",
+        "<br> Successfully saved as <i>" + link + "</i>"
+      );
+
+    } catch (error){
+      statusMessage("Save WebMap", "<br> Error " + error);
+    }
+
+  });
 
 })();
